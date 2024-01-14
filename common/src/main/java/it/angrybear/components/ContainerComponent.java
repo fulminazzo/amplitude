@@ -3,20 +3,37 @@ package it.angrybear.components;
 import it.angrybear.exceptions.InvalidComponentException;
 import lombok.Getter;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
 public abstract class ContainerComponent extends TextComponent {
+    public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=([A-Za-z0-9]+|\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'))?";
     protected final String tagName;
     protected TextComponent children;
+    protected final HashMap<String, String> tagOptions;
 
     public ContainerComponent(String rawText, String tagName) {
         this.tagName = tagName;
+        this.tagOptions = new HashMap<>();
+
         Matcher startMatcher = getTagRegex(tagName).matcher(rawText);
         if (!startMatcher.find())
-            throw new InvalidComponentException(String.format("Could not find valid start <TAG> for component %s",
-                    this.getClass().getSimpleName()));
+            throw new InvalidComponentException(String.format("Could not find valid start <%s> for component %s",
+                    tagName, this.getClass().getSimpleName()));
+
+        final String rawOptions = startMatcher.group(2);
+        if (rawOptions != null) {
+            final Matcher optionsMatcher = Pattern.compile(OPTIONS_REGEX).matcher(rawOptions);
+            while (optionsMatcher.find()) {
+                String key = optionsMatcher.group(1);
+                String value = optionsMatcher.group(4);
+                if (value == null) value = optionsMatcher.group(3);
+                if (value == null) value = optionsMatcher.group(2);
+                tagOptions.put(key, value);
+            }
+        }
 
         final String endRegex = "</" + tagName + ">";
         Matcher endMatcher = Pattern.compile(endRegex).matcher(rawText);
@@ -33,6 +50,6 @@ public abstract class ContainerComponent extends TextComponent {
     }
 
     public static Pattern getTagRegex(String tagName) {
-        return Pattern.compile("<" + tagName + "( [^\n>]+)?>");
+        return Pattern.compile("<" + tagName + "( ([^\n>]+))?>");
     }
 }

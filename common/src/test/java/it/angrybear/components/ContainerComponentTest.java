@@ -1,7 +1,12 @@
 package it.angrybear.components;
 
+import it.angrybear.exceptions.InvalidComponentException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.HashMap;
 
 import static it.angrybear.components.TextComponentTest.mockComponent;
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,6 +40,57 @@ class ContainerComponentTest {
         return objects;
     }
 
+    @Test
+    void testTagOptions() {
+        String rawText = "<mock " +
+                "key1=value " +
+                "key2 " +
+                "key3=\"super value\" " +
+                "key4=\"awesome value\" " +
+                "key5=\"this \\\"value\\\" should be taken\" " +
+                "key6='super value' " +
+                "key7='awesome value' " +
+                "key8='this value should be OVERWRITTEN' " +
+                "key8='this \\'value\\' should be taken' " +
+                "key9='this value is good' " +
+                "key10='this value is also good'>Hello world</mock>";
+        HashMap<String, String> expected = new HashMap<>();
+        expected.put("key1", "value");
+        expected.put("key2", null);
+        expected.put("key3", "super value");
+        expected.put("key4", "awesome value");
+        expected.put("key5", "this \\\"value\\\" should be taken");
+        expected.put("key6", "super value");
+        expected.put("key7", "awesome value");
+        expected.put("key8", "this \\'value\\' should be taken");
+        expected.put("key9", "this value is good");
+        expected.put("key10", "this value is also good");
+        MockContainer textComponent = new MockContainer(rawText);
+        assertEquals(expected, textComponent.getTagOptions());
+    }
+
+    @Test
+    void testMissingStartTag() {
+        Executable executable = () -> new MockContainer("Invalid text");
+        assertThrowsExactly(InvalidComponentException.class, executable);
+        try {
+            executable.execute();
+        } catch (Throwable e) {
+            assertTrue(e.getMessage().contains("<mock>"));
+        }
+    }
+
+    @Test
+    void testMissingEndTag() {
+        Executable executable = () -> new MockContainer("<mock>Invalid text");
+        assertThrowsExactly(InvalidComponentException.class, executable);
+        try {
+            executable.execute();
+        } catch (Throwable e) {
+            assertTrue(e.getMessage().contains("</mock>"));
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("getTestChildren")
     void testChildrenInContainerComponent(String rawText, String expected) {
@@ -58,7 +114,7 @@ class ContainerComponentTest {
 
     private static String mockContainerComponent(String next, String children) {
         String mock = mockComponent(null, null, null, null, null, null, null, null, null);
-        mock = mock.replace("color:", String.format("tagName: mock, children: %s, color:", children));
+        mock = mock.replace("color:", String.format("tagName: mock, children: %s, tagOptions: {}, color:", children));
         mock = mock.replaceAll("^\\{next: null","{next: " + next);
         return mock;
     }
