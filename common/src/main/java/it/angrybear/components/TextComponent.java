@@ -11,7 +11,6 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -27,7 +26,16 @@ public class TextComponent {
     private Boolean reset;
     private String text;
 
+    public TextComponent() {
+        this(null);
+    }
+
     public TextComponent(String rawText) {
+        setContent(rawText);
+    }
+
+    public void setContent(String rawText) {
+        if (rawText == null || rawText.isEmpty()) return;
         Matcher matcher = TAG_REGEX.matcher(rawText);
         if (matcher.find()) {
             String tag = matcher.group(1);
@@ -77,10 +85,6 @@ public class TextComponent {
             }
     }
 
-    public Boolean getReset() {
-        return reset != null && reset;
-    }
-
     public void setReset(Boolean reset) {
         this.reset = reset;
         color = Color.EMPTY;
@@ -106,6 +110,30 @@ public class TextComponent {
                 .filter(f -> !f.getName().equals("next"))
                 .peek(f -> f.setAccessible(true))
                 .toArray(Field[]::new);
+    }
+
+    public Boolean getMagic() {
+        return magic != null && magic;
+    }
+
+    public Boolean getBold() {
+        return bold != null && bold;
+    }
+
+    public Boolean getStrikethrough() {
+        return strikethrough != null && strikethrough;
+    }
+
+    public Boolean getUnderline() {
+        return underline != null && underline;
+    }
+
+    public Boolean getItalic() {
+        return italic != null && italic;
+    }
+
+    public Boolean getReset() {
+        return reset != null && reset;
     }
 
     @Override
