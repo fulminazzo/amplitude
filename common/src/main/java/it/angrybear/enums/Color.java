@@ -20,8 +20,7 @@ public enum Color implements ChatFormatter {
     RED('c'),
     LIGHT_PURPLE('d'),
     YELLOW('e'),
-    WHITE('f'),
-    EMPTY(' ');
+    WHITE('f');
 
     private final char identifierChar;
 

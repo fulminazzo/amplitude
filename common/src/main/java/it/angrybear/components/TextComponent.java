@@ -3,14 +3,19 @@ package it.angrybear.components;
 import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
+import it.fulminazzo.fulmicollection.utils.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -87,7 +92,7 @@ public class TextComponent {
 
     public void setReset(Boolean reset) {
         this.reset = reset;
-        color = Color.EMPTY;
+        color = Color.WHITE;
         bold = false;
         italic = false;
         strikethrough = false;
@@ -110,6 +115,20 @@ public class TextComponent {
                 .filter(f -> !f.getName().equals("next"))
                 .peek(f -> f.setAccessible(true))
                 .toArray(Field[]::new);
+    }
+
+    public Style[] getStyles() {
+        return Arrays.stream(Style.values())
+                .filter(v -> {
+                    String name = v.getName();
+                    String methodName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                    try {
+                        Method method = this.getClass().getMethod(methodName);
+                        return method.invoke(this).equals(true);
+                    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toArray(Style[]::new);
     }
 
     public Boolean getMagic() {

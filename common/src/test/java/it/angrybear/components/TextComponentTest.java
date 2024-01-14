@@ -51,11 +51,10 @@ class TextComponentTest {
                                         ""),
                                 "RED", null, null, null, null, null, null,
                                 "")},
-                new Object[]{
-                        "<red><bold><italic>Hello <reset>world!",
+                new Object[]{"<red><bold><italic>Hello <reset>world",
                         mockComponent(mockComponent(mockComponent(mockComponent(null,
                                                         null, null, null, null, null, null, true,
-                                                        "world!"),
+                                                        "world"),
                                                 "RED", null, true, null, null, true, null,
                                                 "Hello "),
                                         "RED", null, true, null, null, null, null,
