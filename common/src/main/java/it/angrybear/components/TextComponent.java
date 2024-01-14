@@ -3,7 +3,6 @@ package it.angrybear.components;
 import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
-import it.fulminazzo.fulmicollection.utils.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,25 +10,25 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class TextComponent {
     public static final Pattern TAG_REGEX = Pattern.compile("<([^\n>]+)>");
-    private TextComponent next;
-    private Color color;
-    private Boolean magic;
-    private Boolean bold;
-    private Boolean strikethrough;
-    private Boolean underline;
-    private Boolean italic;
-    private Boolean reset;
-    private String text;
+    protected TextComponent next;
+    protected Color color;
+    protected Boolean magic;
+    protected Boolean bold;
+    protected Boolean strikethrough;
+    protected Boolean underline;
+    protected Boolean italic;
+    protected Boolean reset;
+    protected String text;
 
     public TextComponent() {
         this(null);
@@ -71,20 +70,33 @@ public class TextComponent {
                 this.text = String.format("<%s>", tag) + this.text;
                 rawText = "";
             }
+        } else {
+            this.text = rawText;
+            rawText = "";
         }
         if (rawText.trim().isEmpty()) return;
-        this.next = new TextComponent(rawText);
+        setNext(rawText);
+    }
 
-        TextComponent next = this.next;
-        while (next != null)
+    public void setNext(String rawText) {
+        setNext(new TextComponent(rawText));
+    }
+
+    public void setNext(TextComponent next) {
+        this.next = next;
+
+        TextComponent tmp = this.next;
+        while (tmp != null)
             try {
-                if (!next.getReset())
+                if (!tmp.getReset())
                     for (Field field : getOptions()) {
-                        Object nextObject = field.get(next);
+                        if (TextComponent.class.isAssignableFrom(field.getType())) continue;
+                        if (Modifier.isFinal(field.getModifiers())) continue;
+                        Object nextObject = field.get(tmp);
                         if (nextObject != null) continue;
-                        field.set(next, field.get(this));
+                        field.set(tmp, field.get(this));
                     }
-                next = next.getNext();
+                tmp = tmp.getNext();
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -101,7 +113,9 @@ public class TextComponent {
 
     public void reset() {
         try {
-            for (Field field : getOptions()) field.set(this, null);
+            for (Field field : getOptions())
+                if (!Modifier.isFinal(field.getModifiers()))
+                    field.set(this, null);
             reset = true;
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -109,12 +123,19 @@ public class TextComponent {
     }
 
     public Field[] getOptions() {
-        return Arrays.stream(this.getClass().getDeclaredFields())
-                .filter(f -> !Modifier.isStatic(f.getModifiers()))
-                .filter(f -> !f.getName().equals("text"))
-                .filter(f -> !f.getName().equals("next"))
-                .peek(f -> f.setAccessible(true))
-                .toArray(Field[]::new);
+        List<Field> fields = new ArrayList<>();
+        Class<?> clazz = this.getClass();
+        while (TextComponent.class.isAssignableFrom(clazz)) {
+            Arrays.stream(clazz.getDeclaredFields())
+                    .filter(f -> !Modifier.isStatic(f.getModifiers()))
+                    .filter(f -> !f.getName().equals("this$0"))
+                    .filter(f -> !f.getName().equals("text"))
+                    .filter(f -> !f.getName().equals("next"))
+                    .peek(f -> f.setAccessible(true))
+                    .forEach(fields::add);
+            clazz = clazz.getSuperclass();
+        }
+        return fields.toArray(new Field[0]);
     }
 
     public Style[] getStyles() {

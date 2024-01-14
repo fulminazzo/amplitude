@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TextComponentTest {
 
-    private static Object[][] getTestComponents() {
+    static Object[][] getTestComponents() {
         return new Object[][]{
                 new Object[]{"<red>Hello world",
                         mockComponent(null,
@@ -71,7 +71,7 @@ class TextComponentTest {
         assertEquals(expected, textComponent.toString());
     }
 
-    private static String mockComponent(String next, String color, Boolean magic,
+    static String mockComponent(String next, String color, Boolean magic,
                                         Boolean bold, Boolean strikethrough, Boolean underline,
                                         Boolean italic, Boolean reset, String text) {
         return String.format("{next: %s, ", next) +
