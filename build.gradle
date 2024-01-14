@@ -1,0 +1,161 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'io.freefair.lombok' version '8.4'
+}
+
+ext.libraries = [
+        bukkit: ['org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'],
+        placeholderapi: ['me.clip:placeholderapi:2.11.3'],
+        bungeecord: ['net.md-5:bungeecord-api:1.20-R0.1-SNAPSHOT'],
+        velocity: ['com.velocitypowered:velocity-api:3.2.0-SNAPSHOT'],
+        json: ['com.google.code.gson:gson:2.10.1'], //TODO: ??
+        slf4j: ['org.slf4j:slf4j-api:2.0.5'], //TODO: ??
+        joor: ['org.jooq:joor-java-8:0.9.14'],
+
+        yaml: ['it.fulminazzo:YAMLParser:1.4.2'],
+        fulmicollection: ['it.fulminazzo:FulmiCollection:1.2.2']
+]
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'io.freefair.lombok'
+
+    group = "${rootProject.group}"
+    version = "${rootProject.version}"
+    description = 'A Minecraft library that unifies messaging through many platforms.'
+    final String author = 'Fulminazzo'
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = "spigotmc-repo"
+            url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/groups/public/"
+        }
+        maven {
+            name = "PlaceholderAPI"
+            url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+        }
+        maven {
+            name = "PaperMC"
+            url = "https://repo.papermc.io/repository/maven-public/"
+        }
+        maven {
+            name = "JitPack"
+            url = "https://jitpack.io"
+        }
+        maven {
+            name = "Fulminazzo repository"
+            url = "https://repo.fulminazzo.it/releases"
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.30'
+        annotationProcessor 'org.projectlombok:lombok:1.18.30'
+        compileOnly 'org.jetbrains:annotations:24.1.0'
+
+        implementation(libraries.fulmicollection)
+        implementation(libraries.joor)
+        implementation(libraries.yaml)
+
+        testCompileOnly 'org.projectlombok:lombok:1.18.30'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+        testImplementation platform('org.junit:junit-bom:5.9.1')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params'
+
+        testImplementation 'org.mockito:mockito-core:4.11.0'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    this.ext.getFileName = { name ->
+        if (name == null) throw new RuntimeException("getFileName(): Name cannot be null!")
+        String fileName = name
+        final String projectName = rootProject.name
+        if (projectName != fileName) fileName = "${projectName}-" + fileName
+        return fileName + "-${rootProject.version}"
+    }
+
+    processResources {
+        def props = [
+                version: rootProject.version, name: rootProject.name,
+                description: rootProject.description, author: author,
+                group: rootProject.group, module: project.name
+        ]
+        inputs.properties props
+        filteringCharset 'UTF-8'
+        expand props
+    }
+
+    shadowJar {
+        exclude("META-INF/**") // Removes all Maven META-INF/ files.
+        archiveFileName = "${getFileName(project.name)}.jar"
+        manifest {
+            attributes ("Manifest-Version": "${rootProject.version}")
+        }
+    }
+
+    tasks.register('sourcesJar', Jar) {
+        from sourceSets.main.delombokTask
+        archiveClassifier = 'sources'
+    }
+
+    tasks.register('javadocJar', Jar) {
+        from javadoc
+        archiveClassifier = 'javadoc'
+    }
+
+    jar {
+        enabled = true // Required for sub projects depending on sub projects
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        archiveFileName = "${getFileName(project.name)}-original.jar"
+        dependsOn(processResources)
+        dependsOn(shadowJar)
+
+        //TODO: Remove?
+        String finalClass = "${rootProject.group}"
+        if (((String) project.name) != "common" && project.name != rootProject.name)
+            finalClass += ".${project.name}"
+        finalClass += ".BearMain"
+        manifest {
+            attributes(
+                    "Main-Class": finalClass,
+                    "Manifest-Version": "${project.version}"
+            )
+        }
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                String projectName = "${project.name}"
+                String rootProjectName = "${rootProject.name}"
+                groupId = "${rootProject.group}" + (projectName == rootProjectName ? "" : ".${rootProjectName}")
+                artifactId = "${project.name}"
+                version = "${rootProject.version}"
+
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+            }
+        }
+    }
+}
+
+dependencies {
+    libraries.each { compileOnly(it.value) }
+
+    subprojects.each {implementation project(it.path)}
+}

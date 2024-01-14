@@ -1,0 +1,3 @@
+rootProject.name = 'BearMessages'
+include 'common'
+
