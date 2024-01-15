@@ -128,7 +128,8 @@ public class TextComponent {
     }
 
     /**
-     * Sets the next component (if {@link #isSimilar(TextComponent)} merge it with the current component).
+     * Set the next component (if {@link #isSimilar(TextComponent)} merge it with the current component).
+     * Then, apply {@link #setSameOptions(TextComponent)} method.
      *
      * @param rawText the raw text
      */
@@ -137,20 +138,21 @@ public class TextComponent {
     }
 
     /**
-     * Sets the next component (if {@link #isSimilar(TextComponent)} merge it with the current component).
+     * Set the next component (if {@link #isSimilar(TextComponent)} merge it with the current component).
+     * Then, apply {@link #setSameOptions(TextComponent)} method.
      *
      * @param next the next
      */
     public void setNext(TextComponent next) {
         this.next = next;
 
-        setSameOptions(this.next);
-
         while (this.next != null && this.next.isSimilar(this)) {
             String nextText = this.next.text;
             if (nextText != null && !nextText.trim().isEmpty()) this.text += nextText;
             this.next = this.next.next;
         }
+
+        setSameOptions(this.next);
     }
 
     /**
