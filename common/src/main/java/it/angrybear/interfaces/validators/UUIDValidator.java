@@ -4,6 +4,9 @@ import it.angrybear.exceptions.InvalidOptionException;
 
 import java.util.UUID;
 
+/**
+ * A validator for {@link UUID} objects.
+ */
 public class UUIDValidator implements OptionValidator {
 
     @Override
