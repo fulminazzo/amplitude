@@ -10,7 +10,7 @@ import java.util.Map;
  * Represent a HEX component, an implementation of {@link TextComponent} that supports HEX colors.
  * It requires "<b>color</b>" as an option, and it will be parsed using {@link HexColorValidator}.
  * <p>
- * Example: "<hex color=#FF00AA>Hello world!" will be parsed with:
+ * Example: "&#60;hex color=#FF00AA&#62;Hello world!" will be parsed with:
  * <ul>
  *     <li>color: #ff00aa</li>
  *     <li>text: Hello world!</li>
