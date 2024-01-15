@@ -54,7 +54,11 @@ public class CharCodeSerializer extends ComponentSerializer {
 
     @Override
     public @Nullable String serializeHexComponent(@Nullable HexComponent component) throws InvalidOptionException {
-        return component == null ? null : ("&" + String.join("&", component.getTagOption("color").toLowerCase().split("")) + component.getText());
+        if (component == null) return null;
+        String color = component.getTagOption("color").toLowerCase();
+        color = color.substring(1);
+        color = charCode + "x" + charCode + String.join(charCode, color.split(""));
+        return color + component.getText();
     }
 
     @Override
