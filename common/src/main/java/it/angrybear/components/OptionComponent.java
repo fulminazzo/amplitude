@@ -61,7 +61,7 @@ public abstract class OptionComponent extends TextComponent {
      *
      * @param rawText the raw text
      */
-    public void setOptions(String rawText) {
+    public void setOptions(@Nullable String rawText) {
         this.tagOptions.clear();
 
         String rawOptions = rawText;

@@ -19,7 +19,7 @@ public interface IComponentSerializer {
      * @param component the component
      * @return the @ nullable t
      */
-    <T> @Nullable T serializeComponent(@Nullable TextComponent component);
+    <T> @Nullable T serializeComponent(TextComponent component);
 
     /**
      * Serialize a {@link HoverComponent}.
@@ -29,7 +29,7 @@ public interface IComponentSerializer {
      * @return the @ nullable t
      * @throws InvalidOptionException the invalid option exception
      */
-    <T> @Nullable T serializeHoverComponent(@Nullable HoverComponent component) throws InvalidOptionException;
+    <T> @Nullable T serializeHoverComponent(HoverComponent component) throws InvalidOptionException;
 
     /**
      * Serialize a {@link ClickComponent}.
@@ -39,7 +39,7 @@ public interface IComponentSerializer {
      * @return the @ nullable t
      * @throws InvalidOptionException the invalid option exception
      */
-    <T> @Nullable T serializeClickComponent(@Nullable ClickComponent component) throws InvalidOptionException;
+    <T> @Nullable T serializeClickComponent(ClickComponent component) throws InvalidOptionException;
 
     /**
      * Serialize a {@link HexComponent}.
@@ -49,5 +49,5 @@ public interface IComponentSerializer {
      * @return the @ nullable t
      * @throws InvalidOptionException the invalid option exception
      */
-    <T> @Nullable T serializeHexComponent(@Nullable HexComponent component) throws InvalidOptionException;
+    <T> @Nullable T serializeHexComponent(HexComponent component) throws InvalidOptionException;
 }

@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.ClickAction;
 import it.angrybear.enums.HoverAction;
 import it.angrybear.interfaces.IAction;
 import it.angrybear.interfaces.IEventComponent;

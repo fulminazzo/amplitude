@@ -3,7 +3,7 @@ package it.angrybear.interfaces.validators;
 import it.angrybear.exceptions.InvalidOptionException;
 
 /**
- * A validator for {@link Byte} objects..
+ * A validator for {@link Byte} objects.
  */
 public class ByteValidator extends IntegerValidator {
 
