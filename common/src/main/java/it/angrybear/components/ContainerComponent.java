@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 @Getter
 public abstract class ContainerComponent extends TextComponent {
-    public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=([A-Za-z0-9]+|\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'))?";
+    public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final String tagName;
     protected TextComponent children;
     protected final HashMap<String, String> tagOptions;
@@ -71,7 +71,7 @@ public abstract class ContainerComponent extends TextComponent {
     }
 
     public static Pattern getTagRegex(String tagName) {
-        return Pattern.compile("<" + tagName + "( ([^\n>]+))?>");
+        return Pattern.compile("<" + tagName + "( ([^\n>]+)*)?>");
     }
 
     protected Map<String, OptionValidator> getRequiredOptions() {

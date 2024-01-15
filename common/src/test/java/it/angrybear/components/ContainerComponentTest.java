@@ -74,6 +74,15 @@ class ContainerComponentTest {
     }
 
     @Test
+    void testTagOptionLink() {
+        String rawText = "<mock url=https://www.google.com>Hello world</mock>";
+        HashMap<String, String> expected = new HashMap<>();
+        expected.put("url", "https://www.google.com");
+        MockContainer mockContainer = new MockContainer(rawText);
+        assertEquals(expected, mockContainer.getTagOptions());
+    }
+
+    @Test
     void testJsonOptions() {
         String rawText = "<mock json=\"{name: \\\"Alex\\\", age: 10, title: \\\"Json is amazing\\\"}\" title=OVERWRITTEN>Hello world</mock>";
         HashMap<String, String> expected = new HashMap<>();
