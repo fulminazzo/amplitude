@@ -91,7 +91,10 @@ public abstract class ContainerComponent extends TextComponent {
     }
 
     public static @NotNull Pattern getTagRegex(String tagName) {
-        return Pattern.compile("<" + tagName + "( ([^\n>]+)*)?>");
+        String regex = TextComponent.TAG_REGEX.toString();
+        regex = regex.substring(2);
+        regex = regex.substring(0, regex.length() - 2);
+        return Pattern.compile("<" + tagName + "( (" + regex + ")*)?>");
     }
 
     protected Map<String, OptionValidator> getRequiredOptions() {

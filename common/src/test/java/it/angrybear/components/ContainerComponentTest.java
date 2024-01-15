@@ -58,7 +58,7 @@ class ContainerComponentTest {
                 "key8='this value should be OVERWRITTEN' " +
                 "key8='this \\'value\\' should be taken' " +
                 "key9='this value is good' " +
-                "key10='this value is also good'>Hello world</mock>";
+                "key10='this value is <also> good'>Hello world</mock>";
         HashMap<String, String> expected = new HashMap<>();
         expected.put("key1", "value");
         expected.put("key2", null);
@@ -69,7 +69,7 @@ class ContainerComponentTest {
         expected.put("key7", "awesome value");
         expected.put("key8", "this 'value' should be taken");
         expected.put("key9", "this value is good");
-        expected.put("key10", "this value is also good");
+        expected.put("key10", "this value is <also> good");
         MockContainer mockContainer = new MockContainer(rawText);
         assertEquals(expected, mockContainer.getTagOptions());
     }
