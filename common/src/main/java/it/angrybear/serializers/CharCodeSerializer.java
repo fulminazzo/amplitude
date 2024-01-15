@@ -7,11 +7,10 @@ import it.angrybear.components.TextComponent;
 import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.exceptions.InvalidOptionException;
-import it.angrybear.interfaces.IComponentSerializer;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An implementation of {@link IComponentSerializer} that mimics the Minecraft default behavior.
+ * An implementation of {@link ComponentSerializer} that mimics the Minecraft default behavior.
  * <p>
  * For example, using '<i>&</i>' as {@link #charCode} will result in the following conversion:
  * <p>
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * => "&cHello &6friend!"
  */
 @SuppressWarnings("unchecked")
-public class CharCodeSerializer implements IComponentSerializer {
+public class CharCodeSerializer extends ComponentSerializer {
     private final String charCode;
 
     /**

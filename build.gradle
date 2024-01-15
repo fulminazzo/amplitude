@@ -9,6 +9,10 @@ group = 'it.angrybear'
 version = '1.0'
 
 ext.libraries = [
+        bukkit: ['org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'],
+        bukkit_pre_text: ['org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'],
+        bungeecord: ['net.md-5:bungeecord-api:1.20-R0.1-SNAPSHOT'],
+        velocity: ['com.velocitypowered:velocity-api:3.2.0-SNAPSHOT'],
         json: ['com.google.code.gson:gson:2.10.1'],
 ]
 

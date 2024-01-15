@@ -1,4 +1,4 @@
-package it.angrybear.interfaces;
+package it.angrybear.serializers;
 
 import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HexComponent;
@@ -8,9 +8,15 @@ import it.angrybear.exceptions.InvalidOptionException;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An interface that allows creating serializers for text components.
+ * An abstract class that allows creating serializers for text components.
  */
-public interface IComponentSerializer {
+public abstract class ComponentSerializer {
+    static ComponentSerializer DEFAULT_SERIALIZER;
+
+    public static ComponentSerializer getSerializer() {
+        if (DEFAULT_SERIALIZER == null) return new SectionSignSerializer();
+        else return DEFAULT_SERIALIZER;
+    }
 
     /**
      * Serialize a general {@link TextComponent}.
@@ -19,7 +25,7 @@ public interface IComponentSerializer {
      * @param component the component
      * @return the @ nullable t
      */
-    <T> @Nullable T serializeComponent(TextComponent component);
+    public abstract <T> @Nullable T serializeComponent(TextComponent component);
 
     /**
      * Serialize a {@link HoverComponent}.
@@ -29,7 +35,7 @@ public interface IComponentSerializer {
      * @return the @ nullable t
      * @throws InvalidOptionException the invalid option exception
      */
-    <T> @Nullable T serializeHoverComponent(HoverComponent component) throws InvalidOptionException;
+    public abstract <T> @Nullable T serializeHoverComponent(HoverComponent component) throws InvalidOptionException;
 
     /**
      * Serialize a {@link ClickComponent}.
@@ -39,7 +45,7 @@ public interface IComponentSerializer {
      * @return the @ nullable t
      * @throws InvalidOptionException the invalid option exception
      */
-    <T> @Nullable T serializeClickComponent(ClickComponent component) throws InvalidOptionException;
+    public abstract <T> @Nullable T serializeClickComponent(ClickComponent component) throws InvalidOptionException;
 
     /**
      * Serialize a {@link HexComponent}.
@@ -49,5 +55,5 @@ public interface IComponentSerializer {
      * @return the @ nullable t
      * @throws InvalidOptionException the invalid option exception
      */
-    <T> @Nullable T serializeHexComponent(HexComponent component) throws InvalidOptionException;
+    public abstract <T> @Nullable T serializeHexComponent(HexComponent component) throws InvalidOptionException;
 }
