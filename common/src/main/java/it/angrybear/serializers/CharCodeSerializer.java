@@ -12,10 +12,10 @@ import org.jetbrains.annotations.Nullable;
 /**
  * An implementation of {@link ComponentSerializer} that mimics the Minecraft default behavior.
  * <p>
- * For example, using '<i>&</i>' as {@link #charCode} will result in the following conversion:
+ * For example, using '<i>&amp;</i>' as {@link #charCode} will result in the following conversion:
  * <p>
  * "&#60;red&#62;Hello &#60;gold&#62;friend!"
- * => "&cHello &6friend!"
+ * =&#62; "&amp;cHello &amp;6friend!"
  */
 @SuppressWarnings("unchecked")
 public class CharCodeSerializer extends ComponentSerializer {
@@ -51,6 +51,7 @@ public class CharCodeSerializer extends ComponentSerializer {
 
         if (component.getNext() != null)
             output += serializeComponent(component.getNext());
+
         return output;
     }
 

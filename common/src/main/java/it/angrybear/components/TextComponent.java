@@ -134,7 +134,7 @@ public class TextComponent {
      * @param rawText the raw text
      */
     public void setNext(String rawText) {
-        setNext(new TextComponent(rawText));
+        setNext(rawText == null ? null : new TextComponent(rawText));
     }
 
     /**
