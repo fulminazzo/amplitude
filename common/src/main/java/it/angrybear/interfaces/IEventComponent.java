@@ -15,7 +15,7 @@ public interface IEventComponent {
         HashMap<String, OptionValidator> requiredOptions = new HashMap<>();
         Class<T> actionClass = (Class<T>) getActionClass();
         requiredOptions.put("action", new EnumValidator<>(actionClass));
-        IAction[] values = new IAction[0];
+        IAction[] values;
         try {
             Method getValues = actionClass.getDeclaredMethod("values");
             values = (IAction[]) getValues.invoke(actionClass);
@@ -23,10 +23,9 @@ public interface IEventComponent {
             throw new RuntimeException(e);
         }
         for (IAction action : values) {
-            String optionName = action.getRequiredOption();
             String option = getTagOptions().get("action");
             if (action.name().equals(option)) {
-                requiredOptions.put(optionName, action.getValidator());
+                requiredOptions.putAll(action.getRequiredOptions());
                 break;
             }
         }

@@ -8,6 +8,8 @@ import it.angrybear.interfaces.validators.URLValidator;
 import lombok.Getter;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public enum ClickAction implements IAction {
@@ -21,11 +23,10 @@ public enum ClickAction implements IAction {
     CHANGE_PAGE("page", new IntegerValidator()),
     COPY_TO_CLIPBOARD("text", null);
 
-    private final String requiredOption;
-    private final OptionValidator validator;
+    private final Map<String, OptionValidator> requiredOptions;
 
     ClickAction(String requiredOption, OptionValidator validator) {
-        this.requiredOption = requiredOption;
-        this.validator = validator;
+        this.requiredOptions = new HashMap<>();
+        this.requiredOptions.put(requiredOption, validator);
     }
 }
