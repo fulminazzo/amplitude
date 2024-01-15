@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 @Getter
 public class TextComponent {
-    public static final Map<String, Function<String, ContainerComponent>> CONTAINER_COMPONENTS = new HashMap<>();
+    public static final Map<String, Function<String, OptionComponent>> CONTAINER_COMPONENTS = new HashMap<>();
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
     protected TextComponent next;
     protected Color color;
@@ -42,6 +42,7 @@ public class TextComponent {
         if (CONTAINER_COMPONENTS.isEmpty()) {
             CONTAINER_COMPONENTS.put("click", ClickComponent::new);
             CONTAINER_COMPONENTS.put("hover", HoverComponent::new);
+            CONTAINER_COMPONENTS.put("hex", s -> new ClickComponent());
         }
 
         if (rawText == null || rawText.isEmpty()) return;
