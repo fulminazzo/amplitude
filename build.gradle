@@ -8,6 +8,10 @@ plugins {
 group = 'it.angrybear'
 version = '1.0'
 
+ext.libraries = [
+        json: ['com.google.code.gson:gson:2.10.1'],
+]
+
 allprojects {
     apply plugin: 'java'
     apply plugin: 'maven-publish'

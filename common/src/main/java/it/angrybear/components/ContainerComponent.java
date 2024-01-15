@@ -1,9 +1,12 @@
 package it.angrybear.components;
 
+import com.google.gson.Gson;
 import it.angrybear.exceptions.InvalidComponentException;
+import it.angrybear.exceptions.MissingRequiredOptionException;
 import lombok.Getter;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,9 +34,19 @@ public abstract class ContainerComponent extends TextComponent {
                 String value = optionsMatcher.group(4);
                 if (value == null) value = optionsMatcher.group(3);
                 if (value == null) value = optionsMatcher.group(2);
-                tagOptions.put(key, value);
+                if (value != null)
+                    value = value
+                            .replace("\\\"", "\"")
+                            .replace("\\'", "'");
+                if (value != null && key.equals("json")) {
+                    Map<?, ?> json = new Gson().fromJson(value, Map.class);
+                    json.forEach((k, v) -> tagOptions.put(k.toString(), v == null ? null : v.toString()));
+                } else tagOptions.put(key, value);
             }
         }
+
+        for (String o : getRequiredOptions())
+            if (tagOptions.get(o) == null) throw new MissingRequiredOptionException(o, tagOptions);
 
         final String endRegex = "</" + tagName + ">";
         Matcher endMatcher = Pattern.compile(endRegex).matcher(rawText);
@@ -51,5 +64,9 @@ public abstract class ContainerComponent extends TextComponent {
 
     public static Pattern getTagRegex(String tagName) {
         return Pattern.compile("<" + tagName + "( ([^\n>]+))?>");
+    }
+
+    protected String[] getRequiredOptions() {
+        return new String[0];
     }
 }

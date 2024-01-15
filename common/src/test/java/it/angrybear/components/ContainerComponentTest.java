@@ -1,6 +1,7 @@
 package it.angrybear.components;
 
 import it.angrybear.exceptions.InvalidComponentException;
+import it.angrybear.exceptions.MissingRequiredOptionException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -59,14 +60,37 @@ class ContainerComponentTest {
         expected.put("key2", null);
         expected.put("key3", "super value");
         expected.put("key4", "awesome value");
-        expected.put("key5", "this \\\"value\\\" should be taken");
+        expected.put("key5", "this \"value\" should be taken");
         expected.put("key6", "super value");
         expected.put("key7", "awesome value");
-        expected.put("key8", "this \\'value\\' should be taken");
+        expected.put("key8", "this 'value' should be taken");
         expected.put("key9", "this value is good");
         expected.put("key10", "this value is also good");
-        MockContainer textComponent = new MockContainer(rawText);
-        assertEquals(expected, textComponent.getTagOptions());
+        MockContainer mockContainer = new MockContainer(rawText);
+        assertEquals(expected, mockContainer.getTagOptions());
+    }
+
+    @Test
+    void testJsonOptions() {
+        String rawText = "<mock json=\"{name: \\\"Alex\\\", age: 10, title: \\\"Json is amazing\\\"}\" title=OVERWRITTEN>Hello world</mock>";
+        HashMap<String, String> expected = new HashMap<>();
+        expected.put("name", "Alex");
+        expected.put("age", "10.0");
+        expected.put("title", "OVERWRITTEN");
+        MockContainer mockContainer = new MockContainer(rawText);
+        assertEquals(expected, mockContainer.getTagOptions());
+    }
+
+    @Test
+    void testMissingRequiredOptionFound() {
+        assertDoesNotThrow(() ->
+                new MockRequiredContainer("<mock name=\"Alex\">Hello world</mock>"));
+    }
+
+    @Test
+    void testMissingRequiredOptionNotFound() {
+        assertThrowsExactly(MissingRequiredOptionException.class, () ->
+                new MockRequiredContainer("<mock surname=\"Not Alex\">Hello world</mock>"));
     }
 
     @Test
@@ -94,22 +118,22 @@ class ContainerComponentTest {
     @ParameterizedTest
     @MethodSource("getTestChildren")
     void testChildrenInContainerComponent(String rawText, String expected) {
-        MockContainer textComponent = new MockContainer(rawText);
-        assertEquals(expected, textComponent.toString());
+        MockContainer mockContainer = new MockContainer(rawText);
+        assertEquals(expected, mockContainer.toString());
     }
 
     @ParameterizedTest
     @MethodSource("getTestNext")
     void testNextInContainerComponent(String rawText, String expected) {
-        MockContainer textComponent = new MockContainer(rawText);
-        assertEquals(expected, textComponent.toString());
+        MockContainer mockContainer = new MockContainer(rawText);
+        assertEquals(expected, mockContainer.toString());
     }
 
     @ParameterizedTest
     @MethodSource("getTestEmptyNext")
     void testEmptyNextInContainerComponent(String rawText, String expected) {
-        MockContainer textComponent = new MockContainer(rawText);
-        assertEquals(expected, textComponent.toString());
+        MockContainer mockContainer = new MockContainer(rawText);
+        assertEquals(expected, mockContainer.toString());
     }
 
     private static String mockContainerComponent(String next, String children) {
@@ -124,6 +148,18 @@ class ContainerComponentTest {
 
         public MockContainer(String rawText) {
             super(rawText, "mock");
+        }
+    }
+
+    static class MockRequiredContainer extends ContainerComponent {
+
+        public MockRequiredContainer(String rawText) {
+            super(rawText, "mock");
+        }
+
+        @Override
+        protected String[] getRequiredOptions() {
+            return new String[]{"name"};
         }
     }
 }
