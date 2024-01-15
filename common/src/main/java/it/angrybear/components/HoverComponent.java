@@ -11,6 +11,10 @@ import java.util.Map;
 
 public class HoverComponent extends ContainerComponent implements IEventComponent {
 
+    public HoverComponent() {
+        this(null);
+    }
+
     public HoverComponent(@Nullable String rawText) {
         super(rawText, "hover");
     }

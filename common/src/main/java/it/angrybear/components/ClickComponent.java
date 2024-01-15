@@ -11,6 +11,10 @@ import java.util.Map;
 
 public class ClickComponent extends ContainerComponent implements IEventComponent {
 
+    public ClickComponent() {
+        this(null);
+    }
+
     public ClickComponent(@Nullable String rawText) {
         super(rawText, "click");
     }
