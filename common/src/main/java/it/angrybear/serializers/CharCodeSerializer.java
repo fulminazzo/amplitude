@@ -10,10 +10,23 @@ import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.interfaces.IComponentSerializer;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * An implementation of {@link IComponentSerializer} that mimics the Minecraft default behavior.
+ * <p>
+ * For example, using '<i>&</i>' as {@link #charCode} will result in the following conversion:
+ * <p>
+ * "&#60;red&#62;Hello &#60;gold&#62;friend!"
+ * => "&cHello &6friend!"
+ */
 @SuppressWarnings("unchecked")
 public class CharCodeSerializer implements IComponentSerializer {
     private final String charCode;
 
+    /**
+     * Instantiates a new Char code serializer.
+     *
+     * @param charCode the char code
+     */
     public CharCodeSerializer(String charCode) {
         this.charCode = charCode;
     }
