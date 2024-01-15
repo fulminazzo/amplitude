@@ -8,16 +8,34 @@ import org.jetbrains.annotations.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * An implementation of {@link TextComponent} that mimics XML tags.
+ * This means that for any container component, opening and closing tags are required.
+ * If those are not provided, a {@link InvalidComponentException} will be thrown.
+ * <p>
+ * Example: "&#60;component&#62;This is contained&#60;/component&#62; is a valid container component.
+ */
 @Getter
 public abstract class ContainerComponent extends OptionComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final String tagName;
     protected TextComponent child;
 
+    /**
+     * Instantiates a new Container component.
+     *
+     * @param tagName the tag name
+     */
     public ContainerComponent(String tagName) {
         this(null, tagName);
     }
 
+    /**
+     * Instantiates a new Container component.
+     *
+     * @param rawText the raw text
+     * @param tagName the tag name
+     */
     public ContainerComponent(@Nullable String rawText, @NotNull String tagName) {
         this.tagName = tagName;
 
@@ -50,16 +68,35 @@ public abstract class ContainerComponent extends OptionComponent {
         setNext(rawText);
     }
 
+    /**
+     * Sets the child component and applies {@link #setSameOptions(TextComponent)} method.
+     *
+     * @param rawText the raw text
+     */
     public void setChild(@Nullable String rawText) {
         if (rawText == null || rawText.trim().isEmpty()) return;
         setChild(new TextComponent(rawText));
     }
 
+    /**
+     * Sets the child component and applies {@link #setSameOptions(TextComponent)} method.
+     *
+     * @param child the child
+     */
     public void setChild(TextComponent child) {
         this.child = child;
         setSameOptions(child);
     }
 
+    /**
+     * Gets tag regex from the tag name.
+     * <p>
+     * The regex: "&#60;tagName( ((?:".*&#62;.*"|'.*&#62;.*'|[^&#62;])+)*)?&#62;"
+     * (taken from {@link TextComponent#TAG_REGEX})
+     *
+     * @param tagName the tag name
+     * @return the tag regex
+     */
     public static @NotNull Pattern getTagRegex(String tagName) {
         String regex = TextComponent.TAG_REGEX.toString();
         regex = regex.substring(2);
