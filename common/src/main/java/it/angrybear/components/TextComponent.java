@@ -134,15 +134,6 @@ public class TextComponent {
             }
     }
 
-    public void setReset(Boolean reset) {
-        this.reset = reset;
-        color = Color.WHITE;
-        bold = false;
-        italic = false;
-        strikethrough = false;
-        underline = false;
-    }
-
     public void reset() {
         try {
             for (Field field : getOptions())
@@ -188,24 +179,63 @@ public class TextComponent {
         return magic != null && magic;
     }
 
+    public void setMagic(Boolean magic, boolean propagate) {
+        this.magic = magic;
+        if (propagate) setSameOptions(next);
+    }
+
     public Boolean getBold() {
         return bold != null && bold;
+    }
+
+    public void setBold(Boolean bold, boolean propagate) {
+        this.bold = bold;
+        if (propagate) setSameOptions(next);
     }
 
     public Boolean getStrikethrough() {
         return strikethrough != null && strikethrough;
     }
 
+    public void setStrikethrough(Boolean strikethrough, boolean propagate) {
+        this.strikethrough = strikethrough;
+        if (propagate) setSameOptions(next);
+    }
+
     public Boolean getUnderline() {
         return underline != null && underline;
+    }
+
+    public void setUnderline(Boolean underline, boolean propagate) {
+        this.underline = underline;
+        if (propagate) setSameOptions(next);
     }
 
     public Boolean getItalic() {
         return italic != null && italic;
     }
 
+    public void setItalic(Boolean italic, boolean propagate) {
+        this.italic = italic;
+        if (propagate) setSameOptions(next);
+    }
+
     public Boolean getReset() {
         return reset != null && reset;
+    }
+
+    public void setReset(Boolean reset) {
+        setReset(reset, true);
+    }
+
+    public void setReset(Boolean reset, boolean propagate) {
+        this.reset = reset;
+        color = Color.WHITE;
+        bold = false;
+        italic = false;
+        strikethrough = false;
+        underline = false;
+        if (propagate) setSameOptions(next);
     }
 
     @Override
