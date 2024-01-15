@@ -1,28 +1,25 @@
 package it.angrybear.components;
 
-import com.google.gson.Gson;
 import it.angrybear.exceptions.InvalidComponentException;
-import it.angrybear.exceptions.MissingRequiredOptionException;
-import it.angrybear.interfaces.validators.OptionValidator;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
-public abstract class ContainerComponent extends TextComponent {
+public abstract class ContainerComponent extends OptionComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final String tagName;
     protected TextComponent child;
-    protected final @NotNull Map<String, String> tagOptions;
 
-    public ContainerComponent(@NotNull String rawText, String tagName) {
+    public ContainerComponent(String tagName) {
+        this(null, tagName);
+    }
+
+    public ContainerComponent(@Nullable String rawText, @NotNull String tagName) {
         this.tagName = tagName;
-        this.tagOptions = new HashMap<>();
 
         setContent(rawText);
     }
@@ -37,40 +34,13 @@ public abstract class ContainerComponent extends TextComponent {
             throw new InvalidComponentException(String.format("Could not find valid start <%s> for component %s",
                     tagName, this.getClass().getSimpleName()));
 
-        final String rawOptions = startMatcher.group(2);
-        if (rawOptions != null) {
-            final Matcher optionsMatcher = Pattern.compile(OPTIONS_REGEX).matcher(rawOptions);
-            while (optionsMatcher.find()) {
-                String key = optionsMatcher.group(1);
-                String value = optionsMatcher.group(4);
-                if (value == null) value = optionsMatcher.group(3);
-                if (value == null) value = optionsMatcher.group(2);
-                if (value != null)
-                    value = value
-                            .replace("\\\"", "\"")
-                            .replace("\\'", "'");
-                if (value != null && key.equals("json")) {
-                    Map<?, ?> json = new Gson().fromJson(value, Map.class);
-                    json.forEach((k, v) -> tagOptions.put(k.toString(), v == null ? null : v.toString()));
-                } else tagOptions.put(key, value);
-            }
-        }
-
-        final Map<String, OptionValidator> requiredOptions = getRequiredOptions();
-        for (String key : requiredOptions.keySet()) {
-            String option = tagOptions.get(key);
-            if (option == null) throw new MissingRequiredOptionException(key, tagOptions);
-            else {
-                OptionValidator validator = requiredOptions.get(key);
-                if (validator != null) validator.test(key, option);
-            }
-        }
-
         final String endRegex = "</" + tagName + ">";
         Matcher endMatcher = Pattern.compile(endRegex).matcher(rawText);
         if (!endMatcher.find())
             throw new InvalidComponentException(String.format("Could not find valid end </%s> for component %s",
                     tagName, this.getClass().getSimpleName()));
+
+        setOptions(startMatcher.group(1));
 
         final String content = rawText.substring(startMatcher.end(), endMatcher.end() - endRegex.length());
         setChild(content);
@@ -95,9 +65,5 @@ public abstract class ContainerComponent extends TextComponent {
         regex = regex.substring(2);
         regex = regex.substring(0, regex.length() - 2);
         return Pattern.compile("<" + tagName + "( (" + regex + ")*)?>");
-    }
-
-    protected Map<String, OptionValidator> getRequiredOptions() {
-        return new HashMap<>();
     }
 }

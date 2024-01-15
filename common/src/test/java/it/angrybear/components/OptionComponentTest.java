@@ -83,14 +83,14 @@ class OptionComponentTest {
     static class MockContainer extends OptionComponent {
 
         public MockContainer(String rawText) {
-            super(rawText, "mock");
+            super(rawText);
         }
     }
 
     static class MockRequiredContainer extends OptionComponent {
 
         public MockRequiredContainer(String rawText) {
-            super(rawText, "mock");
+            super(rawText);
         }
 
         @Override

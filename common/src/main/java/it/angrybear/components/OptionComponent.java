@@ -16,11 +16,13 @@ import java.util.regex.Pattern;
 @Getter
 public abstract class OptionComponent extends TextComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
-    protected final String tagName;
     protected final @NotNull Map<String, String> tagOptions;
 
-    public OptionComponent(@NotNull String rawText, String tagName) {
-        this.tagName = tagName;
+    public OptionComponent() {
+        this(null);
+    }
+
+    public OptionComponent(@Nullable String rawText) {
         this.tagOptions = new HashMap<>();
 
         setContent(rawText);
@@ -30,15 +32,22 @@ public abstract class OptionComponent extends TextComponent {
     public void setContent(@Nullable String rawText) {
         if (rawText == null) return;
         super.setContent(rawText);
+        setOptions(rawText);
+    }
 
+    public void setOptions(String rawText) {
         this.tagOptions.clear();
 
-        Matcher startMatcher = TAG_REGEX.matcher(rawText);
-        if (!startMatcher.find()) return;
-        final String[] tmp = startMatcher.group(1).split(" ");
-        if (tmp.length < 2) return;
+        String rawOptions = rawText;
+        if (rawText != null) {
+            Matcher startMatcher = TAG_REGEX.matcher(rawText);
+            if (startMatcher.find()) {
+                final String[] tmp = startMatcher.group(1).split(" ");
+                if (tmp.length > 1)
+                    rawOptions = String.join(" ", Arrays.copyOfRange(tmp, 1, tmp.length));
+            }
+        }
 
-        final String rawOptions = String.join(" ", Arrays.copyOfRange(tmp, 1, tmp.length));
         if (rawOptions != null) {
             final Matcher optionsMatcher = Pattern.compile(OPTIONS_REGEX).matcher(rawOptions);
             while (optionsMatcher.find()) {
@@ -57,7 +66,7 @@ public abstract class OptionComponent extends TextComponent {
             }
         }
 
-        final Map<String, OptionValidator> requiredOptions = getRequiredOptions();
+        final Map<String, OptionValidator> requiredOptions = this.getRequiredOptions();
         for (String key : requiredOptions.keySet()) {
             String option = tagOptions.get(key);
             if (option == null) throw new MissingRequiredOptionException(key, tagOptions);

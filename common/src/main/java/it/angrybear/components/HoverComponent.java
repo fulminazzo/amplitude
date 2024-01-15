@@ -5,12 +5,13 @@ import it.angrybear.interfaces.IAction;
 import it.angrybear.interfaces.IEventComponent;
 import it.angrybear.interfaces.validators.OptionValidator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
 public class HoverComponent extends ContainerComponent implements IEventComponent {
 
-    public HoverComponent(@NotNull String rawText) {
+    public HoverComponent(@Nullable String rawText) {
         super(rawText, "hover");
     }
 
