@@ -31,27 +31,14 @@ public class CharCodeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable String serializeComponent(@Nullable TextComponent component) {
+    public @Nullable String serializeSimpleTextComponent(TextComponent component) {
         if (component == null) return null;
-        String output;
-        if (component instanceof HoverComponent)
-            output = serializeHoverComponent((HoverComponent) component);
-        else if (component instanceof ClickComponent)
-            output = serializeClickComponent((ClickComponent) component);
-        else if (component instanceof HexComponent)
-            output = serializeHexComponent((HexComponent) component);
-        else {
-            Color color = component.getColor();
-            output = "";
-            if (color != null) output += charCode + color.getIdentifierChar();
-            for (Style style : component.getStyles())
-                output += charCode + style.getIdentifierChar();
-            output += component.getText();
-        }
-
-        if (component.getNext() != null)
-            output += serializeComponent(component.getNext());
-
+        Color color = component.getColor();
+        String output = "";
+        if (color != null) output += charCode + color.getIdentifierChar();
+        for (Style style : component.getStyles())
+            output += charCode + style.getIdentifierChar();
+        output += component.getText();
         return output;
     }
 
@@ -68,5 +55,10 @@ public class CharCodeSerializer extends ComponentSerializer {
     @Override
     public @Nullable String serializeHexComponent(@Nullable HexComponent component) throws InvalidOptionException {
         return component == null ? null : ("&" + String.join("&", component.getTagOption("color").toLowerCase().split("")) + component.getText());
+    }
+
+    @Override
+    public <T> @Nullable T sumTwoSerializedComponents(T component1, T component2) {
+        return (T) (component1.toString() + component2.toString());
     }
 }
