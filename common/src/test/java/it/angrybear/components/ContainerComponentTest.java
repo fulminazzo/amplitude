@@ -1,13 +1,16 @@
 package it.angrybear.components;
 
 import it.angrybear.exceptions.InvalidComponentException;
+import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.exceptions.MissingRequiredOptionException;
+import it.angrybear.interfaces.OptionValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static it.angrybear.components.TextComponentTest.mockComponent;
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,13 +87,19 @@ class ContainerComponentTest {
     @Test
     void testMissingRequiredOptionFound() {
         assertDoesNotThrow(() ->
-                new MockRequiredContainer("<mock name=\"Alex\">Hello world</mock>"));
+                new MockRequiredContainer("<mock name=\"Alex\" age=10>Hello world</mock>"));
+    }
+
+    @Test
+    void testMissingRequiredOptionInvalid() {
+        assertThrowsExactly(InvalidOptionException.class, () ->
+                new MockRequiredContainer("<mock name=\"Alex\" age=Pumpkin>Hello world</mock>"));
     }
 
     @Test
     void testMissingRequiredOptionNotFound() {
         assertThrowsExactly(MissingRequiredOptionException.class, () ->
-                new MockRequiredContainer("<mock surname=\"Not Alex\">Hello world</mock>"));
+                new MockRequiredContainer("<mock surname=\"Not Alex\" age=10>Hello world</mock>"));
     }
 
     @Test
@@ -158,8 +167,17 @@ class ContainerComponentTest {
         }
 
         @Override
-        protected String[] getRequiredOptions() {
-            return new String[]{"name"};
+        protected Map<String, OptionValidator<String>> getRequiredOptions() {
+            HashMap<String, OptionValidator<String>> required = new HashMap<>();
+            required.put("name", null);
+            required.put("age", e -> {
+                try {
+                    Integer.valueOf(e);
+                } catch (NumberFormatException ex) {
+                    throw new InvalidOptionException("age", Integer.class, e);
+                }
+            });
+            return required;
         }
     }
 }
