@@ -75,18 +75,6 @@ allprojects {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         archiveFileName = "${getFileName(project.name)}-original.jar"
         dependsOn(shadowJar)
-
-        //TODO: Remove?
-        String finalClass = "${rootProject.group}"
-        if (((String) project.name) != "common" && project.name != rootProject.name)
-            finalClass += ".${project.name}"
-        finalClass += ".BearMain"
-        manifest {
-            attributes(
-                    "Main-Class": finalClass,
-                    "Manifest-Version": "${project.version}"
-            )
-        }
     }
 
     publishing {
