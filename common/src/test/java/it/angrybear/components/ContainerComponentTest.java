@@ -3,7 +3,7 @@ package it.angrybear.components;
 import it.angrybear.exceptions.InvalidComponentException;
 import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.exceptions.MissingRequiredOptionException;
-import it.angrybear.interfaces.OptionValidator;
+import it.angrybear.interfaces.validators.OptionValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -167,14 +167,14 @@ class ContainerComponentTest {
         }
 
         @Override
-        protected Map<String, OptionValidator<String>> getRequiredOptions() {
-            HashMap<String, OptionValidator<String>> required = new HashMap<>();
+        protected Map<String, OptionValidator> getRequiredOptions() {
+            HashMap<String, OptionValidator> required = new HashMap<>();
             required.put("name", null);
-            required.put("age", e -> {
+            required.put("age", (o, e) -> {
                 try {
                     Integer.valueOf(e);
                 } catch (NumberFormatException ex) {
-                    throw new InvalidOptionException("age", Integer.class, e);
+                    throw new InvalidOptionException(o, Integer.class, e);
                 }
             });
             return required;

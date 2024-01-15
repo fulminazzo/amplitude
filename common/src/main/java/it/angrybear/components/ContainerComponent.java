@@ -3,7 +3,7 @@ package it.angrybear.components;
 import com.google.gson.Gson;
 import it.angrybear.exceptions.InvalidComponentException;
 import it.angrybear.exceptions.MissingRequiredOptionException;
-import it.angrybear.interfaces.OptionValidator;
+import it.angrybear.interfaces.validators.OptionValidator;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -46,13 +46,13 @@ public abstract class ContainerComponent extends TextComponent {
             }
         }
 
-        final Map<String, OptionValidator<String>> requiredOptions = getRequiredOptions();
+        final Map<String, OptionValidator> requiredOptions = getRequiredOptions();
         for (String key : requiredOptions.keySet()) {
             String option = tagOptions.get(key);
             if (option == null) throw new MissingRequiredOptionException(key, tagOptions);
             else {
-                OptionValidator<String> validator = requiredOptions.get(key);
-                if (validator != null) validator.test(option);
+                OptionValidator validator = requiredOptions.get(key);
+                if (validator != null) validator.test(key, option);
             }
         }
 
@@ -74,7 +74,7 @@ public abstract class ContainerComponent extends TextComponent {
         return Pattern.compile("<" + tagName + "( ([^\n>]+))?>");
     }
 
-    protected Map<String, OptionValidator<String>> getRequiredOptions() {
+    protected Map<String, OptionValidator> getRequiredOptions() {
         return new HashMap<>();
     }
 }
