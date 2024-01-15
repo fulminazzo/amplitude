@@ -1,5 +1,6 @@
 package it.angrybear.components;
 
+import it.angrybear.enums.Color;
 import it.angrybear.exceptions.InvalidComponentException;
 import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.exceptions.MissingRequiredOptionException;
@@ -154,9 +155,17 @@ class ContainerComponentTest {
         assertEquals(expected, mockContainer.toString());
     }
 
+    @Test
+    void testSetSameOptions() {
+        MockContainer mockContainer = new MockContainer("<mock>Hello world</mock>");
+        mockContainer.setColor(Color.RED);
+        mockContainer.setSameOptions(mockContainer.getChild());
+        assertEquals(Color.RED, mockContainer.getChild().getColor());
+    }
+
     private static String mockContainerComponent(String next, String children) {
         String mock = mockComponent(null, null, null, null, null, null, null, null, null);
-        mock = mock.replace("color:", String.format("tagName: mock, children: %s, tagOptions: {}, color:", children));
+        mock = mock.replace("color:", String.format("tagName: mock, child: %s, tagOptions: {}, color:", children));
         mock = mock.replaceAll("^\\{next: null","{next: " + next);
         return mock;
     }

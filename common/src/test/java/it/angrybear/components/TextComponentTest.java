@@ -1,9 +1,10 @@
 package it.angrybear.components;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TextComponentTest {
 
@@ -13,10 +14,16 @@ class TextComponentTest {
                         mockComponent(null,
                                 "RED", null, null, null, null, null, null,
                                 "Hello world")},
-                new Object[]{"<reed>Hello world",
+                new Object[]{"Hello <green>world",
+                        mockComponent(mockComponent(null,
+                                        "GREEN", null, null, null, null, null, null,
+                                        "world"),
+                                null, null, null, null, null, null, null,
+                                "Hello ")},
+                new Object[]{"<reed>Hello world<test>How are you?",
                         mockComponent(null,
                                 null, null, null, null, null, null, null,
-                                "<reed>Hello world")},
+                                "<reed>Hello world<test>How are you?")},
                 new Object[]{"<magic>Hello world",
                         mockComponent(null,
                                 null, true, null, null, null, null, null,
@@ -69,6 +76,34 @@ class TextComponentTest {
     void testComponent(String rawText, String expected) {
         TextComponent textComponent = new TextComponent(rawText);
         assertEquals(expected, textComponent.toString());
+    }
+
+    @Test
+    void testIsSimilar() {
+        TextComponent t1 = new TextComponent("<red>Hello world");
+        TextComponent t2 = new TextComponent("<red>How are you");
+        assertTrue(t1.isSimilar(t2));
+    }
+
+    @Test
+    void testIsNotSimilar() {
+        TextComponent t1 = new TextComponent("<red>Hello world");
+        TextComponent t2 = new TextComponent("<blue>How are you");
+        assertFalse(t1.isSimilar(t2));
+    }
+
+    @Test
+    void testIsEqual() {
+        TextComponent t1 = new TextComponent("<red>Hello world");
+        TextComponent t2 = new TextComponent("<red>Hello world");
+        assertTrue(t1.equals(t2));
+    }
+
+    @Test
+    void testIsNotEqual() {
+        TextComponent t1 = new TextComponent("<red>Hello world");
+        TextComponent t2 = new TextComponent("<red>How are you");
+        assertFalse(t1.equals(t2));
     }
 
     static String mockComponent(String next, String color, Boolean magic,

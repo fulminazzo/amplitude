@@ -6,19 +6,16 @@ import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
 @Setter
 public class TextComponent {
+    public static final Map<String, Function<String, ContainerComponent>> CONTAINER_COMPONENTS = new HashMap<>();
     public static final Pattern TAG_REGEX = Pattern.compile("<([^\n>]+)>");
     protected TextComponent next;
     protected Color color;
@@ -39,21 +36,42 @@ public class TextComponent {
     }
 
     public void setContent(String rawText) {
+        if (CONTAINER_COMPONENTS.isEmpty()) {
+            CONTAINER_COMPONENTS.put("click", ClickComponent::new);
+            CONTAINER_COMPONENTS.put("hover", HoverComponent::new);
+        }
+
         if (rawText == null || rawText.isEmpty()) return;
-        Matcher matcher = TAG_REGEX.matcher(rawText);
+        this.text = null;
+        final Matcher matcher = TAG_REGEX.matcher(rawText);
+
         if (matcher.find()) {
-            String tag = matcher.group(1);
-            String fullTag = matcher.group();
+            if (matcher.start() != 0) {
+                this.text = rawText.substring(0, matcher.start());
+                setNext(rawText.substring(matcher.start()));
+                return;
+            }
+
+            final String tag = matcher.group(1).split(" ")[0];
+            final String fullTag = matcher.group();
+
+            for (String key : CONTAINER_COMPONENTS.keySet())
+                if (tag.equals(key)) {
+                    setNext(CONTAINER_COMPONENTS.get(key).apply(rawText));
+                    return;
+                }
+
             rawText = rawText.substring(fullTag.length());
 
             ChatFormatter formatter = ChatFormatter.getChatFormatter(tag);
             this.text = rawText;
+            if (matcher.find()) {
+                this.text = this.text.substring(0, matcher.start() - fullTag.length());
+                matcher.reset();
+            }
+            rawText = rawText.substring(this.text.length());
 
             if (formatter != null) {
-                if (matcher.find())
-                    this.text = this.text.substring(0, matcher.end() - matcher.group().length() - fullTag.length());
-                rawText = rawText.substring(this.text.length());
-
                 if (formatter instanceof Color) this.color = (Color) formatter;
                 else if (formatter.equals(Style.RESET)) reset();
                 else {
@@ -68,12 +86,12 @@ public class TextComponent {
 
             } else {
                 this.text = String.format("<%s>", tag) + this.text;
-                rawText = "";
             }
         } else {
             this.text = rawText;
             rawText = "";
         }
+
         if (rawText.trim().isEmpty()) return;
         setNext(rawText);
     }
@@ -85,7 +103,17 @@ public class TextComponent {
     public void setNext(TextComponent next) {
         this.next = next;
 
-        TextComponent tmp = this.next;
+        setSameOptions(this.next);
+
+        while (this.next != null && this.next.isSimilar(this)) {
+            String nextText = this.next.text;
+            if (nextText != null) this.text += nextText;
+            this.next = this.next.next;
+        }
+    }
+
+    public void setSameOptions(TextComponent textComponent) {
+        TextComponent tmp = textComponent;
         while (tmp != null)
             try {
                 if (!tmp.getReset())
@@ -96,6 +124,10 @@ public class TextComponent {
                         if (nextObject != null) continue;
                         field.set(tmp, field.get(this));
                     }
+
+                if (tmp instanceof ContainerComponent)
+                    tmp.setSameOptions(((ContainerComponent) tmp).child);
+
                 tmp = tmp.getNext();
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
@@ -189,5 +221,31 @@ public class TextComponent {
             }
         output += "text: " + text;
         return output + "}";
+    }
+
+    public boolean isSimilar(TextComponent textComponent) {
+        if (textComponent == null) return false;
+        if (!this.getClass().equals(textComponent.getClass())) return false;
+        for (Field option : getOptions()) {
+            if (option.getName().equals("text")) continue;
+            try {
+                Object opt1 = option.get(this);
+                Object opt2 = option.get(textComponent);
+                if (!Objects.equals(opt1, opt2)) return false;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
+    }
+
+    public boolean equals(TextComponent textComponent) {
+        return isSimilar(textComponent) && Objects.equals(this.text, textComponent.text);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof TextComponent) return equals((TextComponent) o);
+        return super.equals(o);
     }
 }

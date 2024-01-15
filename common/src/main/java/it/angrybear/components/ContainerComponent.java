@@ -15,12 +15,20 @@ import java.util.regex.Pattern;
 public abstract class ContainerComponent extends TextComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final String tagName;
-    protected TextComponent children;
+    protected TextComponent child;
     protected final Map<String, String> tagOptions;
 
     public ContainerComponent(String rawText, String tagName) {
         this.tagName = tagName;
         this.tagOptions = new HashMap<>();
+
+        setContent(rawText);
+    }
+
+    @Override
+    public void setContent(String rawText) {
+        if (this.tagOptions == null) return;
+        this.tagOptions.clear();
 
         Matcher startMatcher = getTagRegex(tagName).matcher(rawText);
         if (!startMatcher.find())
@@ -63,11 +71,21 @@ public abstract class ContainerComponent extends TextComponent {
                     tagName, this.getClass().getSimpleName()));
 
         final String content = rawText.substring(startMatcher.end(), endMatcher.end() - endRegex.length());
-        if (!content.trim().isEmpty()) children = new TextComponent(content);
+        setChild(content);
 
         rawText = rawText.substring(endMatcher.end());
         if (rawText.trim().isEmpty()) return;
         setNext(rawText);
+    }
+
+    public void setChild(String rawText) {
+        if (rawText == null || rawText.trim().isEmpty()) return;
+        setChild(new TextComponent(rawText));
+    }
+
+    public void setChild(TextComponent child) {
+        this.child = child;
+        setSameOptions(child);
     }
 
     public static Pattern getTagRegex(String tagName) {

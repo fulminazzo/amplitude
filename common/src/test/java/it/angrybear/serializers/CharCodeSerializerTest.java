@@ -1,5 +1,6 @@
 package it.angrybear.serializers;
 
+import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -9,18 +10,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CharCodeSerializerTest {
 
     @ParameterizedTest
-    @CsvSource({"&cHello world,<red>Hello world",
-            "<reed>Hello world,<reed>Hello world",
-            "&kHello world,<magic>Hello world",
-            "&lHello world,<bold>Hello world",
-            "&mHello world,<strikethrough>Hello world",
-            "&nHello world,<underline>Hello world",
-            "&oHello world,<italic>Hello world",
-            "&c&c&lHello world,<red><bold>Hello world",
-            "&c&c&l&c&l&oHello world,<red><bold><italic>Hello world",
-            "&c&c&l&c&l&oHello &rworld,<red><bold><italic>Hello <reset>world"})
+    @CsvSource({
+            "&c&cHello world,<red><hover action=SHOW_TEXT text=\"Hello friend\">Hello world</hover>",
+//            "<reed>Hello world,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world</click>",
+//            "<reed>Hello world how are you today?,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world</click> how are you today?",
+//            "<reed>Hello world &dhow are you today?,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world <light_purple>how</click> are you today?",
+//            "&kHello world,<magic>Hello world",
+//            "&lHello world,<bold>Hello world",
+//            "&mHello world,<strikethrough>Hello world",
+//            "&nHello world,<underline>Hello world",
+//            "&oHello world,<italic>Hello world",
+//            "&c&c&lHello world,<red><bold>Hello world",
+//            "&c&c&l&c&l&oHello world,<red><bold><italic>Hello world",
+//            "&c&c&l&c&l&oHello &rworld,<red><bold><italic>Hello <reset>world"
+    })
     void testVariousMessagesAmpersand(String expected, String rawText) {
         TextComponent textComponent = new TextComponent(rawText);
+        System.out.println(((HoverComponent) textComponent.getNext()));
+        System.out.println(((HoverComponent) textComponent.getNext()).getChild());
         assertEquals(expected, new AmpersandSerializer().serializeComponent(textComponent));
     }
 

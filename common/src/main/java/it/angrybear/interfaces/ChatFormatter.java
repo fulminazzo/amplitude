@@ -17,9 +17,10 @@ public interface ChatFormatter {
     String name();
 
     static ChatFormatter getChatFormatter(String name) {
+        if (name == null) return null;
         ChatFormatter[] chatFormatters = getChatFormatters();
         for (ChatFormatter c : chatFormatters)
-            if (c.getName().equalsIgnoreCase(name)) return c;
+            if (c.getName().equalsIgnoreCase(name.replace("_", ""))) return c;
         return null;
     }
 

@@ -1,7 +1,9 @@
 package it.angrybear.components;
 
+import it.angrybear.enums.Color;
 import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.exceptions.MissingRequiredOptionException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -47,5 +49,14 @@ class ClickComponentTest {
             assertTrue(exception instanceof MissingRequiredOptionException ||
                     exception instanceof InvalidOptionException);
         }
+    }
+
+    @Test
+    void testSameOptions() {
+        String rawText = "<red><click action=RUN_COMMAND command=\"say Hello\">Inner text</click>";
+        TextComponent textComponent = new TextComponent(rawText);
+        ClickComponent component = (ClickComponent) textComponent.getNext();
+        assertEquals(Color.RED, component.getColor());
+        assertEquals(Color.RED, component.getChild().getColor());
     }
 }
