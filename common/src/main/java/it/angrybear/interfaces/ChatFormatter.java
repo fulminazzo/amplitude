@@ -33,7 +33,7 @@ public interface ChatFormatter {
     /**
      * Gets the name.
      *
-     * @return the string
+     * @return the name
      */
     String name();
 

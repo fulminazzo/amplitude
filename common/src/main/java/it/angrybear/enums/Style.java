@@ -9,37 +9,37 @@ import lombok.Getter;
 @Getter
 public enum Style implements ChatFormatter {
     /**
-     * Magic or obfuscated style (corresponds to &k).
+     * Magic or obfuscated style (corresponds to &amp;k).
      * <p>
      * Tag: &#60;magic&#62;
      */
     MAGIC('k'),
     /**
-     * Bold style (corresponds to &l).
+     * Bold style (corresponds to &amp;l).
      * <p>
      * Tag: &#60;bold&#62;
      */
     BOLD('l'),
     /**
-     * Strikethrough style (corresponds to &m).
+     * Strikethrough style (corresponds to &amp;m).
      * <p>
      * Tag: &#60;strikethrough&#62;
      */
     STRIKETHROUGH('m'),
     /**
-     * Underline style (corresponds to &n).
+     * Underline style (corresponds to &amp;n).
      * <p>
      * Tag: &#60;underline&#62;
      */
     UNDERLINE('n'),
     /**
-     * Italic style (corresponds to &o).
+     * Italic style (corresponds to &amp;o).
      * <p>
      * Tag: &#60;italic&#62;
      */
     ITALIC('o'),
     /**
-     * Reset style (corresponds to &r).
+     * Reset style (corresponds to &amp;r).
      * <p>
      * Tag: &#60;reset&#62;
      */
