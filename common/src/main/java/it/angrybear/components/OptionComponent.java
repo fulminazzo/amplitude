@@ -77,6 +77,10 @@ public abstract class OptionComponent extends TextComponent {
         }
     }
 
+    public String getTagOption(String key) {
+        return this.tagOptions.get(key);
+    }
+
     protected Map<String, OptionValidator> getRequiredOptions() {
         return new HashMap<>();
     }

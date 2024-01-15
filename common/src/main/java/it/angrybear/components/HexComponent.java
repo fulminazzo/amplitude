@@ -8,6 +8,14 @@ import java.util.Map;
 
 public class HexComponent extends OptionComponent {
 
+    public HexComponent() {
+        this(null);
+    }
+
+    public HexComponent(String rawText) {
+        super(rawText);
+    }
+
     @Override
     protected Map<String, OptionValidator> getRequiredOptions() {
         Map<String, OptionValidator> options = new HashMap<>();

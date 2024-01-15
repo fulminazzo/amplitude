@@ -42,7 +42,7 @@ public class TextComponent {
         if (CONTAINER_COMPONENTS.isEmpty()) {
             CONTAINER_COMPONENTS.put("click", ClickComponent::new);
             CONTAINER_COMPONENTS.put("hover", HoverComponent::new);
-            CONTAINER_COMPONENTS.put("hex", s -> new ClickComponent());
+            CONTAINER_COMPONENTS.put("hex", HexComponent::new);
         }
 
         if (rawText == null || rawText.isEmpty()) return;
@@ -54,25 +54,25 @@ public class TextComponent {
                 this.text = rawText.substring(0, matcher.start());
                 setNext(rawText.substring(matcher.start()));
                 return;
-            }
+            } else this.text = "";
 
             final String tag = matcher.group(1).split(" ")[0];
             final String fullTag = matcher.group();
 
-            for (String key : CONTAINER_COMPONENTS.keySet())
-                if (tag.equals(key)) {
-                    setNext(CONTAINER_COMPONENTS.get(key).apply(rawText));
-                    return;
-                }
+            if (this.getClass().equals(TextComponent.class))
+                for (String key : CONTAINER_COMPONENTS.keySet())
+                    if (tag.equals(key)) {
+                        setNext(CONTAINER_COMPONENTS.get(key).apply(rawText));
+                        return;
+                    }
 
             rawText = rawText.substring(fullTag.length());
 
             ChatFormatter formatter = ChatFormatter.getChatFormatter(tag);
             this.text = rawText;
-            if (matcher.find()) {
+            if (matcher.find())
                 this.text = this.text.substring(0, matcher.start() - fullTag.length());
-                matcher.reset();
-            }
+
             rawText = rawText.substring(this.text.length());
 
             if (formatter != null) {
@@ -88,7 +88,7 @@ public class TextComponent {
                     }
                 }
 
-            } else {
+            } else if (!CONTAINER_COMPONENTS.containsKey(tag)) {
                 this.text = String.format("<%s>", tag) + this.text;
             }
         } else {

@@ -1,6 +1,7 @@
 package it.angrybear.serializers;
 
 import it.angrybear.components.ClickComponent;
+import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.enums.Color;
@@ -25,6 +26,8 @@ public class CharCodeSerializer implements IComponentSerializer {
             output = serializeHoverComponent((HoverComponent) component);
         else if (component instanceof ClickComponent)
             output = serializeClickComponent((ClickComponent) component);
+        else if (component instanceof HexComponent)
+            output = serializeHexComponent((HexComponent) component);
         else {
             Color color = component.getColor();
             output = "";
@@ -47,5 +50,10 @@ public class CharCodeSerializer implements IComponentSerializer {
     @Override
     public @Nullable String serializeClickComponent(@Nullable ClickComponent component) throws InvalidOptionException {
         return component == null ? null : serializeComponent(component.getChild());
+    }
+
+    @Override
+    public @Nullable String serializeHexComponent(@Nullable HexComponent component) throws InvalidOptionException {
+        return component == null ? null : ("&" + String.join("&", component.getTagOption("color").toLowerCase().split("")) + component.getText());
     }
 }
