@@ -6,7 +6,10 @@ import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -107,7 +110,7 @@ public class TextComponent {
 
         while (this.next != null && this.next.isSimilar(this)) {
             String nextText = this.next.text;
-            if (nextText != null) this.text += nextText;
+            if (nextText != null && !nextText.trim().isEmpty()) this.text += nextText;
             this.next = this.next.next;
         }
     }
@@ -175,8 +178,21 @@ public class TextComponent {
                 }).toArray(Style[]::new);
     }
 
-    public Boolean getMagic() {
+    public void setColor(Color color) {
+        setColor(color, true);
+    }
+
+    public void setColor(Color color, boolean propagate) {
+        this.color = color;
+        if (propagate) setSameOptions(next);
+    }
+
+    public boolean getMagic() {
         return magic != null && magic;
+    }
+
+    public void setMagic(Boolean magic) {
+        setMagic(magic, true);
     }
 
     public void setMagic(Boolean magic, boolean propagate) {
@@ -184,8 +200,12 @@ public class TextComponent {
         if (propagate) setSameOptions(next);
     }
 
-    public Boolean getBold() {
+    public boolean getBold() {
         return bold != null && bold;
+    }
+
+    public void setBold(Boolean bold) {
+        setBold(bold, true);
     }
 
     public void setBold(Boolean bold, boolean propagate) {
@@ -193,8 +213,12 @@ public class TextComponent {
         if (propagate) setSameOptions(next);
     }
 
-    public Boolean getStrikethrough() {
+    public boolean getStrikethrough() {
         return strikethrough != null && strikethrough;
+    }
+
+    public void setStrikethrough(Boolean strikethrough) {
+        setStrikethrough(strikethrough, true);
     }
 
     public void setStrikethrough(Boolean strikethrough, boolean propagate) {
@@ -202,8 +226,12 @@ public class TextComponent {
         if (propagate) setSameOptions(next);
     }
 
-    public Boolean getUnderline() {
+    public boolean getUnderline() {
         return underline != null && underline;
+    }
+
+    public void setUnderline(Boolean underline) {
+        setUnderline(underline, true);
     }
 
     public void setUnderline(Boolean underline, boolean propagate) {
@@ -211,8 +239,12 @@ public class TextComponent {
         if (propagate) setSameOptions(next);
     }
 
-    public Boolean getItalic() {
+    public boolean getItalic() {
         return italic != null && italic;
+    }
+
+    public void setItalic(Boolean italic) {
+        setItalic(italic, true);
     }
 
     public void setItalic(Boolean italic, boolean propagate) {
@@ -220,7 +252,7 @@ public class TextComponent {
         if (propagate) setSameOptions(next);
     }
 
-    public Boolean getReset() {
+    public boolean getReset() {
         return reset != null && reset;
     }
 
@@ -236,6 +268,36 @@ public class TextComponent {
         strikethrough = false;
         underline = false;
         if (propagate) setSameOptions(next);
+    }
+
+    public boolean getStyle(Style style) {
+        if (style == null) return false;
+        String methodName = style.name();
+        methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
+
+        try {
+            Method getMethod = TextComponent.class.getDeclaredMethod("get" + methodName);
+            return (boolean) getMethod.invoke(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setStyle(Style style) {
+        setStyle(style, true);
+    }
+
+    public void setStyle(Style style, boolean propagate) {
+        if (style == null) return;
+        String methodName = style.name();
+        methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
+
+        try {
+            Method setMethod = TextComponent.class.getDeclaredMethod("set" + methodName, Boolean.class, boolean.class);
+            setMethod.invoke(this, true, propagate);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

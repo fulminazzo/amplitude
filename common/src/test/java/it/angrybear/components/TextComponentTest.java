@@ -1,8 +1,14 @@
 package it.angrybear.components;
 
+import it.angrybear.enums.Color;
+import it.angrybear.enums.Style;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -118,5 +124,50 @@ class TextComponentTest {
                 String.format("italic: %s, ", italic) +
                 String.format("reset: %s, ", reset) +
                 String.format("text: %s}", text);
+    }
+
+    @ParameterizedTest
+    @EnumSource(Color.class)
+    void testColorSetters(Color color) {
+        TextComponent textComponent = new TextComponent("Simple test <bold>sounds great");
+
+        textComponent.setColor(color, false);
+        assertNotEquals(color, textComponent.getNext().getColor());
+
+        textComponent.setColor(color);
+        assertEquals(color, textComponent.getNext().getColor());
+    }
+
+    @ParameterizedTest
+    @EnumSource(Style.class)
+    void testStyleSetters(Style style) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        TextComponent textComponent = new TextComponent("Simple test <red>sounds great");
+
+        String methodName = style.name();
+        methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
+
+        Method getMethod = TextComponent.class.getDeclaredMethod("get" + methodName);
+
+        // setStyle(Boolean, boolean)
+        Method setMethod = TextComponent.class.getDeclaredMethod("set" + methodName, Boolean.class, boolean.class);
+        setMethod.invoke(textComponent, true, false);
+        assertFalse((Boolean) getMethod.invoke(textComponent.getNext()));
+
+        // setStyle(Boolean)
+        setMethod = TextComponent.class.getDeclaredMethod("set" + methodName, Boolean.class);
+        setMethod.invoke(textComponent, true);
+        assertTrue((Boolean) getMethod.invoke(textComponent.getNext()));
+    }
+
+    @ParameterizedTest
+    @EnumSource(Style.class)
+    void testSetStyle(Style style) {
+        TextComponent textComponent = new TextComponent("Simple test <red>sounds great");
+
+        textComponent.setStyle(style, false);
+        assertFalse(textComponent.getNext().getStyle(style));
+
+        textComponent.setStyle(style);
+        assertTrue(textComponent.getNext().getStyle(style));
     }
 }
