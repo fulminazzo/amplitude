@@ -1,5 +1,6 @@
 package it.angrybear.components;
 
+import it.angrybear.enums.ClickAction;
 import it.angrybear.enums.HoverAction;
 import it.angrybear.interfaces.IAction;
 import it.angrybear.interfaces.IEventComponent;
@@ -9,12 +10,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+/**
+ * Represents an implementation of {@link ContainerComponent} that supports click actions.
+ * All actions are defined in {@link HoverAction} with detailed comments for the required options.
+ * <p>
+ * Example: &#60;hover action="SHOW_TEXT" text="Secret message!"&#62;Hover event!&#60;/hover&#62;
+ */
 public class HoverComponent extends ContainerComponent implements IEventComponent {
 
+    /**
+     * Instantiates a new Hover component.
+     */
     public HoverComponent() {
         this(null);
     }
 
+    /**
+     * Instantiates a new Hover component.
+     *
+     * @param rawText the raw text
+     */
     public HoverComponent(@Nullable String rawText) {
         super(rawText, "hover");
     }
