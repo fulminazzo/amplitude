@@ -146,13 +146,13 @@ public class TextComponent {
     public void setNext(TextComponent next) {
         this.next = next;
 
+        setSameOptions(this.next);
+
         while (this.next != null && this.next.isSimilar(this)) {
             String nextText = this.next.text;
             if (nextText != null && !nextText.trim().isEmpty()) this.text += nextText;
             this.next = this.next.next;
         }
-
-        setSameOptions(this.next);
     }
 
     /**

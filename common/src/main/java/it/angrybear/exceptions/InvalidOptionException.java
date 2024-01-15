@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * An exception thrown when a given option results invalid.
- * Check {@link ContainerComponent} for more..
+ * Check {@link ContainerComponent} for more.
  */
 public class InvalidOptionException extends RuntimeException {
 
