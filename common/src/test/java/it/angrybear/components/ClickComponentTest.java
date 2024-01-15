@@ -22,7 +22,7 @@ class ClickComponentTest {
                 new Object[]{"<click action=OPEN_URL url=invalid_link>Hello world</click>", false},
                 // OPEN_FILE
                 new Object[]{"<click action=OPEN_FILE>Hello world</click>", false},
-                new Object[]{"<click action=OPEN_FILE url=./password.txt>Hello world</click>", false},
+                new Object[]{"<click action=OPEN_FILE file=./password.txt>Hello world</click>", false},
                 // RUN_COMMAND
                 new Object[]{"<click action=RUN_COMMAND>Hello world</click>", false},
                 new Object[]{"<click action=RUN_COMMAND command=\"op Fulminazzo\">Hello world</click>", true},
