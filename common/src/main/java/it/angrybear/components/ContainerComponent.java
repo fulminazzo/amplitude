@@ -16,7 +16,7 @@ public abstract class ContainerComponent extends TextComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final String tagName;
     protected TextComponent children;
-    protected final HashMap<String, String> tagOptions;
+    protected final Map<String, String> tagOptions;
 
     public ContainerComponent(String rawText, String tagName) {
         this.tagName = tagName;
