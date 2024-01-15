@@ -2,10 +2,10 @@ package it.angrybear.enums;
 
 import it.angrybear.interfaces.IAction;
 import it.angrybear.interfaces.validators.ByteValidator;
-import it.angrybear.interfaces.validators.IntegerValidator;
 import it.angrybear.interfaces.validators.OptionValidator;
 import it.angrybear.interfaces.validators.UUIDValidator;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +20,9 @@ public enum HoverAction implements IAction {
     SHOW_TEXT("text", null)
     ;
 
-    private final Map<String, OptionValidator> requiredOptions;
+    private final @NotNull Map<String, OptionValidator> requiredOptions;
 
-    HoverAction(Object... requiredOptions) {
+    HoverAction(Object @NotNull ... requiredOptions) {
         this.requiredOptions = new HashMap<>();
         for (int i = 0; i < requiredOptions.length; i += 2)
             this.requiredOptions.put((String) requiredOptions[i], (OptionValidator) requiredOptions[i + 1]);

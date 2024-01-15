@@ -4,7 +4,8 @@ import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
-import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -27,7 +28,7 @@ public class TextComponent {
     protected Boolean underline;
     protected Boolean italic;
     protected Boolean reset;
-    protected String text;
+    protected @Nullable String text;
 
     public TextComponent() {
         this(null);
@@ -37,7 +38,7 @@ public class TextComponent {
         setContent(rawText);
     }
 
-    public void setContent(String rawText) {
+    public void setContent(@Nullable String rawText) {
         if (CONTAINER_COMPONENTS.isEmpty()) {
             CONTAINER_COMPONENTS.put("click", ClickComponent::new);
             CONTAINER_COMPONENTS.put("hover", HoverComponent::new);
@@ -147,7 +148,7 @@ public class TextComponent {
         }
     }
 
-    public Field[] getOptions() {
+    public Field @NotNull [] getOptions() {
         List<Field> fields = new ArrayList<>();
         Class<?> clazz = this.getClass();
         while (TextComponent.class.isAssignableFrom(clazz)) {
@@ -163,7 +164,7 @@ public class TextComponent {
         return fields.toArray(new Field[0]);
     }
 
-    public Style[] getStyles() {
+    public Style @NotNull [] getStyles() {
         return Arrays.stream(Style.values())
                 .filter(v -> {
                     String name = v.getName();
@@ -269,7 +270,7 @@ public class TextComponent {
         if (propagate) setSameOptions(next);
     }
 
-    public boolean getStyle(Style style) {
+    public boolean getStyle(@Nullable Style style) {
         if (style == null) return false;
         String methodName = style.name();
         methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
@@ -286,7 +287,7 @@ public class TextComponent {
         setStyle(style, true);
     }
 
-    public void setStyle(Style style, boolean propagate) {
+    public void setStyle(@Nullable Style style, boolean propagate) {
         if (style == null) return;
         String methodName = style.name();
         methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
@@ -300,7 +301,7 @@ public class TextComponent {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         String output = "{";
         output += "next: " + next + ", ";
         for (Field field : getOptions())
@@ -314,7 +315,7 @@ public class TextComponent {
         return output + "}";
     }
 
-    public boolean isSimilar(TextComponent textComponent) {
+    public boolean isSimilar(@Nullable TextComponent textComponent) {
         if (textComponent == null) return false;
         if (!this.getClass().equals(textComponent.getClass())) return false;
         for (Field option : getOptions()) {
@@ -330,7 +331,7 @@ public class TextComponent {
         return true;
     }
 
-    public boolean equals(TextComponent textComponent) {
+    public boolean equals(@NotNull TextComponent textComponent) {
         return isSimilar(textComponent) && Objects.equals(this.text, textComponent.text);
     }
 

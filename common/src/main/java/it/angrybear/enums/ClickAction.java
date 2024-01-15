@@ -6,6 +6,7 @@ import it.angrybear.interfaces.validators.IntegerValidator;
 import it.angrybear.interfaces.validators.OptionValidator;
 import it.angrybear.interfaces.validators.URLValidator;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public enum ClickAction implements IAction {
     CHANGE_PAGE("page", new IntegerValidator()),
     COPY_TO_CLIPBOARD("text", null);
 
-    private final Map<String, OptionValidator> requiredOptions;
+    private final @NotNull Map<String, OptionValidator> requiredOptions;
 
     ClickAction(String requiredOption, OptionValidator validator) {
         this.requiredOptions = new HashMap<>();

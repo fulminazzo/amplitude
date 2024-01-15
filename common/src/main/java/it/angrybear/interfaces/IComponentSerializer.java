@@ -4,12 +4,13 @@ import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.exceptions.InvalidOptionException;
+import org.jetbrains.annotations.Nullable;
 
 public interface IComponentSerializer {
 
-    <T> T serializeComponent(TextComponent component);
+    <T> @Nullable T serializeComponent(@Nullable TextComponent component);
 
-    <T> T serializeHoverComponent(HoverComponent component) throws InvalidOptionException;
+    <T> @Nullable T serializeHoverComponent(@Nullable HoverComponent component) throws InvalidOptionException;
 
-    <T> T serializeClickComponent(ClickComponent component) throws InvalidOptionException;
+    <T> @Nullable T serializeClickComponent(@Nullable ClickComponent component) throws InvalidOptionException;
 }

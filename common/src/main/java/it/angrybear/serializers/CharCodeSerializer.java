@@ -7,8 +7,9 @@ import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.interfaces.IComponentSerializer;
+import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("unchecked")
 public class CharCodeSerializer implements IComponentSerializer {
     private final String charCode;
 
@@ -17,7 +18,7 @@ public class CharCodeSerializer implements IComponentSerializer {
     }
 
     @Override
-    public String serializeComponent(TextComponent component) {
+    public @Nullable String serializeComponent(@Nullable TextComponent component) {
         if (component == null) return null;
         String output;
         if (component instanceof HoverComponent)
@@ -39,12 +40,12 @@ public class CharCodeSerializer implements IComponentSerializer {
     }
 
     @Override
-    public String serializeHoverComponent(HoverComponent component) throws InvalidOptionException {
+    public @Nullable String serializeHoverComponent(@Nullable HoverComponent component) throws InvalidOptionException {
         return component == null ? null : serializeComponent(component.getChild());
     }
 
     @Override
-    public String serializeClickComponent(ClickComponent component) throws InvalidOptionException {
+    public @Nullable String serializeClickComponent(@Nullable ClickComponent component) throws InvalidOptionException {
         return component == null ? null : serializeComponent(component.getChild());
     }
 }

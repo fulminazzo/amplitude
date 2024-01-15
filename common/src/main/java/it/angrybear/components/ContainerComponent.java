@@ -5,6 +5,8 @@ import it.angrybear.exceptions.InvalidComponentException;
 import it.angrybear.exceptions.MissingRequiredOptionException;
 import it.angrybear.interfaces.validators.OptionValidator;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +18,9 @@ public abstract class ContainerComponent extends TextComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final String tagName;
     protected TextComponent child;
-    protected final Map<String, String> tagOptions;
+    protected final @NotNull Map<String, String> tagOptions;
 
-    public ContainerComponent(String rawText, String tagName) {
+    public ContainerComponent(@NotNull String rawText, String tagName) {
         this.tagName = tagName;
         this.tagOptions = new HashMap<>();
 
@@ -26,8 +28,8 @@ public abstract class ContainerComponent extends TextComponent {
     }
 
     @Override
-    public void setContent(String rawText) {
-        if (this.tagOptions == null) return;
+    public void setContent(@Nullable String rawText) {
+        if (rawText == null) return;
         this.tagOptions.clear();
 
         Matcher startMatcher = getTagRegex(tagName).matcher(rawText);
@@ -78,7 +80,7 @@ public abstract class ContainerComponent extends TextComponent {
         setNext(rawText);
     }
 
-    public void setChild(String rawText) {
+    public void setChild(@Nullable String rawText) {
         if (rawText == null || rawText.trim().isEmpty()) return;
         setChild(new TextComponent(rawText));
     }
@@ -88,7 +90,7 @@ public abstract class ContainerComponent extends TextComponent {
         setSameOptions(child);
     }
 
-    public static Pattern getTagRegex(String tagName) {
+    public static @NotNull Pattern getTagRegex(String tagName) {
         return Pattern.compile("<" + tagName + "( ([^\n>]+)*)?>");
     }
 

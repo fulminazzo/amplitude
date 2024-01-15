@@ -1,8 +1,10 @@
 package it.angrybear.exceptions;
 
+import org.jetbrains.annotations.NotNull;
+
 public class InvalidOptionException extends RuntimeException {
 
-    public InvalidOptionException(String optionName, Class<?> expected, String option) {
+    public InvalidOptionException(String optionName, @NotNull Class<?> expected, String option) {
         this(optionName, expected.getSimpleName(), option);
     }
 
