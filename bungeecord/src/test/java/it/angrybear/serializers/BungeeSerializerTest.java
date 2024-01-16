@@ -5,7 +5,6 @@ import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.enums.ClickAction;
-import it.angrybear.enums.Color;
 import it.angrybear.enums.HoverAction;
 import it.angrybear.exceptions.InvalidOptionException;
 import net.md_5.bungee.api.ChatColor;
@@ -25,7 +24,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 class BungeeSerializerTest {
@@ -47,17 +47,17 @@ class BungeeSerializerTest {
                 new Object[]{HoverAction.SHOW_ACHIEVEMENT,
                         null, "id=achievement.mineWood"
                 },
-                new Object[]{HoverAction.SHOW_ITEM,
-                        new Item("minecraft:stone_sword", 1, ItemTag.ofNbt("{Damage: 0, Enchantments:[{id:\"minecraft:sharpness\",lvl:5s}]}")),
-                        "id=minecraft:stone_sword Count=1b Tag=\"{Damage: 0, Enchantments:[{id:\\\"minecraft:sharpness\\\",lvl:5s}]}\""
+                new Object[]{HoverAction.SHOW_TEXT, new Text("Hello friend!"),
+                        "text=\"Hello friend!\""
                 },
                 new Object[]{HoverAction.SHOW_ENTITY,
                         new Entity("zombie", "3f8164bf-1ed-4bcb-96be-7033beed028c",
                                 new net.md_5.bungee.api.chat.TextComponent("Zombie")),
                         "id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\" type=\"zombie\" name=\"Zombie\""
                 },
-                new Object[]{HoverAction.SHOW_TEXT, new Text("Hello friend!"),
-                        "text=\"Hello friend!\""
+                new Object[]{HoverAction.SHOW_ITEM,
+                        new Item("minecraft:stone_sword", 1, ItemTag.ofNbt("{Damage: 0, Enchantments:[{id:\"minecraft:sharpness\",lvl:5s}]}")),
+                        "id=minecraft:stone_sword Count=1b Tag=\"{Damage: 0, Enchantments:[{id:\\\"minecraft:sharpness\\\",lvl:5s}]}\""
                 }
         };
     }
@@ -96,45 +96,52 @@ class BungeeSerializerTest {
 
             BaseComponent cc = createComponent(ChatColor.WHITE + " ");
             resetComponent(cc);
-            if (!action.equals(ClickAction.COPY_TO_CLIPBOARD)) c.addExtra(cc);
-
-            addExtra(temp, c);
-            temp = cc;
+            if (!action.equals(ClickAction.COPY_TO_CLIPBOARD)) {
+                c.addExtra(cc);
+                addExtra(temp, c);
+                temp = cc;
+            } else{
+                addExtra(temp, c);
+                temp = c;
+            }
 
             rawText += String.format("<click action=%s %s=\"%s\">%s</click> ", action, required, option, text);
         }
 
+        BaseComponent cd = createComponent(ChatColor.WHITE + " ");
+        resetComponent(cd);
+        temp.addExtra(cd);
+        temp = cd;
 
-//        temp = c2;
-//        for (Object[] objects : getHoverTests()) {
-//            HoverAction action = (HoverAction) objects[0];
-//            final Content content = (Content) objects[1];
-//            final String option = (String) objects[2];
-//
-//            if (action.equals(HoverAction.SHOW_ACHIEVEMENT)) continue;
-//
-//            final String text = String.format("Hover %s Demo", action.name());
-//
-//            BaseComponent c = createComponent("");
-//
-//            BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
-//            resetComponent(component);
-//            component.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
-//            c.addExtra(component);
-//
-//            BaseComponent cc = createComponent(ChatColor.WHITE + " ");
-//            resetComponent(cc);
-//            if (!action.equals(HoverAction.SHOW_TEXT)) c.addExtra(cc);
-//
-//            addExtra(temp, c);
-//            temp = cc;
-//
-//            rawText += String.format("<hover action=%s %s>%s</hover> ", action, option, text);
-//        }
+        for (Object[] objects : getHoverTests()) {
+            HoverAction action = (HoverAction) objects[0];
+            final Content content = (Content) objects[1];
+            final String option = (String) objects[2];
+
+            if (action.equals(HoverAction.SHOW_ACHIEVEMENT)) continue;
+
+            final String text = String.format("Hover %s Demo", action.name());
+
+            BaseComponent c = createComponent("");
+
+            BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
+            resetComponent(component);
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
+            c.addExtra(component);
+
+            BaseComponent cc = createComponent(ChatColor.WHITE + " ");
+            resetComponent(cc);
+            if (!action.equals(HoverAction.SHOW_ITEM)) c.addExtra(cc);
+
+            addExtra(temp, c);
+            temp = cc;
+
+            rawText += String.format("<hover action=%s %s>%s</hover> ", action, option, text);
+        }
 
         TextComponent c1 = new TextComponent(rawText);
 
-        assertEquals(c2, serializer.serializeComponent(c1), rawText);
+        assertEquals(c2.toString(), serializer.serializeComponent(c1).toString(), rawText);
     }
 
     @Test
