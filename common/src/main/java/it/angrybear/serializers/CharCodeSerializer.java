@@ -64,6 +64,6 @@ public class CharCodeSerializer extends ComponentSerializer {
 
     @Override
     public <T> @Nullable T sumTwoSerializedComponents(@NotNull T component1, @NotNull T component2) {
-        return (T) (component1.toString() + component2.toString());
+        return (T) (component1 + component2.toString());
     }
 }
