@@ -9,10 +9,12 @@ group = 'it.angrybear'
 version = '1.0'
 
 ext.libraries = [
-        bungeecord: ['net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'],
-        legacy_bungeecord: ['net.md-5:bungeecord-api:1.15-SNAPSHOT'],
-        velocity: ['com.velocitypowered:velocity-api:3.2.0-SNAPSHOT'],
-        json: ['com.google.code.gson:gson:2.10.1'],
+        bungeecord: 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT',
+        legacy_bungeecord: 'net.md-5:bungeecord-api:1.15-SNAPSHOT',
+        velocity: 'com.velocitypowered:velocity-api:3.2.0-SNAPSHOT',
+        json: 'com.google.code.gson:gson:2.10.1',
+
+        fulmicollection: 'it.fulminazzo:FulmiCollection:1.2.2'
 ]
 
 allprojects {
@@ -30,6 +32,11 @@ allprojects {
         maven {
             name = 'bungeecord-repo'
             url = 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
+
+        maven {
+            name = "fulminazzo"
+            url = "https://repo.fulminazzo.it/releases"
         }
     }
 
@@ -63,6 +70,15 @@ allprojects {
     shadowJar {
         exclude("META-INF/**") // Removes all Maven META-INF/ files.
         archiveFileName = "${getFileName(project.name)}.jar"
+
+        // Leave FulmiCollection ClassUtils class.
+        exclude 'it/fulminazzo/fulmicollection/*.class'
+        for (String c : 'a'..'z')
+            if (c != "u") exclude "it/fulminazzo/fulmicollection/${c}*/**"
+            else
+                for (String d : 'A'..'Z')
+                    if (d != "C") exclude "it/fulminazzo/fulmicollection/${c}*/${d}*"
+
         manifest {
             attributes ("Manifest-Version": "${rootProject.version}")
         }
@@ -83,6 +99,9 @@ allprojects {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         archiveFileName = "${getFileName(project.name)}-original.jar"
         dependsOn(shadowJar)
+        manifest {
+            attributes ("Manifest-Version": "${rootProject.version}")
+        }
     }
 
     publishing {

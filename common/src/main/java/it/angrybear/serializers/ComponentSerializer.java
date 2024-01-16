@@ -4,12 +4,49 @@ import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
+import it.fulminazzo.fulmicollection.utils.ClassUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.Set;
 
 /**
  * An abstract class that allows creating serializers for text components.
  */
 public abstract class ComponentSerializer {
+
+    /**
+     * A method to get the first valid ComponentSerializer from the current package.
+     * It tries to instantiate every class that is not {@link CharCodeSerializer},
+     * {@link AmpersandSerializer} or {@link SectionSignSerializer}.
+     * If it fails with every class, return a new {@link SectionSignSerializer};
+     *
+     * @return the component serializer
+     */
+    @SuppressWarnings("unchecked")
+    public static ComponentSerializer serializer() {
+        @NotNull Set<Class<?>> classes = ClassUtils.findClassesInPackage(ComponentSerializer.class.getPackage().getName(),
+                ComponentSerializer.class);
+        for (Class<?> clazz : classes) {
+            if (!ComponentSerializer.class.isAssignableFrom(clazz)) continue;
+            if (Modifier.isAbstract(clazz.getModifiers())) continue;
+            // Using getCanonicalName() to support Spigot reload.
+            if (clazz.getCanonicalName().equals(CharCodeSerializer.class.getCanonicalName())) continue;
+            if (clazz.getCanonicalName().equals(AmpersandSerializer.class.getCanonicalName())) continue;
+            if (clazz.getCanonicalName().equals(SectionSignSerializer.class.getCanonicalName())) continue;
+            try {
+                Constructor<? extends ComponentSerializer> constructor = (Constructor<? extends ComponentSerializer>) clazz.getConstructor();
+                return constructor.newInstance();
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (Exception ignored) {
+            }
+        }
+        return new SectionSignSerializer();
+    }
 
     /**
      * Serialize a general {@link TextComponent} and its siblings.
@@ -20,6 +57,7 @@ public abstract class ComponentSerializer {
      */
     public <T> @Nullable T serializeComponent(TextComponent component) {
         if (component == null) return null;
+
         T output;
         if (component instanceof HoverComponent)
             output = serializeHoverComponent((HoverComponent) component);
