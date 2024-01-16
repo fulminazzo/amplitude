@@ -58,7 +58,12 @@ public abstract class ContainerComponent extends OptionComponent {
             throw new InvalidComponentException(String.format("Could not find valid end </%s> for component %s",
                     tagName, this.getClass().getSimpleName()));
 
-        setOptions(startMatcher.group(1));
+        startMatcher = TextComponent.TAG_REGEX.matcher(startMatcher.group());
+        if (startMatcher.find()) {
+            String match = startMatcher.group(1);
+            if (match != null)
+                setOptions(match.substring(tagName.length()));
+        }
 
         final String content = rawText.substring(startMatcher.end(), endMatcher.end() - endRegex.length());
         setChild(content);
@@ -90,17 +95,12 @@ public abstract class ContainerComponent extends OptionComponent {
 
     /**
      * Gets tag regex from the tag name.
-     * <p>
-     * The regex: "&#60;tagName( ((?:".*&#62;.*"|'.*&#62;.*'|[^&#62;])+)*)?&#62;"
-     * (taken from {@link TextComponent#TAG_REGEX})
      *
      * @param tagName the tag name
      * @return the tag regex
      */
     public static @NotNull Pattern getTagRegex(String tagName) {
-        String regex = TextComponent.TAG_REGEX.toString();
-        regex = regex.substring(2);
-        regex = regex.substring(0, regex.length() - 2);
-        return Pattern.compile("<" + tagName + "( (" + regex + ")*)?>");
+        String regex = "<" + tagName + " ?((?:(?!<" + tagName + ")(?!</" + tagName + ">).)*)";
+        return Pattern.compile(regex);
     }
 }
