@@ -140,6 +140,7 @@ public class Color implements ChatFormatter {
             try {
                 if (Modifier.isStatic(field.getModifiers()) && field.get(Color.class).equals(this))
                     return field.getName();
+            } catch (ClassCastException ignored) {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -157,6 +158,7 @@ public class Color implements ChatFormatter {
             try {
                 if (Modifier.isStatic(field.getModifiers()))
                     values.add((Color) field.get(Color.class));
+            } catch (ClassCastException ignored) {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
