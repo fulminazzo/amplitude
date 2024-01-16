@@ -66,4 +66,9 @@ public class CharCodeSerializer extends ComponentSerializer {
     public <T> @Nullable T sumTwoSerializedComponents(@NotNull T component1, @NotNull T component2) {
         return (T) (component1 + component2.toString());
     }
+
+    @Override
+    public <T, P> void send(P player, T component) {
+        throw new RuntimeException("Not implemented.");
+    }
 }
