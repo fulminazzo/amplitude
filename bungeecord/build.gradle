@@ -2,4 +2,5 @@ dependencies {
     api(project(":common"))
 
     compileOnly(libraries.bungeecord)
+    testImplementation(libraries.bungeecord)
 }

@@ -25,9 +25,22 @@ public class BungeeSerializer extends ComponentSerializer {
 
     @Override
     public BaseComponent serializeSimpleTextComponent(@Nullable TextComponent component) {
+        if (component == null) return null;
         String rawText = getBaseSerializer().serializeSimpleTextComponent(component);
         if (rawText == null) return null;
-        return new net.md_5.bungee.api.chat.TextComponent(rawText);
+        BaseComponent[] components = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(rawText);
+        if (component.getReset())
+            for (BaseComponent c : components) {
+                c.setBold(false);
+                c.setStrikethrough(false);
+                c.setItalic(false);
+                c.setObfuscated(false);
+                c.setUnderlined(false);
+            }
+
+        BaseComponent c1 = components[0];
+        for (int i = 1; i < components.length; i++) c1.addExtra(components[i]);
+        return c1;
     }
 
     @Override
@@ -67,7 +80,9 @@ public class BungeeSerializer extends ComponentSerializer {
         }
         applyForAllComponents(comp, c -> c.setHoverEvent(new HoverEvent(action, content)));
 
-        return comp;
+        BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
+        tmp.addExtra(comp);
+        return tmp;
     }
 
     @Override
@@ -82,7 +97,9 @@ public class BungeeSerializer extends ComponentSerializer {
         ClickEvent clickEvent = new ClickEvent(action, component.getTagOption(requiredOption));
         applyForAllComponents(comp, c -> c.setClickEvent(clickEvent));
 
-        return comp;
+        BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
+        tmp.addExtra(comp);
+        return tmp;
     }
 
     @Override
@@ -101,11 +118,6 @@ public class BungeeSerializer extends ComponentSerializer {
         BaseComponent bc1 = (BaseComponent) component1;
         BaseComponent bc2 = (BaseComponent) component2;
         if (bc1 == null) return null;
-        if (bc1.getHoverEvent() != null || bc1.getClickEvent() != null) {
-            BaseComponent bc3 = new net.md_5.bungee.api.chat.TextComponent(bc1);
-            bc1 = new net.md_5.bungee.api.chat.TextComponent("");
-            bc1.addExtra(bc3);
-        }
         if (bc2 != null) bc1.addExtra(bc2);
         return (T) bc1;
     }
