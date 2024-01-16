@@ -36,7 +36,17 @@ public class CharCodeSerializer extends ComponentSerializer {
         if (component == null) return null;
         Color color = component.getColor();
         String output = "";
-        if (color != null) output += charCode + color.getIdentifierChar();
+        if (color != null) {
+            final char idChar = color.getIdentifierChar();
+            if (idChar == '?') {
+                String code = color.getCode().toUpperCase()
+                        .replace("#", "x")
+                        .replace("", charCode);
+                if (code.endsWith(charCode)) code = code.substring(0, code.length() - 1);
+                output += code;
+            }
+            else output += charCode + idChar;
+        }
         for (Style style : component.getStyles())
             output += charCode + style.getIdentifierChar();
         output += component.getText();
@@ -56,7 +66,7 @@ public class CharCodeSerializer extends ComponentSerializer {
     @Override
     public @Nullable String serializeHexComponent(@Nullable HexComponent component) throws InvalidOptionException {
         if (component == null) return null;
-        String color = component.getTagOption("color").toLowerCase();
+        String color = component.getHexColor();
         color = color.substring(1);
         color = charCode + "x" + charCode + String.join(charCode, color.split(""));
         return color + component.getText();

@@ -1,4 +1,4 @@
 dependencies {
-    implementation(libraries.json)
-    implementation(libraries.fulmicollection)
+    api(libraries.fulmicollection)
+    api(libraries.json)
 }

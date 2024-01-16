@@ -11,7 +11,7 @@ class CharCodeSerializerTest {
     @ParameterizedTest
     @CsvSource({
             "&c&cHello world,<red><hover action=SHOW_TEXT text=\"Hello friend\">Hello world</hover>",
-            "&x&f&f&0&0&a&aHello world,<hex color=#FF00AA>Hello world",
+            "&x&F&F&0&0&A&AHello &x&F&F&0&0&A&A&lworld,<hex color=#FF00AA>Hello <bold>world",
             "<reed>Hello world,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world</click>",
             "<reed>Hello world how are you today?,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world</click> how are you today?",
             "<reed>Hello world &dhow are you today?,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world <light_purple>how</click> are you today?",
