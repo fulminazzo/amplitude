@@ -3,6 +3,7 @@ package it.angrybear.components;
 import com.google.gson.Gson;
 import it.angrybear.exceptions.MissingRequiredOptionException;
 import it.angrybear.interfaces.validators.OptionValidator;
+import it.angrybear.utils.StringUtils;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,8 +87,17 @@ public abstract class OptionComponent extends TextComponent {
                             .replace("\\\"", "\"")
                             .replace("\\'", "'");
                 if (value != null && key.equals("json")) {
-                    Map<?, ?> json = new Gson().fromJson(value, Map.class);
-                    json.forEach((k, v) -> tagOptions.put(k.toString(), v == null ? null : v.toString()));
+                    Gson gson = new Gson();
+                    Map<?, ?> json = gson.fromJson(value, Map.class);
+                    json.forEach((k, v) -> {
+                        String jKey = k.toString();
+                        if (v == null) tagOptions.put(jKey, null);
+                        else try {
+                            tagOptions.put(jKey, StringUtils.stripQuotes(gson.toJson(v)));
+                        } catch (Exception e) {
+                            tagOptions.put(jKey, v.toString());
+                        }
+                    });
                 } else tagOptions.put(key, value);
             }
         }
