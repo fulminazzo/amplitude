@@ -7,6 +7,7 @@ import it.angrybear.components.TextComponent;
 import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.exceptions.InvalidOptionException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -31,7 +32,7 @@ public class CharCodeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable String serializeSimpleTextComponent(TextComponent component) {
+    public @Nullable String serializeSimpleTextComponent(@Nullable TextComponent component) {
         if (component == null) return null;
         Color color = component.getColor();
         String output = "";
@@ -62,7 +63,7 @@ public class CharCodeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T sumTwoSerializedComponents(T component1, T component2) {
+    public <T> @Nullable T sumTwoSerializedComponents(@NotNull T component1, @NotNull T component2) {
         return (T) (component1.toString() + component2.toString());
     }
 }

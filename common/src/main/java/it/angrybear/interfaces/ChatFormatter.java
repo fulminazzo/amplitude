@@ -2,6 +2,8 @@ package it.angrybear.interfaces;
 
 import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -17,7 +19,7 @@ public interface ChatFormatter {
      *
      * @return the name
      */
-    default String getName() {
+    default @NotNull String getName() {
         return name().toLowerCase().replace("_", "");
     }
 
@@ -41,7 +43,7 @@ public interface ChatFormatter {
      * @param name the name
      * @return the chat formatter
      */
-    static ChatFormatter getChatFormatter(String name) {
+    static ChatFormatter getChatFormatter(@Nullable String name) {
         if (name == null) return null;
         name = name.replace("dark_", "dark")
                 .replace("light_", "light");
@@ -58,7 +60,7 @@ public interface ChatFormatter {
      * @param identifierChar the identifier char
      * @return the chat formatter
      */
-    static ChatFormatter getChatFormatter(char identifierChar) {
+    static @Nullable ChatFormatter getChatFormatter(char identifierChar) {
         ChatFormatter[] chatFormatters = getChatFormatters();
         for (ChatFormatter c : chatFormatters)
             if (c.getIdentifierChar() == identifierChar)
@@ -71,7 +73,7 @@ public interface ChatFormatter {
      *
      * @return the chat formatters
      */
-    static ChatFormatter [] getChatFormatters() {
+    static ChatFormatter @NotNull [] getChatFormatters() {
         return Stream.concat(Arrays.stream(Color.values()), Arrays.stream(Style.values()))
                 .map(c -> (ChatFormatter) c)
                 .toArray(ChatFormatter[]::new);

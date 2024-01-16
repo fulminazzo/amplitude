@@ -27,7 +27,7 @@ public abstract class ComponentSerializer {
      * @return the component serializer
      */
     @SuppressWarnings("unchecked")
-    public static ComponentSerializer serializer() {
+    public static @NotNull ComponentSerializer serializer() {
         @NotNull Set<Class<?>> classes = ClassUtils.findClassesInPackage(ComponentSerializer.class.getPackage().getName(),
                 ComponentSerializer.class);
         for (Class<?> clazz : classes) {
@@ -55,7 +55,7 @@ public abstract class ComponentSerializer {
      * @param component the component
      * @return the output
      */
-    public <T> @Nullable T serializeComponent(TextComponent component) {
+    public <T> @Nullable T serializeComponent(@Nullable TextComponent component) {
         if (component == null) return null;
 
         T output;
