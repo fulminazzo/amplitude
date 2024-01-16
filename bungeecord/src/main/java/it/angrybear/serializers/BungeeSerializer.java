@@ -130,7 +130,7 @@ public class BungeeSerializer extends ComponentSerializer {
     }
 
     private ComponentSerializer getBaseSerializer() {
-        return new SectionSignSerializer();
+        return sectionSign();
     }
 
     @Override

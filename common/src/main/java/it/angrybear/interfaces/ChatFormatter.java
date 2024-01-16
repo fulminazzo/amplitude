@@ -51,7 +51,8 @@ public interface ChatFormatter {
         for (ChatFormatter c : chatFormatters) {
             if (c.getName().equalsIgnoreCase(name)) return c;
         }
-        return null;
+        if (name.length() == 1) return getChatFormatter(name.toLowerCase().charAt(0));
+        else return null;
     }
 
     /**

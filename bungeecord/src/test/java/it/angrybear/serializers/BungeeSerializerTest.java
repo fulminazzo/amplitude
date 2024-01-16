@@ -16,6 +16,7 @@ import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,7 +28,9 @@ import java.util.function.Consumer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.mockito.Mockito.*;
 
+@SuppressWarnings("deprecation")
 class BungeeSerializerTest {
     private static final BungeeSerializer serializer = new BungeeSerializer();
 
@@ -192,6 +195,14 @@ class BungeeSerializerTest {
         BaseComponent c2 = c[0];
         for (int i = 1; i < c.length; i++) c2.addExtra(c[i]);
         assertEquals(c2, serializer.serializeHexComponent(c1));
+    }
+
+    @Test
+    void testSend() {
+        TextComponent component = new TextComponent("This is an example");
+        ProxiedPlayer player = mock(ProxiedPlayer.class);
+        serializer.send(player, component);
+        verify(player, atLeastOnce()).sendMessage((BaseComponent) serializer.serializeComponent(component));
     }
 
     private void addExtra(BaseComponent c1, BaseComponent c2) {
