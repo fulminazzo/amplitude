@@ -508,6 +508,31 @@ public class TextComponent {
      * @return the string
      */
     public String serialize() {
+        String output = serializeSingle();
+
+        if (next != null) {
+            final String color = this.color == null ? null : String.format("<%s>", this.color.getName());
+
+            String tmp = next.serialize();
+
+            if (color != null && tmp.startsWith(color)) tmp = tmp.substring(color.length());
+            for (Style s : getStyles()) {
+                String style = String.format("<%s>", s.getName());
+                if (tmp.startsWith(style)) tmp = tmp.substring(style.length());
+            }
+
+            output += tmp;
+        }
+
+        return output;
+    }
+
+    /**
+     * Serialize the current component to a raw text ignoring the next components.
+     *
+     * @return the string
+     */
+    protected String serializeSingle() {
         final String color = this.color == null ? null : String.format("<%s>", this.color.getName());
         final List<String> styles = new ArrayList<>();
         for (Style style : getStyles())
@@ -517,16 +542,6 @@ public class TextComponent {
         if (color != null) output += color;
         for (String style : styles) output += style;
         if (text != null) output += text;
-
-        if (next != null) {
-            String tmp = next.serialize();
-
-            if (color != null && tmp.startsWith(color)) tmp = tmp.substring(color.length());
-            for (String style : styles)
-                if (tmp.startsWith(style)) tmp = tmp.substring(style.length());
-
-            output += tmp;
-        }
 
         return output;
     }

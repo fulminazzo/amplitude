@@ -1,5 +1,6 @@
 package it.angrybear.components;
 
+import it.angrybear.enums.Style;
 import it.angrybear.interfaces.validators.HexColorValidator;
 import it.angrybear.interfaces.validators.OptionValidator;
 import org.jetbrains.annotations.NotNull;
@@ -40,5 +41,22 @@ public class HexComponent extends OptionComponent {
         Map<String, OptionValidator> options = new HashMap<>();
         options.put("color", new HexColorValidator());
         return options;
+    }
+
+    /**
+     * Gets hex color.
+     *
+     * @return the hex color
+     */
+    public String getHEXColor() {
+        return getTagOption("color");
+    }
+
+    @Override
+    public String serializeSingle() {
+        String output = super.serializeSingle();
+        if (color != null)
+            output = output.substring(String.format("<%s>", color.getName()).length());
+        return String.format("<hex color=\"%s\">", getHEXColor()) + output;
     }
 }

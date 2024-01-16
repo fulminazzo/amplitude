@@ -102,6 +102,12 @@ class TextComponentTest {
     }
 
     @Test
+    void testSerializeHex() {
+        String rawText = "<red>Hello <hex color=\"#FF00AA\">world<bold>this is sick!";
+        assertEquals(rawText, new TextComponent(rawText).serialize());
+    }
+
+    @Test
     void testIsSimilar() {
         TextComponent t1 = new TextComponent("<red>Hello world");
         TextComponent t2 = new TextComponent("<red>How are you");
