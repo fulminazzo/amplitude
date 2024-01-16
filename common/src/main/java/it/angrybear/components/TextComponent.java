@@ -175,6 +175,7 @@ public class TextComponent {
                         if (nextObject != null) continue;
                         field.set(tmp, field.get(this));
                     }
+                else return;
 
                 if (tmp instanceof ContainerComponent)
                     tmp.setSameOptions(((ContainerComponent) tmp).child);

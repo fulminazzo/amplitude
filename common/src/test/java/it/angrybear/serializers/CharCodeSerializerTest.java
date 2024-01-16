@@ -20,6 +20,7 @@ class CharCodeSerializerTest {
             "&mHello world,<strikethrough>Hello world",
             "&nHello world,<underline>Hello world",
             "&oHello world,<italic>Hello world",
+            "&oHello &rworld,<italic>Hello <reset>world",
             "&c&c&lHello world,<red><bold>Hello world",
             "&c&c&l&c&l&oHello world,<red><bold><italic>Hello world",
             "&c&c&l&c&l&oHello &rworld,<red><bold><italic>Hello <reset>world"

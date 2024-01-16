@@ -166,6 +166,15 @@ public class Color implements ChatFormatter {
     }
 
     /**
+     * Is custom.
+     *
+     * @return the boolean
+     */
+    public boolean isCustom() {
+        return identifierChar == '?';
+    }
+
+    /**
      * Check if two colors equal.
      *
      * @param color the color
