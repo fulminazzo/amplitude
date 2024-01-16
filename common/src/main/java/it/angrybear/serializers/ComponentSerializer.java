@@ -118,4 +118,27 @@ public abstract class ComponentSerializer {
      * @return the result component
      */
     public abstract <T> @Nullable T sumTwoSerializedComponents(T component1, T component2);
+
+    /**
+     * Send to player.
+     *
+     * @param <P>       the type parameter
+     * @param player    the player
+     * @param component the component
+     */
+    public <P> void send(P player, TextComponent component) {
+        if (player == null) return;
+        if (component == null) return;
+        send(player, serializeComponent(component));
+    }
+
+    /**
+     * Send to player.
+     *
+     * @param <T>       the type parameter
+     * @param <P>       the type parameter
+     * @param player    the player
+     * @param component the component
+     */
+    public abstract <T, P> void send(P player, T component);
 }
