@@ -1,2 +1,4 @@
 rootProject.name = 'BearMessages'
 include 'common'
+include 'bungeecord'
+
