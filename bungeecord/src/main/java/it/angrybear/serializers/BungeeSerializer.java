@@ -1,7 +1,5 @@
 package it.angrybear.serializers;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
