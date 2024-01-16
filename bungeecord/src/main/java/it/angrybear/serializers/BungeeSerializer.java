@@ -47,9 +47,7 @@ public class BungeeSerializer extends ComponentSerializer {
                 count = count.substring(0, count.length() - 1);
                 String rawTag = component.getTagOption("Tag");
                 ItemTag tag = null;
-                if (rawTag != null)
-                    tag = new ItemTag.Serializer().deserialize(
-                           new Gson().fromJson(rawTag, JsonObject.class),null, null);
+                if (rawTag != null) tag = ItemTag.ofNbt(rawTag);
                 content = new Item(id, Integer.parseInt(count), tag);
                 break;
             }
