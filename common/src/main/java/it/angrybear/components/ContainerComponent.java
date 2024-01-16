@@ -74,6 +74,28 @@ public abstract class ContainerComponent extends OptionComponent {
     }
 
     /**
+     * Get the inner text from the children using {@link TextComponent#toRaw(TextComponent)}.
+     *
+     * @return the text
+     */
+    @Override
+    public @Nullable String getText() {
+        return child == null ? null : TextComponent.toRaw(child);
+    }
+
+    /**
+     * Set the children as the given text using {@link TextComponent#fromRaw(String)}.
+     *
+     * @param text the text
+     */
+    @Override
+    public void setText(@Nullable String text) {
+        this.child = null;
+        if (text == null) return;
+        this.child = TextComponent.fromRaw(text);
+    }
+
+    /**
      * Sets the child component and applies {@link #setSameOptions(TextComponent)} method.
      *
      * @param rawText the raw text

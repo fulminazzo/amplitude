@@ -4,6 +4,7 @@ import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +43,7 @@ public class TextComponent {
     protected Boolean underline;
     protected Boolean italic;
     protected Boolean reset;
+    @Setter
     protected @Nullable String text;
 
     /**
