@@ -4,18 +4,25 @@ import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.security.auth.callback.TextOutputCallback;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TextComponentTest {
+
+    static Object[][] getTestFromRawParameters() {
+        return new Object[][]{
+                new Object[]{TextComponent.class, "<red>Hello world"},
+                new Object[]{HexComponent.class, "<hex color=#FF00AA>Hello world"},
+                new Object[]{ClickComponent.class, "<click action=COPY_TO_CLIPBOARD text=\"I hacked you\">Hello world</click>"},
+                new Object[]{HoverComponent.class, "<hover action=SHOW_TEXT text=\"Can you see me!?\">Hello world</hover>"},
+        };
+    }
 
     static Object[][] getTestComponents() {
         return new Object[][]{
@@ -87,6 +94,13 @@ class TextComponentTest {
         assertEquals(expected, textComponent.toString());
     }
 
+    @ParameterizedTest
+    @MethodSource("getTestComponents")
+    void testSerialize(String rawText) {
+        TextComponent textComponent = new TextComponent(rawText);
+        assertEquals(rawText, TextComponent.toRaw(textComponent));
+    }
+
     @Test
     void testIsSimilar() {
         TextComponent t1 = new TextComponent("<red>Hello world");
@@ -137,20 +151,6 @@ class TextComponentTest {
         assertFalse(textComponent.isEmpty());
     }
 
-    static String mockComponent(String next, String color, Boolean magic,
-                                        Boolean bold, Boolean strikethrough, Boolean underline,
-                                        Boolean italic, Boolean reset, String text) {
-        return String.format("{next: %s, ", next) +
-                String.format("color: %s, ", color) +
-                String.format("magic: %s, ", magic) +
-                String.format("bold: %s, ", bold) +
-                String.format("strikethrough: %s, ", strikethrough) +
-                String.format("underline: %s, ", underline) +
-                String.format("italic: %s, ", italic) +
-                String.format("reset: %s, ", reset) +
-                String.format("text: %s}", text);
-    }
-
     @ParameterizedTest
     @EnumSource(Color.class)
     void testColorSetters(Color color) {
@@ -194,5 +194,25 @@ class TextComponentTest {
 
         textComponent.setStyle(style);
         assertTrue(textComponent.getNext().getStyle(style));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getTestFromRawParameters")
+    void testFromRaw(Class<?> expected, String rawText) {
+        assertEquals(expected, TextComponent.fromRaw(rawText).getClass());
+    }
+
+    static String mockComponent(String next, String color, Boolean magic,
+                                Boolean bold, Boolean strikethrough, Boolean underline,
+                                Boolean italic, Boolean reset, String text) {
+        return String.format("{next: %s, ", next) +
+                String.format("color: %s, ", color) +
+                String.format("magic: %s, ", magic) +
+                String.format("bold: %s, ", bold) +
+                String.format("strikethrough: %s, ", strikethrough) +
+                String.format("underline: %s, ", underline) +
+                String.format("italic: %s, ", italic) +
+                String.format("reset: %s, ", reset) +
+                String.format("text: %s}", text);
     }
 }

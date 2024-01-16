@@ -32,49 +32,16 @@ import java.util.regex.Pattern;
  */
 @Getter
 public class TextComponent {
-    /**
-     * The constant CONTAINER_COMPONENTS.
-     */
     public static final Map<String, Function<String, OptionComponent>> CONTAINER_COMPONENTS = new HashMap<>();
-    /**
-     * The constant TAG_REGEX.
-     */
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
-    /**
-     * The Next.
-     */
     protected TextComponent next;
-    /**
-     * The Color.
-     */
     protected Color color;
-    /**
-     * The Magic.
-     */
     protected Boolean magic;
-    /**
-     * The Bold.
-     */
     protected Boolean bold;
-    /**
-     * The Strikethrough.
-     */
     protected Boolean strikethrough;
-    /**
-     * The Underline.
-     */
     protected Boolean underline;
-    /**
-     * The Italic.
-     */
     protected Boolean italic;
-    /**
-     * The Reset.
-     */
     protected Boolean reset;
-    /**
-     * The Text.
-     */
     protected @Nullable String text;
 
     /**
@@ -536,6 +503,35 @@ public class TextComponent {
     }
 
     /**
+     * Serialize the current component to a raw text.
+     *
+     * @return the string
+     */
+    public String serialize() {
+        final String color = this.color == null ? null : String.format("<%s>", this.color.getName());
+        final List<String> styles = new ArrayList<>();
+        for (Style style : getStyles())
+            styles.add(String.format("<%s>", style.getName()));
+
+        String output = "";
+        if (color != null) output += color;
+        for (String style : styles) output += style;
+        if (text != null) output += text;
+
+        if (next != null) {
+            String tmp = next.serialize();
+
+            if (color != null && tmp.startsWith(color)) tmp = tmp.substring(color.length());
+            for (String style : styles)
+                if (tmp.startsWith(style)) tmp = tmp.substring(style.length());
+
+            output += tmp;
+        }
+
+        return output;
+    }
+
+    /**
      * Check if the current text component has no styles, no color and no text applied.
      *
      * @return true if every parameter is null
@@ -598,5 +594,29 @@ public class TextComponent {
             }
         output += "text: " + text;
         return output + "}";
+    }
+
+    /**
+     * Converts a raw text to a component.
+     *
+     * @param rawText the raw text
+     * @return the text component
+     */
+    public static TextComponent fromRaw(String rawText) {
+        if (rawText == null) return null;
+        TextComponent textComponent = new TextComponent(rawText);
+        while (textComponent.isEmpty()) textComponent = textComponent.getNext();
+        return textComponent;
+    }
+
+    /**
+     * Converts a component to its raw text.
+     *
+     * @param textComponent the text component
+     * @return the string
+     */
+    public static String toRaw(TextComponent textComponent) {
+        if (textComponent == null) return null;
+        else return textComponent.serialize();
     }
 }
