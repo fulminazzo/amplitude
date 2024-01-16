@@ -2,6 +2,7 @@ package it.angrybear.enums;
 
 import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -113,6 +114,11 @@ public class Color implements ChatFormatter {
     private final char identifierChar;
     private String code;
 
+    /**
+     * Instantiates a new Color.
+     *
+     * @param identifierChar the identifier char
+     */
     Color(char identifierChar) {
         this.identifierChar = identifierChar;
     }
@@ -122,7 +128,7 @@ public class Color implements ChatFormatter {
      *
      * @param code the identifier code
      */
-    public Color(String code) {
+    public Color(@NotNull String code) {
         this.identifierChar = '?';
         this.code = code;
     }
@@ -140,6 +146,11 @@ public class Color implements ChatFormatter {
         return "CUSTOM";
     }
 
+    /**
+     * Get all the values of this class.
+     *
+     * @return the values
+     */
     public static Color[] values() {
         List<Color> values = new ArrayList<>();
         for (Field field : Color.class.getDeclaredFields())
@@ -150,6 +161,24 @@ public class Color implements ChatFormatter {
                 throw new RuntimeException(e);
             }
         return values.toArray(new Color[0]);
+    }
+
+    /**
+     * Check if two colors equal.
+     *
+     * @param color the color
+     * @return the boolean
+     */
+    public boolean equals(Color color) {
+        if (color == null) return false;
+        if (identifierChar != '?') return identifierChar == color.identifierChar;
+        else return code.equals(color.code);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Color) return equals((Color) o);
+        return super.equals(o);
     }
 
     @Override

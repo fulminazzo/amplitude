@@ -60,7 +60,7 @@ public class HexComponent extends OptionComponent {
     }
 
     @Override
-    public String serializeSingle() {
+    public @NotNull String serializeSingle() {
         String output = super.serializeSingle();
         if (color != null)
             output = output.substring(String.format("<%s>", color.getName()).length());

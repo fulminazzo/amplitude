@@ -507,7 +507,7 @@ public class TextComponent {
      *
      * @return the string
      */
-    public String serialize() {
+    public @NotNull String serialize() {
         String output = serializeSingle();
 
         if (next != null) {
@@ -532,7 +532,7 @@ public class TextComponent {
      *
      * @return the string
      */
-    protected String serializeSingle() {
+    protected @NotNull String serializeSingle() {
         final String color = this.color == null ? null : String.format("<%s>", this.color.getName());
         final List<String> styles = new ArrayList<>();
         for (Style style : getStyles())
@@ -617,7 +617,7 @@ public class TextComponent {
      * @param rawText the raw text
      * @return the text component
      */
-    public static TextComponent fromRaw(String rawText) {
+    public static TextComponent fromRaw(@Nullable String rawText) {
         if (rawText == null) return null;
         TextComponent textComponent = new TextComponent(rawText);
         while (textComponent.isEmpty()) textComponent = textComponent.getNext();
@@ -630,7 +630,7 @@ public class TextComponent {
      * @param textComponent the text component
      * @return the string
      */
-    public static String toRaw(TextComponent textComponent) {
+    public static String toRaw(@Nullable TextComponent textComponent) {
         if (textComponent == null) return null;
         else return textComponent.serialize();
     }
