@@ -1,6 +1,5 @@
 package it.angrybear.interfaces;
 
-import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

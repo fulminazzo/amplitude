@@ -49,6 +49,24 @@ public abstract class ComponentSerializer {
     }
 
     /**
+     * Get a new section sign serializer.
+     *
+     * @return the section sign serializer
+     */
+    public static @NotNull SectionSignSerializer sectionSign() {
+        return new SectionSignSerializer();
+    }
+
+    /**
+     * Get a new ampersand serializer.
+     *
+     * @return the ampersand serializer
+     */
+    public static @NotNull AmpersandSerializer ampersand() {
+        return new AmpersandSerializer();
+    }
+
+    /**
      * Serialize a general {@link TextComponent} and its siblings.
      *
      * @param <T>       the type parameter

@@ -75,7 +75,6 @@ public interface ChatFormatter {
      */
     static ChatFormatter @NotNull [] getChatFormatters() {
         return Stream.concat(Arrays.stream(Color.values()), Arrays.stream(Style.values()))
-                .map(c -> (ChatFormatter) c)
                 .toArray(ChatFormatter[]::new);
     }
 }
