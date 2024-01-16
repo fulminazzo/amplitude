@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,6 +14,15 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TextComponentTest {
+
+    static Object[][] getTestFromRawParameters() {
+        return new Object[][]{
+                new Object[]{TextComponent.class, "<red>Hello world"},
+                new Object[]{HexComponent.class, "<hex color=#FF00AA>Hello world"},
+                new Object[]{ClickComponent.class, "<click action=COPY_TO_CLIPBOARD text=\"I hacked you\">Hello world</click>"},
+                new Object[]{HoverComponent.class, "<hover action=SHOW_TEXT text=\"Can you see me!?\">Hello world</hover>"},
+        };
+    }
 
     static Object[][] getTestComponents() {
         return new Object[][]{
@@ -84,6 +94,19 @@ class TextComponentTest {
         assertEquals(expected, textComponent.toString());
     }
 
+    @ParameterizedTest
+    @MethodSource("getTestComponents")
+    void testSerialize(String rawText) {
+        TextComponent textComponent = new TextComponent(rawText);
+        assertEquals(rawText, TextComponent.toRaw(textComponent));
+    }
+
+    @Test
+    void testSerializeHex() {
+        String rawText = "<red>Hello <hex color=\"#FF00AA\">world<bold>this is sick!";
+        assertEquals(rawText, new TextComponent(rawText).serialize());
+    }
+
     @Test
     void testIsSimilar() {
         TextComponent t1 = new TextComponent("<red>Hello world");
@@ -112,22 +135,30 @@ class TextComponentTest {
         assertFalse(t1.equals(t2));
     }
 
-    static String mockComponent(String next, String color, Boolean magic,
-                                        Boolean bold, Boolean strikethrough, Boolean underline,
-                                        Boolean italic, Boolean reset, String text) {
-        return String.format("{next: %s, ", next) +
-                String.format("color: %s, ", color) +
-                String.format("magic: %s, ", magic) +
-                String.format("bold: %s, ", bold) +
-                String.format("strikethrough: %s, ", strikethrough) +
-                String.format("underline: %s, ", underline) +
-                String.format("italic: %s, ", italic) +
-                String.format("reset: %s, ", reset) +
-                String.format("text: %s}", text);
+    @Test
+    void testEmpty() {
+        TextComponent textComponent = new TextComponent();
+        assertTrue(textComponent.isEmpty());
     }
 
     @ParameterizedTest
-    @EnumSource(Color.class)
+    @ValueSource(strings = {
+            "<red>",
+            "<bold>",
+            "<magic>",
+            "<italic>",
+            "<strikethrough>",
+            "<underline>",
+            "<reset>",
+            "Text"
+    })
+    void testNotEmpty(String rawText) {
+        TextComponent textComponent = new TextComponent(rawText);
+        assertFalse(textComponent.isEmpty());
+    }
+
+    @ParameterizedTest
+    @MethodSource("it.angrybear.enums.Color#values")
     void testColorSetters(Color color) {
         TextComponent textComponent = new TextComponent("Simple test <bold>sounds great");
 
@@ -169,5 +200,25 @@ class TextComponentTest {
 
         textComponent.setStyle(style);
         assertTrue(textComponent.getNext().getStyle(style));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getTestFromRawParameters")
+    void testFromRaw(Class<?> expected, String rawText) {
+        assertEquals(expected, TextComponent.fromRaw(rawText).getClass());
+    }
+
+    static String mockComponent(String next, String color, Boolean magic,
+                                Boolean bold, Boolean strikethrough, Boolean underline,
+                                Boolean italic, Boolean reset, String text) {
+        return String.format("{next: %s, ", next) +
+                String.format("color: %s, ", color) +
+                String.format("magic: %s, ", magic) +
+                String.format("bold: %s, ", bold) +
+                String.format("strikethrough: %s, ", strikethrough) +
+                String.format("underline: %s, ", underline) +
+                String.format("italic: %s, ", italic) +
+                String.format("reset: %s, ", reset) +
+                String.format("text: %s}", text);
     }
 }

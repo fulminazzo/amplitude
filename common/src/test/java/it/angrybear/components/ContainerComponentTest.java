@@ -94,6 +94,16 @@ class ContainerComponentTest {
         }
     }
 
+    @Test
+    void testEmpty() {
+        assertTrue(new MockContainer("<mock></mock>").isEmpty());
+    }
+
+    @Test
+    void testNotEmpty() {
+        assertFalse(new MockContainer("<mock><red>Inner content</mock>").isEmpty());
+    }
+
     @ParameterizedTest
     @MethodSource("getTestChildren")
     void testChildrenInContainerComponent(String rawText, String expected) {
@@ -125,7 +135,7 @@ class ContainerComponentTest {
 
     private static String mockContainerComponent(String next, String children) {
         String mock = mockComponent(null, null, null, null, null, null, null, null, null);
-        mock = mock.replace("color:", String.format("tagName: mock, child: %s, tagOptions: {}, color:", children));
+        mock = mock.replace("color:", String.format("child: %s, color:", children));
         mock = mock.replaceAll("^\\{next: null","{next: " + next);
         return mock;
     }

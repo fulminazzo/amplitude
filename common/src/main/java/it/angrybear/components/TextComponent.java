@@ -4,6 +4,7 @@ import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +43,7 @@ public class TextComponent {
     protected Boolean underline;
     protected Boolean italic;
     protected Boolean reset;
+    @Setter
     protected @Nullable String text;
 
     /**
@@ -166,7 +168,7 @@ public class TextComponent {
         while (tmp != null)
             try {
                 if (!tmp.getReset())
-                    for (Field field : getOptions()) {
+                    for (Field field : getOptionFields()) {
                         if (TextComponent.class.isAssignableFrom(field.getType())) continue;
                         if (Modifier.isFinal(field.getModifiers())) continue;
                         Object nextObject = field.get(tmp);
@@ -188,7 +190,7 @@ public class TextComponent {
      */
     public void reset() {
         try {
-            for (Field field : getOptions())
+            for (Field field : getOptionFields())
                 if (!Modifier.isFinal(field.getModifiers()))
                     field.set(this, null);
             reset = true;
@@ -198,16 +200,35 @@ public class TextComponent {
     }
 
     /**
+     * Get all the options as an object array.
+     *
+     * @return the objects
+     */
+    public Object @NotNull [] getOptions() {
+        List<Object> objects = new ArrayList<>();
+        for (Field field : getOptionFields()) {
+            try {
+                field.setAccessible(true);
+                objects.add(field.get(this));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return objects.toArray(new Object[0]);
+    }
+
+    /**
      * Get all the options as a field array.
      *
      * @return the fields
      */
-    public Field @NotNull [] getOptions() {
+    public Field @NotNull [] getOptionFields() {
         List<Field> fields = new ArrayList<>();
         Class<?> clazz = this.getClass();
         while (TextComponent.class.isAssignableFrom(clazz)) {
             Arrays.stream(clazz.getDeclaredFields())
                     .filter(f -> !Modifier.isStatic(f.getModifiers()))
+                    .filter(f -> !Modifier.isFinal(f.getModifiers()))
                     .filter(f -> !f.getName().equals("this$0"))
                     .filter(f -> !f.getName().equals("text"))
                     .filter(f -> !f.getName().equals("next"))
@@ -484,8 +505,62 @@ public class TextComponent {
     }
 
     /**
+     * Serialize the current component to a raw text.
+     *
+     * @return the string
+     */
+    public @NotNull String serialize() {
+        String output = serializeSingle();
+
+        if (next != null) {
+            final String color = this.color == null ? null : String.format("<%s>", this.color.getName());
+
+            String tmp = next.serialize();
+
+            if (color != null && tmp.startsWith(color)) tmp = tmp.substring(color.length());
+            for (Style s : getStyles()) {
+                String style = String.format("<%s>", s.getName());
+                if (tmp.startsWith(style)) tmp = tmp.substring(style.length());
+            }
+
+            output += tmp;
+        }
+
+        return output;
+    }
+
+    /**
+     * Serialize the current component to a raw text ignoring the next components.
+     *
+     * @return the string
+     */
+    protected @NotNull String serializeSingle() {
+        final String color = this.color == null ? null : String.format("<%s>", this.color.getName());
+        final List<String> styles = new ArrayList<>();
+        for (Style style : getStyles())
+            styles.add(String.format("<%s>", style.getName()));
+
+        String output = "";
+        if (color != null) output += color;
+        for (String style : styles) output += style;
+        if (text != null) output += text;
+
+        return output;
+    }
+
+    /**
+     * Check if the current text component has no styles, no color and no text applied.
+     *
+     * @return true if every parameter is null
+     */
+    public boolean isEmpty() {
+        for (Object o : getOptions()) if (o != null) return false;
+        return text == null || text.isEmpty();
+    }
+
+    /**
      * Check if two text components are similar.
-     * "Similar" means if all their options (from {@link #getOptions()}) except {@link #text} are equal.
+     * "Similar" means if all their options (from {@link #getOptionFields()}) except {@link #text} are equal.
      *
      * @param textComponent the text component
      * @return true if they are similar
@@ -493,7 +568,7 @@ public class TextComponent {
     public boolean isSimilar(@Nullable TextComponent textComponent) {
         if (textComponent == null) return false;
         if (!this.getClass().equals(textComponent.getClass())) return false;
-        for (Field option : getOptions()) {
+        for (Field option : getOptionFields()) {
             if (option.getName().equals("text")) continue;
             try {
                 Object opt1 = option.get(this);
@@ -527,7 +602,7 @@ public class TextComponent {
     public @NotNull String toString() {
         String output = "{";
         output += "next: " + next + ", ";
-        for (Field field : getOptions())
+        for (Field field : getOptionFields())
             try {
                 Object object = field.get(this);
                 output += String.format("%s: %s, ", field.getName(), object);
@@ -536,5 +611,29 @@ public class TextComponent {
             }
         output += "text: " + text;
         return output + "}";
+    }
+
+    /**
+     * Converts a raw text to a component.
+     *
+     * @param rawText the raw text
+     * @return the text component
+     */
+    public static TextComponent fromRaw(@Nullable String rawText) {
+        if (rawText == null) return null;
+        TextComponent textComponent = new TextComponent(rawText);
+        while (textComponent.isEmpty()) textComponent = textComponent.getNext();
+        return textComponent;
+    }
+
+    /**
+     * Converts a component to its raw text.
+     *
+     * @param textComponent the text component
+     * @return the string
+     */
+    public static String toRaw(@Nullable TextComponent textComponent) {
+        if (textComponent == null) return null;
+        else return textComponent.serialize();
     }
 }
