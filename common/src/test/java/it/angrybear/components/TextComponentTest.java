@@ -158,7 +158,7 @@ class TextComponentTest {
     }
 
     @ParameterizedTest
-    @EnumSource(Color.class)
+    @MethodSource("it.angrybear.enums.Color#values")
     void testColorSetters(Color color) {
         TextComponent textComponent = new TextComponent("Simple test <bold>sounds great");
 

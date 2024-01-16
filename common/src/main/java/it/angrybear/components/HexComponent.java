@@ -1,9 +1,10 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.Style;
+import it.angrybear.enums.Color;
 import it.angrybear.interfaces.validators.HexColorValidator;
 import it.angrybear.interfaces.validators.OptionValidator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,12 @@ public class HexComponent extends OptionComponent {
      */
     public HexComponent(String rawText) {
         super(rawText);
+    }
+
+    @Override
+    public void setOptions(@Nullable String rawText) {
+        super.setOptions(rawText);
+        setColor(new Color(getHEXColor()));
     }
 
     @Override
