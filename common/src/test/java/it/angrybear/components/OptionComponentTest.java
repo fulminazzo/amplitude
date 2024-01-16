@@ -79,6 +79,16 @@ class OptionComponentTest {
                 new MockRequiredContainer("<mock surname=\"Not Alex\" age=10>Hello world"));
     }
 
+    @Test
+    void testEmpty() {
+        assertTrue(new MockContainer("").isEmpty());
+    }
+
+    @Test
+    void testNotEmpty() {
+        assertFalse(new MockContainer("<mock key=\"value\">").isEmpty());
+    }
+
 
     static class MockContainer extends OptionComponent {
 

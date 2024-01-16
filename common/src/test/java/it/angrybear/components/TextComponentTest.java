@@ -4,9 +4,12 @@ import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import javax.security.auth.callback.TextOutputCallback;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -110,6 +113,28 @@ class TextComponentTest {
         TextComponent t1 = new TextComponent("<red>Hello world");
         TextComponent t2 = new TextComponent("<red>How are you");
         assertFalse(t1.equals(t2));
+    }
+
+    @Test
+    void testEmpty() {
+        TextComponent textComponent = new TextComponent();
+        assertTrue(textComponent.isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "<red>",
+            "<bold>",
+            "<magic>",
+            "<italic>",
+            "<strikethrough>",
+            "<underline>",
+            "<reset>",
+            "Text"
+    })
+    void testNotEmpty(String rawText) {
+        TextComponent textComponent = new TextComponent(rawText);
+        assertFalse(textComponent.isEmpty());
     }
 
     static String mockComponent(String next, String color, Boolean magic,

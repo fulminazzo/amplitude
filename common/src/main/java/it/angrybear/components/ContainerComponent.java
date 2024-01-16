@@ -103,4 +103,14 @@ public abstract class ContainerComponent extends OptionComponent {
         String regex = "<" + tagName + " ?((?:(?!<" + tagName + ")(?!</" + tagName + ">).)*)";
         return Pattern.compile(regex);
     }
+
+    /**
+     * Check if the current component is empty using {@link OptionComponent#isEmpty()} and {@link #child}.
+     *
+     * @return true if both are empty.
+     */
+    @Override
+    public boolean isEmpty() {
+        return super.isEmpty() && (child == null || child.isEmpty());
+    }
 }

@@ -131,4 +131,14 @@ public abstract class OptionComponent extends TextComponent {
     protected Map<String, OptionValidator> getRequiredOptions() {
         return new HashMap<>();
     }
+
+    /**
+     * Check if the current component is empty using {@link TextComponent#isEmpty()} and {@link #tagOptions}.
+     *
+     * @return true if both are empty.
+     */
+    @Override
+    public boolean isEmpty() {
+        return super.isEmpty() && tagOptions.isEmpty();
+    }
 }

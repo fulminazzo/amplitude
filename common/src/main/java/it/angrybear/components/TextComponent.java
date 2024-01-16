@@ -32,16 +32,49 @@ import java.util.regex.Pattern;
  */
 @Getter
 public class TextComponent {
+    /**
+     * The constant CONTAINER_COMPONENTS.
+     */
     public static final Map<String, Function<String, OptionComponent>> CONTAINER_COMPONENTS = new HashMap<>();
+    /**
+     * The constant TAG_REGEX.
+     */
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
+    /**
+     * The Next.
+     */
     protected TextComponent next;
+    /**
+     * The Color.
+     */
     protected Color color;
+    /**
+     * The Magic.
+     */
     protected Boolean magic;
+    /**
+     * The Bold.
+     */
     protected Boolean bold;
+    /**
+     * The Strikethrough.
+     */
     protected Boolean strikethrough;
+    /**
+     * The Underline.
+     */
     protected Boolean underline;
+    /**
+     * The Italic.
+     */
     protected Boolean italic;
+    /**
+     * The Reset.
+     */
     protected Boolean reset;
+    /**
+     * The Text.
+     */
     protected @Nullable String text;
 
     /**
@@ -166,7 +199,7 @@ public class TextComponent {
         while (tmp != null)
             try {
                 if (!tmp.getReset())
-                    for (Field field : getOptions()) {
+                    for (Field field : getOptionFields()) {
                         if (TextComponent.class.isAssignableFrom(field.getType())) continue;
                         if (Modifier.isFinal(field.getModifiers())) continue;
                         Object nextObject = field.get(tmp);
@@ -188,7 +221,7 @@ public class TextComponent {
      */
     public void reset() {
         try {
-            for (Field field : getOptions())
+            for (Field field : getOptionFields())
                 if (!Modifier.isFinal(field.getModifiers()))
                     field.set(this, null);
             reset = true;
@@ -198,16 +231,35 @@ public class TextComponent {
     }
 
     /**
+     * Get all the options as an object array.
+     *
+     * @return the objects
+     */
+    public Object @NotNull [] getOptions() {
+        List<Object> objects = new ArrayList<>();
+        for (Field field : getOptionFields()) {
+            try {
+                field.setAccessible(true);
+                objects.add(field.get(this));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return objects.toArray(new Object[0]);
+    }
+
+    /**
      * Get all the options as a field array.
      *
      * @return the fields
      */
-    public Field @NotNull [] getOptions() {
+    public Field @NotNull [] getOptionFields() {
         List<Field> fields = new ArrayList<>();
         Class<?> clazz = this.getClass();
         while (TextComponent.class.isAssignableFrom(clazz)) {
             Arrays.stream(clazz.getDeclaredFields())
                     .filter(f -> !Modifier.isStatic(f.getModifiers()))
+                    .filter(f -> !Modifier.isFinal(f.getModifiers()))
                     .filter(f -> !f.getName().equals("this$0"))
                     .filter(f -> !f.getName().equals("text"))
                     .filter(f -> !f.getName().equals("next"))
@@ -484,8 +536,18 @@ public class TextComponent {
     }
 
     /**
+     * Check if the current text component has no styles, no color and no text applied.
+     *
+     * @return true if every parameter is null
+     */
+    public boolean isEmpty() {
+        for (Object o : getOptions()) if (o != null) return false;
+        return text == null || text.isEmpty();
+    }
+
+    /**
      * Check if two text components are similar.
-     * "Similar" means if all their options (from {@link #getOptions()}) except {@link #text} are equal.
+     * "Similar" means if all their options (from {@link #getOptionFields()}) except {@link #text} are equal.
      *
      * @param textComponent the text component
      * @return true if they are similar
@@ -493,7 +555,7 @@ public class TextComponent {
     public boolean isSimilar(@Nullable TextComponent textComponent) {
         if (textComponent == null) return false;
         if (!this.getClass().equals(textComponent.getClass())) return false;
-        for (Field option : getOptions()) {
+        for (Field option : getOptionFields()) {
             if (option.getName().equals("text")) continue;
             try {
                 Object opt1 = option.get(this);
@@ -527,7 +589,7 @@ public class TextComponent {
     public @NotNull String toString() {
         String output = "{";
         output += "next: " + next + ", ";
-        for (Field field : getOptions())
+        for (Field field : getOptionFields())
             try {
                 Object object = field.get(this);
                 output += String.format("%s: %s, ", field.getName(), object);
