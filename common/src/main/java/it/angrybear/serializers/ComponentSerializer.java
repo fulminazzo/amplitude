@@ -129,7 +129,8 @@ public abstract class ComponentSerializer {
     public <P> void send(P player, TextComponent component) {
         if (player == null) return;
         if (component == null) return;
-        send(player, serializeComponent(component));
+        Object object = serializeComponent(component);
+        send(player, object);
     }
 
     /**

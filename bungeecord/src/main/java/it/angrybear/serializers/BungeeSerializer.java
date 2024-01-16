@@ -16,6 +16,7 @@ import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -118,5 +119,39 @@ public class BungeeSerializer extends ComponentSerializer {
 
     private ComponentSerializer getBaseSerializer() {
         return new SectionSignSerializer();
+    }
+
+    @Override
+    public <T, P> void send(P player, T component) {
+        if (player == null) return;
+        if (component == null) return;
+        try {
+            // BungeeCord
+            try {
+                final Class<?> clazz = Class.forName("net.md_5.bungee.api.connection.ProxiedPlayer");
+                if (!clazz.isAssignableFrom(player.getClass()))
+                    throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
+                Method sendMessage = player.getClass().getMethod("sendMessage", BaseComponent.class);
+                sendMessage.invoke(player, component);
+                return;
+            } catch (ClassNotFoundException ignored) {}
+
+            // Spigot
+            try {
+                final Class<?> clazz = Class.forName("org.bukkit.entity.Player");
+                if (!clazz.isAssignableFrom(player.getClass()))
+                    throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
+                Method spigotMethod = player.getClass().getMethod("spigot");
+                Object spigot = spigotMethod.invoke(player);
+                Method sendMessage = spigot.getClass().getMethod("sendMessage", BaseComponent.class);
+                sendMessage.setAccessible(true);
+                sendMessage.invoke(spigot, component);
+                return;
+            } catch (ClassNotFoundException ignored) {}
+
+            throw new Exception("Platform not recognized: this serializer works only on BungeeCord or Spigot.");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
