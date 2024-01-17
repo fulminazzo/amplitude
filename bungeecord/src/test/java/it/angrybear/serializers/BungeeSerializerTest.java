@@ -205,6 +205,11 @@ class BungeeSerializerTest {
         verify(player, atLeastOnce()).sendMessage((BaseComponent) serializer.serializeComponent(component));
     }
 
+    @Test
+    void testSerializerMethod() {
+        assertEquals(BungeeSerializer.class, ComponentSerializer.serializer().getClass());
+    }
+
     private void addExtra(BaseComponent c1, BaseComponent c2) {
         if (c1.getExtra() == null || (c1.getClickEvent() != null || c1.getHoverEvent() != null))
             c1.addExtra(c2);

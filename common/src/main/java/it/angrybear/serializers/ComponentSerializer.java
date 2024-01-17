@@ -28,8 +28,7 @@ public abstract class ComponentSerializer {
      */
     @SuppressWarnings("unchecked")
     public static @NotNull ComponentSerializer serializer() {
-        @NotNull Set<Class<?>> classes = ClassUtils.findClassesInPackage(ComponentSerializer.class.getPackage().getName(),
-                ComponentSerializer.class);
+        @NotNull Set<Class<?>> classes = ClassUtils.findClassesInPackage(ComponentSerializer.class.getPackage().getName());
         for (Class<?> clazz : classes) {
             if (!ComponentSerializer.class.isAssignableFrom(clazz)) continue;
             if (Modifier.isAbstract(clazz.getModifiers())) continue;
