@@ -76,7 +76,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
             case SHOW_ACHIEVEMENT: {
                 String id = component.getTagOption("id");
                 if (!id.startsWith("achievement.")) id = "achievement." + id;
-                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{id:\"%s\"}", id));
+                content = new net.md_5.bungee.api.chat.TextComponent(id);
                 break;
             }
             default: {

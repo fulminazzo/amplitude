@@ -71,7 +71,9 @@ public class BungeeSerializer extends ComponentSerializer {
                 break;
             }
             case SHOW_ACHIEVEMENT: {
-                content = new Text(component.getTagOption("id"));
+                String id = component.getTagOption("id");
+                if (!id.startsWith("achievement.")) id = "achievement." + id;
+                content = new Text(id);
                 break;
             }
             default: {
