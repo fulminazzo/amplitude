@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"unchecked"})
@@ -25,6 +26,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
 
     @Override
     public BaseComponent serializeSimpleTextComponent(@Nullable TextComponent component) {
+        correctComponents(component);
         if (component == null) return null;
         String rawText = getBaseSerializer().serializeSimpleTextComponent(component);
         if (rawText == null) return null;
@@ -45,6 +47,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
 
     @Override
     public BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
+        correctComponents(component);
         if (component == null) return null;
         BaseComponent comp = serializeSimpleTextComponent(component.getChild());
 
@@ -88,6 +91,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
 
     @Override
     public BaseComponent serializeClickComponent(@Nullable ClickComponent component) {
+        correctComponents(component);
         if (component == null) return null;
         BaseComponent comp = serializeSimpleTextComponent(component.getChild());
 
@@ -105,6 +109,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
 
     @Override
     public BaseComponent serializeHexComponent(@Nullable HexComponent component) {
+        correctComponents(component);
         if (component == null) return null;
         String rawText = component.getText();
         if (rawText == null) return null;
@@ -164,5 +169,21 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Corrects the current component by removing any Hex color assignation from {@link HexComponent}.
+     * This passage is mandatory and executed for every serialization method as in 1.15 and below Hex colors were NOT supported.
+     *
+     * @param component the component to correct
+     */
+    protected void correctComponents(TextComponent component) {
+        if (component == null) return;
+        TextComponent c1 = component.getNext();
+        if (!(c1 instanceof HexComponent)) return;
+        TextComponent c2 = c1.getNext();
+        if (c2 == null) return;
+        if (!Objects.equals(c2.getColor(), c1.getColor())) return;
+        c2.setColor(component.getColor());
     }
 }

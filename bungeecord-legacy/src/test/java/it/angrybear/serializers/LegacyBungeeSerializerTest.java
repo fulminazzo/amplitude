@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.Mockito.*;
 
 @SuppressWarnings("deprecation")
