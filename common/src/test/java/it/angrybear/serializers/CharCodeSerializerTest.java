@@ -27,7 +27,7 @@ class CharCodeSerializerTest {
     })
     void testVariousMessagesAmpersand(String expected, String rawText) {
         TextComponent textComponent = new TextComponent(rawText);
-        assertEquals(expected, new AmpersandSerializer().serializeComponent(textComponent));
+        assertEquals(expected, ComponentSerializer.ampersand().serializeComponent(textComponent));
     }
 
     @ParameterizedTest
@@ -43,7 +43,7 @@ class CharCodeSerializerTest {
             "§c§c§l§c§l§oHello §rworld,<red><bold><italic>Hello <reset>world"})
     void testVariousMessagesSectionSign(String expected, String rawText) {
         TextComponent textComponent = new TextComponent(rawText);
-        assertEquals(expected, new SectionSignSerializer().serializeComponent(textComponent));
+        assertEquals(expected, ComponentSerializer.sectionSign().serializeComponent(textComponent));
     }
 
     @ParameterizedTest
