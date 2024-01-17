@@ -25,8 +25,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.Mockito.*;
 
@@ -143,8 +142,9 @@ class BungeeSerializerTest {
         }
 
         TextComponent c1 = new TextComponent(rawText);
-
-        assertEquals(c2.toString(), serializer.serializeComponent(c1).toString(), rawText);
+        BaseComponent c = serializer.serializeComponent(c1);
+        assertNotNull(c);
+        assertEquals(c2.toString(), c.toString(), rawText);
     }
 
     @Test
