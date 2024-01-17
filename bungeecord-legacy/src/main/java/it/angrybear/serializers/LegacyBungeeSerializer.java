@@ -123,6 +123,14 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         BaseComponent bc1 = (BaseComponent) component1;
         BaseComponent bc2 = (BaseComponent) component2;
         if (bc1 == null) return null;
+        if (bc1 instanceof net.md_5.bungee.api.chat.TextComponent) {
+            net.md_5.bungee.api.chat.TextComponent tc1 = (net.md_5.bungee.api.chat.TextComponent) bc1;
+            if (tc1.getText() == null) tc1.setText("");
+        }
+        if (bc2 instanceof net.md_5.bungee.api.chat.TextComponent) {
+            net.md_5.bungee.api.chat.TextComponent tc2 = (net.md_5.bungee.api.chat.TextComponent) bc2;
+            if (tc2.getText() == null) tc2.setText("");
+        }
         if (bc2 != null) bc1.addExtra(bc2);
         return (T) bc1;
     }
