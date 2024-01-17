@@ -41,7 +41,7 @@ class LegacyBungeeSerializerTest {
     private static Object[][] getHoverTests() {
         return new Object[][]{
                 new Object[]{HoverAction.SHOW_ACHIEVEMENT,
-                        new net.md_5.bungee.api.chat.TextComponent("{id:\"achievement.mineWood\"}"), "id=achievement.mineWood"
+                        new net.md_5.bungee.api.chat.TextComponent("achievement.mineWood"), "id=achievement.mineWood"
                 },
                 new Object[]{HoverAction.SHOW_TEXT, new net.md_5.bungee.api.chat.TextComponent("Hello friend!"),
                         "text=\"Hello friend!\""
