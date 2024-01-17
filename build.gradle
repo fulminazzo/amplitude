@@ -10,7 +10,7 @@ version = '1.0'
 
 ext.libraries = [
         bungeecord: 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT',
-        legacy_bungeecord: 'net.md-5:bungeecord-api:1.15-SNAPSHOT',
+        bungeecord_legacy: 'net.md-5:bungeecord-api:1.15-SNAPSHOT',
         velocity: 'com.velocitypowered:velocity-api:3.2.0-SNAPSHOT',
         json: 'com.google.code.gson:gson:2.10.1',
 
