@@ -60,22 +60,23 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
                 String id = component.getTagOption("id");
                 String count = component.getTagOption("Count");
                 String rawTag = component.getTagOption("Tag");
+                if (rawTag == null) rawTag = component.getTagOption("tag");
                 if (rawTag == null) rawTag = "";
-                else rawTag = ",Tag:" + rawTag;
-                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{Count:%s,id:%s%s}", count, id, rawTag));
+                else rawTag = ",tag:" + rawTag;
+                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{Count:%s,id:\"%s\"%s}", count, id, rawTag));
                 break;
             }
             case SHOW_ENTITY: {
                 String type = component.getTagOption("type");
                 String id = component.getTagOption("id");
                 String name = component.getTagOption("name");
-                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{type:%s,id:%s,name:%s}", type, id, name));
+                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{type:%s,id:\"%s\",name:%s}", type, id, name));
                 break;
             }
             case SHOW_ACHIEVEMENT: {
                 String id = component.getTagOption("id");
                 if (!id.startsWith("achievement.")) id = "achievement." + id;
-                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{id:%s}", id));
+                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{id:\"%s\"}", id));
                 break;
             }
             default: {

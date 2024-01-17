@@ -41,17 +41,17 @@ class LegacyBungeeSerializerTest {
     private static Object[][] getHoverTests() {
         return new Object[][]{
                 new Object[]{HoverAction.SHOW_ACHIEVEMENT,
-                        new net.md_5.bungee.api.chat.TextComponent("{id:achievement.mineWood}"), "id=achievement.mineWood"
+                        new net.md_5.bungee.api.chat.TextComponent("{id:\"achievement.mineWood\"}"), "id=achievement.mineWood"
                 },
                 new Object[]{HoverAction.SHOW_TEXT, new net.md_5.bungee.api.chat.TextComponent("Hello friend!"),
                         "text=\"Hello friend!\""
                 },
                 new Object[]{HoverAction.SHOW_ENTITY,
-                        new net.md_5.bungee.api.chat.TextComponent("{type:zombie,id:3f8164bf-1ed-4bcb-96be-7033beed028c,name:Zombie}"),
+                        new net.md_5.bungee.api.chat.TextComponent("{type:zombie,id:\"3f8164bf-1ed-4bcb-96be-7033beed028c\",name:Zombie}"),
                         "id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\" type=\"zombie\" name=\"Zombie\""
                 },
                 new Object[]{HoverAction.SHOW_ITEM,
-                        new net.md_5.bungee.api.chat.TextComponent("{Count:1b,id:minecraft:stone_sword,Tag:{Damage: 0, Enchantments:[{id:\"minecraft:sharpness\",lvl:5s}]}}"),
+                        new net.md_5.bungee.api.chat.TextComponent("{Count:1b,id:\"minecraft:stone_sword\",tag:{Damage: 0, Enchantments:[{id:\"minecraft:sharpness\",lvl:5s}]}}"),
                         "id=minecraft:stone_sword Count=1b Tag=\"{Damage: 0, Enchantments:[{id:\\\"minecraft:sharpness\\\",lvl:5s}]}\""
                 }
         };
