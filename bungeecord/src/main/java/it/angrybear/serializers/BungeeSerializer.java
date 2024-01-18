@@ -16,6 +16,15 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Implementation of {@link ComponentSerializer} for Minecraft 1.16 and above.
+ * It uses {@link LegacyBungeeSerializer} for most of its methods, but rewrites the following:
+ * <ul>
+ *     <li>implements Hex colors in {@link #serializeHexComponent(HexComponent)}</li>
+ *     <li>uses new {@link Content} objects to create {@link HoverEvent}</li>
+ *     <li>removes {@link #correctComponents(TextComponent)} function to allow for Hex colors</li>
+ * </ul>
+ */
 public class BungeeSerializer extends LegacyBungeeSerializer {
 
     @Override
