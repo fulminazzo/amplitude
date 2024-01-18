@@ -40,6 +40,11 @@ class ChatFormatterTest {
     }
 
     @Test
+    void testStrike() {
+        assertEquals(Style.STRIKETHROUGH, ChatFormatter.getChatFormatter("strike"));
+    }
+
+    @Test
     void testNotExistingChatFormatterName() {
         assertNull(ChatFormatter.getChatFormatter("not existing"));
     }
