@@ -47,6 +47,7 @@ public interface ChatFormatter {
         if (name == null) return null;
         name = name.replace("dark_", "dark")
                 .replace("light_", "light");
+        if (name.equalsIgnoreCase("strike")) return Style.STRIKETHROUGH;
         ChatFormatter[] chatFormatters = getChatFormatters();
         for (ChatFormatter c : chatFormatters) {
             if (c.getName().equalsIgnoreCase(name)) return c;
