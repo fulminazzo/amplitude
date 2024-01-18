@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  */
 @Getter
 public class TextComponent {
-    public static final Map<String, Function<String, OptionComponent>> CONTAINER_COMPONENTS = new HashMap<>();
+    public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<>();
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
     protected TextComponent next;
     protected Color color;
