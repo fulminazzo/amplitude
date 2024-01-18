@@ -23,6 +23,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Implementation of {@link ComponentSerializer} that supports the <a href="https://docs.advntr.dev/index.html">Adventure API</a>.
+ * This means
+ * that it can be used in every version of <a href="https://papermc.io/software/paper">PaperMC</a> from 1.16 and in <a href="https://papermc.io/software/velocity">Velocity</a>.
+ */
 @SuppressWarnings("unchecked")
 public class AdventureSerializer extends ComponentSerializer {
 

@@ -29,12 +29,10 @@ allprojects {
 
     repositories {
         mavenCentral()
-
         maven {
             name = 'bungeecord-repo'
             url = 'https://oss.sonatype.org/content/repositories/snapshots'
         }
-
         maven {
             name = "fulminazzo"
             url = "https://repo.fulminazzo.it/releases"
