@@ -176,7 +176,7 @@ public class Color implements ChatFormatter {
 
     /**
      * Check if two colors equal.
-     *
+     *4
      * @param color the color
      * @return the boolean
      */

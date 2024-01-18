@@ -2,4 +2,5 @@ rootProject.name = 'BearMessages'
 include 'common'
 include 'bungeecord'
 include 'bungeecord-legacy'
+include 'adventure'
 
