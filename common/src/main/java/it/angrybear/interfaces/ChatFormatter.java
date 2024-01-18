@@ -48,10 +48,16 @@ public interface ChatFormatter {
         name = name.replace("dark_", "dark")
                 .replace("light_", "light");
         if (name.equalsIgnoreCase("strike")) return Style.STRIKETHROUGH;
-        ChatFormatter[] chatFormatters = getChatFormatters();
-        for (ChatFormatter c : chatFormatters) {
+
+        for (ChatFormatter c : Color.values())
             if (c.getName().equalsIgnoreCase(name)) return c;
+
+        for (ChatFormatter c : Style.values()) {
+            String n = name;
+            if (c != Style.RESET && n.startsWith("!")) n = n.substring(1);
+            if (c.getName().equalsIgnoreCase(n)) return c;
         }
+
         if (name.length() == 1) return getChatFormatter(name.toLowerCase().charAt(0));
         else return null;
     }

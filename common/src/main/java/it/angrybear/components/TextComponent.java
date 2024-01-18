@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -109,9 +108,9 @@ public class TextComponent {
                 else if (formatter.equals(Style.RESET)) reset();
                 else {
                     try {
-                        Field field = this.getClass().getDeclaredField(formatter.getName());
+                        Field field = TextComponent.class.getDeclaredField(formatter.getName());
                         field.setAccessible(true);
-                        field.set(this, true);
+                        field.set(this, !tag.startsWith("!"));
                     } catch (IllegalAccessException | NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
@@ -248,12 +247,11 @@ public class TextComponent {
     public Style @NotNull [] getStyles() {
         return Arrays.stream(Style.values())
                 .filter(v -> {
-                    String name = v.getName();
-                    String methodName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
                     try {
-                        Method method = this.getClass().getMethod(methodName);
-                        return method.invoke(this).equals(true);
-                    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                        Field field = TextComponent.class.getDeclaredField(v.name().toLowerCase());
+                        field.setAccessible(true);
+                        return field.get(this) != null;
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }).toArray(Style[]::new);
@@ -464,15 +462,13 @@ public class TextComponent {
      * @param style the style
      * @return the style
      */
-    public boolean getStyle(@Nullable Style style) {
+    public Boolean getStyle(@Nullable Style style) {
         if (style == null) return false;
-        String methodName = style.name();
-        methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
-
         try {
-            Method getMethod = TextComponent.class.getDeclaredMethod("get" + methodName);
-            return (boolean) getMethod.invoke(this);
-        } catch (Exception e) {
+            Field field = TextComponent.class.getDeclaredField(style.name().toLowerCase());
+            field.setAccessible(true);
+            return (Boolean) field.get(this);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
     }
@@ -490,16 +486,27 @@ public class TextComponent {
      * Sets style.
      *
      * @param style     the style
+     * @param value     the value
+     */
+    public void setStyle(@Nullable Style style, Boolean value) {
+        setStyle(style, value, true);
+    }
+
+    /**
+     * Sets style.
+     *
+     * @param style     the style
+     * @param value     the value
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
-    public void setStyle(@Nullable Style style, boolean propagate) {
+    public void setStyle(@Nullable Style style, Boolean value, boolean propagate) {
         if (style == null) return;
         String methodName = style.name();
         methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
 
         try {
             Method setMethod = TextComponent.class.getDeclaredMethod("set" + methodName, Boolean.class, boolean.class);
-            setMethod.invoke(this, true, propagate);
+            setMethod.invoke(this, value, propagate);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -521,6 +528,7 @@ public class TextComponent {
             if (color != null && tmp.startsWith(color)) tmp = tmp.substring(color.length());
             for (Style s : getStyles()) {
                 String style = String.format("<%s>", s.getName());
+                if (!getStyle(s)) style = "<!" + style.substring(1);
                 if (tmp.startsWith(style)) tmp = tmp.substring(style.length());
             }
 
@@ -538,8 +546,11 @@ public class TextComponent {
     protected @NotNull String serializeSingle() {
         final String color = this.color == null ? null : String.format("<%s>", this.color.getName());
         final List<String> styles = new ArrayList<>();
-        for (Style style : getStyles())
-            styles.add(String.format("<%s>", style.getName()));
+        for (Style style : getStyles()) {
+            String s = String.format("<%s>", style.getName());
+            if (!getStyle(style)) s = "<!" + s.substring(1);
+            styles.add(s);
+        }
 
         String output = "";
         if (color != null) output += color;

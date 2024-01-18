@@ -48,17 +48,17 @@ class TextComponentTest {
                         mockComponent(null,
                                 null, null, true, null, null, null, null,
                                 "Hello world")},
-                new Object[]{"<strikethrough>Hello world",
+                new Object[]{"<!strikethrough>Hello world",
                         mockComponent(null,
-                                null, null, null, true, null, null, null,
+                                null, null, null, false, null, null, null,
                                 "Hello world")},
                 new Object[]{"<underline>Hello world",
                         mockComponent(null,
                                 null, null, null, null, true, null, null,
                                 "Hello world")},
-                new Object[]{"<italic>Hello world",
+                new Object[]{"<!italic>Hello world",
                         mockComponent(null,
-                                null, null, null, null, null, true, null,
+                                null, null, null, null, null, false, null,
                                 "Hello world")},
                 new Object[]{"<red><bold>Hello world",
                         mockComponent(mockComponent(null,
@@ -195,10 +195,16 @@ class TextComponentTest {
     void testSetStyle(Style style) {
         TextComponent textComponent = new TextComponent("Simple test <red>sounds great");
 
-        textComponent.setStyle(style, false);
-        assertFalse(textComponent.getNext().getStyle(style));
+        textComponent.setStyle(style, true, false);
+        assertTrue(textComponent.getStyle(style));
+        assertNull(textComponent.getNext().getStyle(style));
+
+        textComponent.setStyle(style, false, false);
+        assertFalse(textComponent.getStyle(style));
+        assertNull(textComponent.getNext().getStyle(style));
 
         textComponent.setStyle(style);
+        assertTrue(textComponent.getStyle(style));
         assertTrue(textComponent.getNext().getStyle(style));
     }
 
