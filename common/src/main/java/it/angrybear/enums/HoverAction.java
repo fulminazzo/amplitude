@@ -24,6 +24,8 @@ public enum HoverAction implements IAction {
      * or
      * <p>
      * Example: &#60;hover action="SHOW_ACHIEVEMENT" json="{ id: \"achievement.mineWood\" }"&#62;Hover event!&#60;/hover&#62;
+     * <p>
+     * Removed in Minecraft 1.12!
      */
     SHOW_ACHIEVEMENT("id", null),
     /**
