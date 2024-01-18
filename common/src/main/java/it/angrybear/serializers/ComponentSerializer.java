@@ -4,6 +4,8 @@ import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
+import it.angrybear.enums.Color;
+import it.angrybear.enums.Style;
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -135,6 +137,36 @@ public abstract class ComponentSerializer {
      * @return the result component
      */
     public abstract <T> @Nullable T sumTwoSerializedComponents(T component1, T component2);
+
+    /**
+     * Apply the specified color to the component.
+     *
+     * @param <T>       the type parameter
+     * @param component the component
+     * @param color     the color
+     * @return the result component
+     */
+    public abstract <T> @Nullable T applyColor(T component, Color color);
+
+    /**
+     * According to the value, apply or remove the specified style to the component.
+     *
+     * @param <T>       the type parameter
+     * @param component the component
+     * @param style     the style
+     * @param value     the value
+     * @return the result component
+     */
+    public abstract <T> @Nullable T applyStyle(T component, Style style, Boolean value);
+
+    /**
+     * Reset the component style and colors.
+     *
+     * @param <T>       the type parameter
+     * @param component the component
+     * @return the result component
+     */
+    public abstract <T> @Nullable T reset(T component);
 
     /**
      * Send to player.

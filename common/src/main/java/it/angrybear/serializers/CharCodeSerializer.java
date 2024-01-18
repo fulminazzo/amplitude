@@ -36,19 +36,8 @@ public class CharCodeSerializer extends ComponentSerializer {
         if (component == null) return null;
         Color color = component.getColor();
         String output = "";
-        if (color != null) {
-            final char idChar = color.getIdentifierChar();
-            if (idChar == '?') {
-                String code = color.getCode().toUpperCase()
-                        .replace("#", "x")
-                        .replace("", charCode);
-                if (code.endsWith(charCode)) code = code.substring(0, code.length() - 1);
-                output += code;
-            }
-            else output += charCode + idChar;
-        }
-        for (Style style : component.getStyles())
-            output += charCode + style.getIdentifierChar();
+        if (color != null) output += applyColor(output, color);
+        for (Style style : component.getStyles()) output += applyStyle(output, style, component.getStyle(style));
         output += component.getText();
         return output;
     }
@@ -75,6 +64,32 @@ public class CharCodeSerializer extends ComponentSerializer {
     @Override
     public <T> @Nullable T sumTwoSerializedComponents(@NotNull T component1, @NotNull T component2) {
         return (T) (component1 + component2.toString());
+    }
+
+    @Override
+    public <T> @Nullable T applyColor(@Nullable T component, @NotNull Color color) {
+        if (component == null) return null;
+        final char idChar = color.getIdentifierChar();
+        if (idChar == '?') {
+            String code = color.getCode().toUpperCase()
+                    .replace("#", "x")
+                    .replace("", charCode);
+            if (code.endsWith(charCode)) code = code.substring(0, code.length() - 1);
+            return (T) code;
+        } else return (T) (charCode + idChar);
+    }
+
+    @Override
+    public <T> @Nullable T applyStyle(@Nullable T component, @NotNull Style style, @Nullable Boolean value) {
+        if (component == null) return null;
+        if (value == null || !value) return (T) "";
+        return (T) (charCode + style.getIdentifierChar());
+    }
+
+    @Override
+    public <T> @Nullable T reset(@Nullable T component) {
+        if (component == null) return null;
+        return (T) (charCode + "r" + component);
     }
 
     @Override
