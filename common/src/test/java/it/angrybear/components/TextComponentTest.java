@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class TextComponentTest {
 
@@ -76,7 +77,7 @@ class TextComponentTest {
                                 "")},
                 new Object[]{"<red><bold><italic>Hello <reset>world",
                         mockComponent(mockComponent(mockComponent(mockComponent(null,
-                                                        null, null, null, null, null, null, true,
+                                                        "WHITE", false, false, false, false, false, true,
                                                         "world"),
                                                 "RED", null, true, null, null, true, null,
                                                 "Hello "),
@@ -116,6 +117,14 @@ class TextComponentTest {
     @MethodSource("getTestCloneComponents")
     void testClone(TextComponent component) {
         assertEquals(component.copy(), component);
+    }
+
+    @Test
+    void testSetSameOptions() {
+        TextComponent textComponent = new TextComponent("<red><bold>Hello <reset>world<blue>what color am I?");
+        TextComponent c = textComponent.getNext().getNext().getNext();
+        assertEquals(Color.BLUE, c.getColor());
+        assertNull(c.getStyle(Style.BOLD));
     }
 
     @Test
@@ -188,17 +197,20 @@ class TextComponentTest {
         String methodName = style.name();
         methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
 
-        Method getMethod = TextComponent.class.getDeclaredMethod("get" + methodName);
+        Method getMethod = TextComponent.class.getDeclaredMethod("is" + methodName);
+
+        if (style != Style.RESET) methodName = "set" + methodName;
+        else methodName = methodName.toLowerCase();
 
         // setStyle(Boolean, boolean)
-        Method setMethod = TextComponent.class.getDeclaredMethod("set" + methodName, Boolean.class, boolean.class);
+        Method setMethod = TextComponent.class.getDeclaredMethod(methodName, Boolean.class, boolean.class);
         setMethod.invoke(textComponent, true, false);
         assertFalse((Boolean) getMethod.invoke(textComponent.getNext()));
 
         // setStyle(Boolean)
-        setMethod = TextComponent.class.getDeclaredMethod("set" + methodName, Boolean.class);
+        setMethod = TextComponent.class.getDeclaredMethod(methodName, Boolean.class);
         setMethod.invoke(textComponent, true);
-        assertTrue((Boolean) getMethod.invoke(textComponent.getNext()));
+        assertEquals(style != Style.RESET, getMethod.invoke(textComponent.getNext()));
     }
 
     @ParameterizedTest
@@ -216,6 +228,7 @@ class TextComponentTest {
 
         textComponent.setStyle(style);
         assertTrue(textComponent.getStyle(style));
+        assumeTrue(style != Style.RESET, "If style is RESET, it should not be propagated");
         assertTrue(textComponent.getNext().getStyle(style));
     }
 

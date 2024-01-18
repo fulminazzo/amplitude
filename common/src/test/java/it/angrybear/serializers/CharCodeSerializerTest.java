@@ -31,7 +31,8 @@ class CharCodeSerializerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"§cHello world,<red>Hello world",
+    @CsvSource({
+            "§cHello world,<red>Hello world",
             "<reed>Hello world,<reed>Hello world",
             "§kHello world,<magic>Hello world",
             "§lHello world,<bold>Hello world",
@@ -40,14 +41,16 @@ class CharCodeSerializerTest {
             "§oHello world,<italic>Hello world",
             "§c§c§lHello world,<red><bold>Hello world",
             "§c§c§l§c§l§oHello world,<red><bold><italic>Hello world",
-            "§c§c§l§c§l§oHello §rworld,<red><bold><italic>Hello <reset>world"})
+            "§c§c§l§c§l§oHello §rworld,<red><bold><italic>Hello <reset>world"
+    })
     void testVariousMessagesSectionSign(String expected, String rawText) {
         TextComponent textComponent = new TextComponent(rawText);
         assertEquals(expected, ComponentSerializer.sectionSign().serializeComponent(textComponent));
     }
 
     @ParameterizedTest
-    @CsvSource({"<COLOR>cHello world,<red>Hello world",
+    @CsvSource({
+            "<COLOR>cHello world,<red>Hello world",
             "<reed>Hello world,<reed>Hello world",
             "<COLOR>kHello world,<magic>Hello world",
             "<COLOR>lHello world,<bold>Hello world",
@@ -56,7 +59,8 @@ class CharCodeSerializerTest {
             "<COLOR>oHello world,<italic>Hello world",
             "<COLOR>c<COLOR>c<COLOR>lHello world,<red><bold>Hello world",
             "<COLOR>c<COLOR>c<COLOR>l<COLOR>c<COLOR>l<COLOR>oHello world,<red><bold><italic>Hello world",
-            "<COLOR>c<COLOR>c<COLOR>l<COLOR>c<COLOR>l<COLOR>oHello <COLOR>rworld,<red><bold><italic>Hello <reset>world"})
+            "<COLOR>c<COLOR>c<COLOR>l<COLOR>c<COLOR>l<COLOR>oHello <COLOR>rworld,<red><bold><italic>Hello <reset>world"
+    })
     void testVariousMessagesAbstract(String expected, String rawText) {
         TextComponent textComponent = new TextComponent(rawText);
         assertEquals(expected, new CharCodeSerializer("<COLOR>").serializeComponent(textComponent));

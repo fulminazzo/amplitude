@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
  *     <li>&#60;hover&#62; which creates a new {@link HoverComponent}</li>
  * </ul>
  */
-@Getter
 public class TextComponent {
     public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<String, Function<String, TextComponent>>(){{
         put("click", ClickComponent::new);
@@ -36,7 +35,9 @@ public class TextComponent {
         put("hex", HexComponent::new);
     }};
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
+    @Getter
     protected TextComponent next;
+    @Getter
     protected Color color;
     protected Boolean magic;
     protected Boolean bold;
@@ -44,6 +45,7 @@ public class TextComponent {
     protected Boolean underline;
     protected Boolean italic;
     protected Boolean reset;
+    @Getter
     @Setter
     protected @Nullable String text;
 
@@ -101,7 +103,7 @@ public class TextComponent {
 
             if (formatter != null) {
                 if (formatter instanceof Color) this.color = (Color) formatter;
-                else if (formatter.equals(Style.RESET)) reset();
+                else if (formatter.equals(Style.RESET)) reset(true);
                 else {
                     try {
                         Field field = TextComponent.class.getDeclaredField(formatter.getName());
@@ -158,41 +160,29 @@ public class TextComponent {
      *
      * @param textComponent the text component
      */
-    public void setSameOptions(TextComponent textComponent) {
-        TextComponent tmp = textComponent;
-        while (tmp != null)
-            try {
-                if (!tmp.getReset())
-                    for (Field field : getOptionFields()) {
-                        if (TextComponent.class.isAssignableFrom(field.getType())) continue;
-                        if (Modifier.isFinal(field.getModifiers())) continue;
-                        Object nextObject = field.get(tmp);
-                        if (nextObject != null) continue;
-                        field.set(tmp, field.get(this));
-                    }
-                else return;
+    public void setSameOptions(@Nullable TextComponent textComponent) {
+        if (textComponent == null) return;
 
-                if (tmp instanceof ContainerComponent)
-                    tmp.setSameOptions(((ContainerComponent) tmp).child);
+        if (isReset()) return;
 
-                tmp = tmp.getNext();
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-    }
-
-    /**
-     * Reset the formatting using {@link Style#RESET}.
-     */
-    public void reset() {
         try {
-            for (Field field : getOptionFields())
-                if (!Modifier.isFinal(field.getModifiers()))
-                    field.set(this, null);
-            reset = true;
+            for (Field field : getOptionFields()) {
+                if (TextComponent.class.isAssignableFrom(field.getType())) continue;
+                if (Modifier.isFinal(field.getModifiers())) continue;
+                if (field.getName().equals("reset")) continue;
+                Object nextObject = field.get(textComponent);
+                if (nextObject != null) continue;
+                field.set(textComponent, field.get(this));
+            }
+
+            if (textComponent instanceof ContainerComponent)
+                textComponent.setSameOptions(((ContainerComponent) textComponent).child);
+
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+
+        textComponent.setSameOptions(textComponent.getNext());
     }
 
     /**
@@ -278,7 +268,7 @@ public class TextComponent {
      *
      * @return the magic
      */
-    public boolean getMagic() {
+    public boolean isMagic() {
         return magic != null && magic;
     }
 
@@ -307,7 +297,7 @@ public class TextComponent {
      *
      * @return the bold
      */
-    public boolean getBold() {
+    public boolean isBold() {
         return bold != null && bold;
     }
 
@@ -336,7 +326,7 @@ public class TextComponent {
      *
      * @return the strikethrough
      */
-    public boolean getStrikethrough() {
+    public boolean isStrikethrough() {
         return strikethrough != null && strikethrough;
     }
 
@@ -365,7 +355,7 @@ public class TextComponent {
      *
      * @return the underline
      */
-    public boolean getUnderline() {
+    public boolean isUnderline() {
         return underline != null && underline;
     }
 
@@ -394,7 +384,7 @@ public class TextComponent {
      *
      * @return the italic
      */
-    public boolean getItalic() {
+    public boolean isItalic() {
         return italic != null && italic;
     }
 
@@ -423,7 +413,7 @@ public class TextComponent {
      *
      * @return the reset
      */
-    public boolean getReset() {
+    public boolean isReset() {
         return reset != null && reset;
     }
 
@@ -432,24 +422,24 @@ public class TextComponent {
      *
      * @param reset the reset
      */
-    public void setReset(Boolean reset) {
-        setReset(reset, true);
+    public void reset(Boolean reset) {
+        reset(reset, true);
     }
 
     /**
      * Sets reset.
      *
-     * @param reset     the reset
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
-    public void setReset(Boolean reset, boolean propagate) {
+    public void reset(Boolean reset, boolean propagate) {
         this.reset = reset;
-        color = Color.WHITE;
-        bold = false;
-        italic = false;
-        strikethrough = false;
-        underline = false;
-        if (propagate) setSameOptions(next);
+        if (reset) {
+            setColor(Color.WHITE, false);
+            for (Style style : Style.values())
+                if (style != Style.RESET)
+                    setStyle(style, false, false);
+            if (propagate) setSameOptions(next);
+        }
     }
 
     /**
@@ -499,9 +489,11 @@ public class TextComponent {
         if (style == null) return;
         String methodName = style.name();
         methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
+        if (style != Style.RESET) methodName = "set" + methodName;
+        else methodName = methodName.toLowerCase();
 
         try {
-            Method setMethod = TextComponent.class.getDeclaredMethod("set" + methodName, Boolean.class, boolean.class);
+            Method setMethod = TextComponent.class.getDeclaredMethod(methodName, Boolean.class, boolean.class);
             setMethod.invoke(this, value, propagate);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -540,9 +532,10 @@ public class TextComponent {
      * @return the string
      */
     protected @NotNull String serializeSingle() {
-        final String color = this.color == null ? null : String.format("<%s>", this.color.getName());
+        final String color = this.color == null || isReset() ? null : String.format("<%s>", this.color.getName());
         final List<String> styles = new ArrayList<>();
-        for (Style style : getStyles()) {
+        if (isReset()) styles.add("<reset>");
+        else for (Style style : getStyles()) {
             String s = String.format("<%s>", style.getName());
             if (!getStyle(style)) s = "<!" + s.substring(1);
             styles.add(s);

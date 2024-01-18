@@ -35,7 +35,7 @@ public class CharCodeSerializer extends ComponentSerializer {
     public @Nullable String serializeSimpleTextComponent(@Nullable TextComponent component) {
         if (component == null) return null;
         String output = "";
-        if (component.getReset()) output = reset(output);
+        if (component.isReset()) output = reset(output);
         else {
             Color color = component.getColor();
             if (color != null) output += applyColor(output, color);
