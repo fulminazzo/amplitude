@@ -2,4 +2,5 @@ dependencies {
     api(project(":common"))
 
     compileOnly(libraries.adventure)
+    testImplementation(libraries.adventure)
 }
