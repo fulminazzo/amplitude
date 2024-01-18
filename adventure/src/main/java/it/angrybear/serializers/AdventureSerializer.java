@@ -6,9 +6,13 @@ import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.enums.ClickAction;
 import it.angrybear.enums.Color;
+import it.angrybear.enums.HoverAction;
 import it.angrybear.enums.Style;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -16,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @SuppressWarnings("unchecked")
 public class AdventureSerializer extends ComponentSerializer {
@@ -35,9 +40,42 @@ public class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T serializeHoverComponent(@Nullable HoverComponent component) {
+    public @Nullable Component serializeHoverComponent(@Nullable HoverComponent component) {
         if (component == null) return null;
-        return null;
+        Component c = serializeComponent(component.getChild());
+        if (c == null) c = Component.text("");
+
+        HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
+
+        HoverEvent<?> hoverEvent;
+        switch (hoverAction) {
+            case SHOW_ITEM: {
+                String id = component.getTagOption("id");
+                String count = component.getTagOption("Count");
+                count = count.substring(0, count.length() - 1);
+                String rawTag = component.getTagOption("Tag");
+                hoverEvent = HoverEvent.showItem(Key.key(id), Integer.parseInt(count), BinaryTagHolder.binaryTagHolder(rawTag));
+                break;
+            }
+            case SHOW_ENTITY: {
+                String type = component.getTagOption("type");
+                String id = component.getTagOption("id");
+                String name = component.getTagOption("name");
+                hoverEvent = HoverEvent.showEntity(Key.key(type), UUID.fromString(id), Component.text(name));
+                break;
+            }
+            case SHOW_ACHIEVEMENT: {
+                String id = component.getTagOption("id");
+                if (!id.startsWith("achievement.")) id = "achievement." + id;
+                hoverEvent = HoverEvent.showAchievement(id);
+                break;
+            }
+            default: {
+                hoverEvent = HoverEvent.showText(Component.text(component.getTagOption("text")));
+            }
+        }
+
+        return c.hoverEvent(hoverEvent);
     }
 
     @Override

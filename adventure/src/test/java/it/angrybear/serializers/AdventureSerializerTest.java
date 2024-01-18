@@ -2,11 +2,16 @@ package it.angrybear.serializers;
 
 import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HexComponent;
+import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.enums.ClickAction;
+import it.angrybear.enums.HoverAction;
 import it.angrybear.exceptions.InvalidOptionException;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.junit.jupiter.api.Test;
@@ -15,9 +20,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 class AdventureSerializerTest {
     private static final AdventureSerializer serializer = new AdventureSerializer();
@@ -34,25 +41,26 @@ class AdventureSerializerTest {
     }
 
     private static Object[][] getHoverTests() {
-        //TODO:
-//        return new Object[][]{
-//                new Object[]{HoverAction.SHOW_ACHIEVEMENT,
-//                        null, "id=achievement.mineWood"
-//                },
-//                new Object[]{HoverAction.SHOW_TEXT, new Text("Hello friend!"),
-//                        "text=\"Hello friend!\""
-//                },
-//                new Object[]{HoverAction.SHOW_ENTITY,
-//                        new Entity("zombie", "3f8164bf-1ed-4bcb-96be-7033beed028c",
-//                                new net.md_5.bungee.api.chat.TextComponent("Zombie")),
-//                        "id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\" type=\"zombie\" name=\"Zombie\""
-//                },
-//                new Object[]{HoverAction.SHOW_ITEM,
-//                        new Item("minecraft:stone_sword", 1, ItemTag.ofNbt("{Damage: 0, Enchantments:[{id:\"minecraft:sharpness\",lvl:5s}]}")),
-//                        "id=minecraft:stone_sword Count=1b Tag=\"{Damage: 0, Enchantments:[{id:\\\"minecraft:sharpness\\\",lvl:5s}]}\""
-//                }
-//        };
-        return null;
+        return new Object[][]{
+                new Object[]{HoverAction.SHOW_ACHIEVEMENT,
+                        HoverEvent.showAchievement("achievement.mineWood"), "id=achievement.mineWood"
+                },
+                new Object[]{HoverAction.SHOW_TEXT,
+                        HoverEvent.showText(Component.text("Hello friend!")),
+                        "text=\"Hello friend!\""
+                },
+                new Object[]{HoverAction.SHOW_ENTITY,
+                        HoverEvent.showEntity(Key.key("zombie"),
+                                UUID.fromString("3f8164bf-1ed-4bcb-96be-7033beed028c"),
+                                Component.text("Zombie")),
+                        "id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\" type=\"zombie\" name=\"Zombie\""
+                },
+                new Object[]{HoverAction.SHOW_ITEM,
+                        HoverEvent.showItem(Key.key("stone_sword"),
+                                1, BinaryTagHolder.binaryTagHolder("{Damage: 0, Enchantments:[{id:\"minecraft:sharpness\",lvl:5s}]}")),
+                        "id=minecraft:stone_sword Count=1b Tag=\"{Damage: 0, Enchantments:[{id:\\\"minecraft:sharpness\\\",lvl:5s}]}\""
+                }
+        };
     }
 
     @Test
@@ -163,17 +171,14 @@ class AdventureSerializerTest {
         else executable.execute();
     }
 
-//    @ParameterizedTest
-//    @MethodSource("getHoverTests")
-//    void testHoverComponent(HoverAction action, Content content, String options) {
-////        HoverComponent c1 = new HoverComponent("<hover action=" + action + " " + options + ">Test</hover>");
-////        assumeFalse(action.equals(HoverAction.SHOW_ACHIEVEMENT));
-////        BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent("Test");
-////        c2.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
-////        BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
-////        tmp.addExtra(c2);
-////        assertEquals(tmp.toString(), serializer.serializeHoverComponent(c1).toString());
-//    }
+    @ParameterizedTest
+    @MethodSource("getHoverTests")
+    void testHoverComponent(HoverAction action, HoverEvent<?> hoverEvent, String options) {
+        HoverComponent c1 = new HoverComponent("<hover action=" + action + " " + options + ">Test</hover>");
+        Component c2 = Component.text("Test");
+        c2 = c2.hoverEvent(hoverEvent);
+        assertEquals(c2, serializer.serializeHoverComponent(c1));
+    }
 
     @Test
     void testHexComponent() {
