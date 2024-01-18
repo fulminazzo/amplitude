@@ -143,7 +143,7 @@ class BungeeSerializerTest {
     @MethodSource("getHoverTests")
     void testHoverComponent(HoverAction action, Content content, String options) {
         HoverComponent c1 = new HoverComponent("<hover action=" + action + " " + options + ">Test</hover>");
-        assumeFalse(action.equals(HoverAction.SHOW_ACHIEVEMENT));
+        assumeFalse(action.equals(HoverAction.SHOW_ACHIEVEMENT), "SHOW_ACHIEVEMENT not available in Minecraft 1.12+");
         BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent("Test");
         c2.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
         BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();

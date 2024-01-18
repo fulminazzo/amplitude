@@ -12,8 +12,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * An abstract class that allows creating serializers for text components.
@@ -74,17 +77,17 @@ public abstract class ComponentSerializer {
      * @param component the component
      * @return the output
      */
+    @SuppressWarnings("unchecked")
     public <T> @Nullable T serializeComponent(@Nullable TextComponent component) {
         if (component == null) return null;
 
+        Method method = findSerializeMethod(component);
         T output;
-        if (component instanceof HoverComponent)
-            output = serializeHoverComponent((HoverComponent) component);
-        else if (component instanceof ClickComponent)
-            output = serializeClickComponent((ClickComponent) component);
-        else if (component instanceof HexComponent)
-            output = serializeHexComponent((HexComponent) component);
-        else output = serializeSimpleTextComponent(component);
+        try {
+            output = (T) method.invoke(this, component);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
 
         if (component.getNext() != null)
             output = sumTwoSerializedComponents(output, serializeComponent(component.getNext()));
@@ -191,4 +194,25 @@ public abstract class ComponentSerializer {
      * @param component the component
      */
     public abstract <T, P> void send(P player, T component);
+
+    private Method findSerializeMethod(@NotNull TextComponent component) {
+        Class<?> tmp = this.getClass();
+        while (tmp != null) {
+            Method method = Stream.concat(Arrays.stream(tmp.getDeclaredMethods()), Arrays.stream(tmp.getMethods()))
+                    .filter(m -> m.getName().startsWith("serialize"))
+                    .filter(m -> m.getParameterCount() == 1)
+                    .filter(m -> m.getParameterTypes()[0].equals(component.getClass()))
+                    .findFirst().orElse(null);
+            if (method != null) {
+                method.setAccessible(true);
+                return method;
+            }
+            tmp = tmp.getSuperclass();
+        }
+        try {
+            return ComponentSerializer.class.getMethod("serializeSimpleTextComponent", TextComponent.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
