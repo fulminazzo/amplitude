@@ -22,6 +22,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * Implementation of {@link ComponentSerializer} for Minecraft 1.16 and below.
+ * It supports every fork of <a href="https://www.spigotmc.org/wiki/bungeecord/">BungeeCord</a> and <a href="https://www.spigotmc.org/wiki/spigot/">Spigot</a>,
+ * since it uses the BungeeCord API to create components.
+ * <p>
+ * Hex colors are <b>disabled</b>.
+ */
 @SuppressWarnings({"unchecked"})
 @Getter
 @Setter
@@ -151,6 +158,13 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         return component;
     }
 
+    /**
+     * Sets style.
+     *
+     * @param component the component
+     * @param style     the style
+     * @param value     the value
+     */
     protected void setStyle(@NotNull BaseComponent component, @NotNull Style style, boolean value) {
         String methodName = style.getName();
         methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1).toLowerCase();
@@ -175,6 +189,12 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         return component;
     }
 
+    /**
+     * Apply for all components.
+     *
+     * @param component the component
+     * @param function  the function
+     */
     protected void applyForAllComponents(BaseComponent component, Consumer<BaseComponent> function) {
         if (component == null) return;
         function.accept(component);
