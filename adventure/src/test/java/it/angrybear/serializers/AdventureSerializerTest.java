@@ -1,16 +1,23 @@
 package it.angrybear.serializers;
 
+import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HexComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.enums.ClickAction;
+import it.angrybear.exceptions.InvalidOptionException;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AdventureSerializerTest {
     private static final AdventureSerializer serializer = new AdventureSerializer();
@@ -143,19 +150,17 @@ class AdventureSerializerTest {
     @ParameterizedTest
     @MethodSource("getClickTests")
     void testClickComponent(ClickAction action, String option) throws Throwable {
-//        Executable executable = () -> {
-//            ClickComponent c1 = new ClickComponent("<click action=" + action + " " +
-//                    new ArrayList<>(action.getRequiredOptions().keySet()).get(0) +
-//                    "=\"" + option + "\">Test</click>");
-//            BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent("Test");
-//            c2.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(action.name()), option));
-//            BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
-//            tmp.addExtra(c2);
-//            assertEquals(tmp, serializer.serializeClickComponent(c1));
-//        };
-//        if (action.equals(ClickAction.OPEN_FILE))
-//            assertThrows(InvalidOptionException.class, executable);
-//        else executable.execute();
+        Executable executable = () -> {
+            ClickComponent c1 = new ClickComponent("<click action=" + action + " " +
+                    new ArrayList<>(action.getRequiredOptions().keySet()).get(0) +
+                    "=\"" + option + "\">Test</click>");
+            Component c2 = Component.text("Test");
+            c2 = c2.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.valueOf(action.name()), option));
+            assertEquals(c2, serializer.serializeClickComponent(c1));
+        };
+        if (action.equals(ClickAction.OPEN_FILE))
+            assertThrows(InvalidOptionException.class, executable);
+        else executable.execute();
     }
 
 //    @ParameterizedTest

@@ -46,6 +46,7 @@ public class BungeeSerializer extends ComponentSerializer {
     @Override
     public BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
         if (component == null) return null;
+        //TODO: Not good! You will lose information! Please use serializeTextComponent!!!
         BaseComponent comp = serializeSimpleTextComponent(component.getChild());
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
