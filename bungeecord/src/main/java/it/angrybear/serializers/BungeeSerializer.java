@@ -1,53 +1,28 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
-import it.angrybear.enums.ClickAction;
+import it.angrybear.enums.Color;
 import it.angrybear.enums.HoverAction;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.ItemTag;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
-@SuppressWarnings({"unchecked"})
-public class BungeeSerializer extends ComponentSerializer {
-
-    @Override
-    public BaseComponent serializeSimpleTextComponent(@Nullable TextComponent component) {
-        if (component == null) return null;
-        String rawText = getBaseSerializer().serializeSimpleTextComponent(component);
-        if (rawText == null) return null;
-        BaseComponent[] components = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(rawText);
-        if (component.getReset())
-            for (BaseComponent c : components) {
-                c.setBold(false);
-                c.setStrikethrough(false);
-                c.setItalic(false);
-                c.setObfuscated(false);
-                c.setUnderlined(false);
-            }
-
-        BaseComponent c1 = components[0];
-        for (int i = 1; i < components.length; i++) c1.addExtra(components[i]);
-        return c1;
-    }
+public class BungeeSerializer extends LegacyBungeeSerializer {
 
     @Override
     public BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
+        correctComponents(component);
         if (component == null) return null;
-        //TODO: Not good! You will lose information! Please use serializeTextComponent!!!
-        BaseComponent comp = serializeSimpleTextComponent(component.getChild());
+        BaseComponent comp = serializeComponent(component.getChild());
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
         HoverEvent.Action action = HoverEvent.Action.valueOf(hoverAction.name());
@@ -59,6 +34,7 @@ public class BungeeSerializer extends ComponentSerializer {
                 String count = component.getTagOption("Count");
                 count = count.substring(0, count.length() - 1);
                 String rawTag = component.getTagOption("Tag");
+                if (rawTag == null || rawTag.isEmpty()) rawTag = component.getTagOption("tag");
                 ItemTag tag = null;
                 if (rawTag != null) tag = ItemTag.ofNbt(rawTag);
                 content = new Item(id, Integer.parseInt(count), tag);
@@ -89,84 +65,23 @@ public class BungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public BaseComponent serializeClickComponent(@Nullable ClickComponent component) {
-        if (component == null) return null;
-        BaseComponent comp = serializeSimpleTextComponent(component.getChild());
-
-        ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
-        ClickEvent.Action action = ClickEvent.Action.valueOf(clickAction.name());
-
-        String requiredOption = new ArrayList<>(clickAction.getRequiredOptions().keySet()).get(0);
-        ClickEvent clickEvent = new ClickEvent(action, component.getTagOption(requiredOption));
-        applyForAllComponents(comp, c -> c.setClickEvent(clickEvent));
-
-        BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
-        tmp.addExtra(comp);
-        return tmp;
-    }
-
-    @Override
     public BaseComponent serializeHexComponent(@Nullable HexComponent component) {
-        String rawText = getBaseSerializer().serializeHexComponent(component);
-        if (rawText == null) return null;
-        BaseComponent[] components = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(rawText);
-        BaseComponent comp = components[0];
-        for (int i = 1; i < components.length; i++)
-            comp.addExtra(components[i]);
-        return comp;
+        if (component == null) return null;
+        BaseComponent comp = new net.md_5.bungee.api.chat.TextComponent(component.getText());
+        return applyColor(comp, component.getColor());
     }
 
     @Override
-    public <T> @Nullable T sumTwoSerializedComponents(@Nullable T component1, @Nullable T component2) {
-        BaseComponent bc1 = (BaseComponent) component1;
-        BaseComponent bc2 = (BaseComponent) component2;
-        if (bc1 == null) return null;
-        if (bc2 != null) bc1.addExtra(bc2);
-        return (T) bc1;
-    }
-
-    private void applyForAllComponents(BaseComponent component, Consumer<BaseComponent> function) {
-        if (component == null) return;
-        function.accept(component);
-        if (component.getExtra() == null) return;
-        component.getExtra().forEach(e -> applyForAllComponents(e, function));
-    }
-
-    private ComponentSerializer getBaseSerializer() {
-        return sectionSign();
+    public <T> @Nullable T applyColor(@Nullable T component, @NotNull Color color) {
+        if (component == null) return null;
+        BaseComponent c = (BaseComponent) component;
+        ChatColor chatColor = ChatColor.of(color.isCustom() ? color.getCode() : color.getName());
+        c.setColor(chatColor);
+        return component;
     }
 
     @Override
-    public <T, P> void send(P player, T component) {
-        if (player == null) return;
-        if (component == null) return;
-        try {
-            // BungeeCord
-            try {
-                final Class<?> clazz = Class.forName("net.md_5.bungee.api.connection.ProxiedPlayer");
-                if (!clazz.isAssignableFrom(player.getClass()))
-                    throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
-                Method sendMessage = player.getClass().getMethod("sendMessage", BaseComponent.class);
-                sendMessage.invoke(player, component);
-                return;
-            } catch (ClassNotFoundException ignored) {}
+    protected void correctComponents(TextComponent component) {
 
-            // Spigot
-            try {
-                final Class<?> clazz = Class.forName("org.bukkit.entity.Player");
-                if (!clazz.isAssignableFrom(player.getClass()))
-                    throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
-                Method spigotMethod = player.getClass().getMethod("spigot");
-                Object spigot = spigotMethod.invoke(player);
-                Method sendMessage = spigot.getClass().getMethod("sendMessage", BaseComponent.class);
-                sendMessage.setAccessible(true);
-                sendMessage.invoke(spigot, component);
-                return;
-            } catch (ClassNotFoundException ignored) {}
-
-            throw new Exception("Platform not recognized: this serializer works only on BungeeCord or Spigot.");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

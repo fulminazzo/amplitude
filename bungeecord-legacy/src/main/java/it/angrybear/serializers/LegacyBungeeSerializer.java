@@ -57,7 +57,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
                 String id = component.getTagOption("id");
                 String count = component.getTagOption("Count");
                 String rawTag = component.getTagOption("Tag");
-                if (rawTag == null) rawTag = component.getTagOption("tag");
+                if (rawTag == null || rawTag.isEmpty()) rawTag = component.getTagOption("tag");
                 if (rawTag == null) rawTag = "";
                 else rawTag = ",tag:" + rawTag;
                 content = new net.md_5.bungee.api.chat.TextComponent(String.format("{Count:%s,id:\"%s\"%s}", count, id, rawTag));
@@ -110,7 +110,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         correctComponents(component);
         if (component == null) return null;
         String rawText = component.getText();
-        if (rawText == null) return null;
+        if (rawText == null) rawText = "";
         if (showingHex) rawText = component.getHexColor() + rawText;
         return new net.md_5.bungee.api.chat.TextComponent(rawText);
     }
@@ -151,7 +151,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         return component;
     }
 
-    private void setStyle(@NotNull BaseComponent component, @NotNull Style style, boolean value) {
+    protected void setStyle(@NotNull BaseComponent component, @NotNull Style style, boolean value) {
         String methodName = style.getName();
         methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1).toLowerCase();
         try {
@@ -175,7 +175,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         return component;
     }
 
-    private void applyForAllComponents(BaseComponent component, Consumer<BaseComponent> function) {
+    protected void applyForAllComponents(BaseComponent component, Consumer<BaseComponent> function) {
         if (component == null) return;
         function.accept(component);
         if (component.getExtra() == null) return;
