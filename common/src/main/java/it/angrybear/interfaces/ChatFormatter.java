@@ -62,20 +62,32 @@ public interface ChatFormatter {
      * @return the chat formatter
      */
     static @Nullable ChatFormatter getChatFormatter(char identifierChar) {
+        identifierChar = Character.toLowerCase(identifierChar);
         ChatFormatter[] chatFormatters = getChatFormatters();
         for (ChatFormatter c : chatFormatters)
             if (c.getIdentifierChar() == identifierChar)
                 return c;
+            /*
+                Allow compatibility for:
+                - bold (<b>)
+                - italic (<i>)
+                - strikethrough (<s>)
+                - underline (<u>)
+             */
+            else if (c instanceof Style && !c.equals(Style.MAGIC))
+                if (c.name().toLowerCase().charAt(0) == identifierChar)
+                    return c;
+
         return null;
     }
 
     /**
-     * Get an array containing all the chat formatters from {@link Color} and {@link Style}.
+     * Get an array containing all the chat formatters from {@link Style} and {@link Color}.
      *
      * @return the chat formatters
      */
     static ChatFormatter @NotNull [] getChatFormatters() {
-        return Stream.concat(Arrays.stream(Color.values()), Arrays.stream(Style.values()))
+        return Stream.concat(Arrays.stream(Style.values()), Arrays.stream(Color.values()))
                 .toArray(ChatFormatter[]::new);
     }
 }

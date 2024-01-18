@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -145,6 +146,26 @@ public class Color implements ChatFormatter {
                 throw new RuntimeException(e);
             }
         return "CUSTOM";
+    }
+
+    /**
+     * Get the corresponding Color from its name.
+     *
+     * @param name the name
+     * @return the color
+     */
+    public static Color valueOf(String name) {
+        return Arrays.stream(values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
+    /**
+     * Get the corresponding Color from its identifier char.
+     *
+     * @param identifierChar the identifier char
+     * @return the color
+     */
+    public static Color valueOf(char identifierChar) {
+        return Arrays.stream(values()).filter(v -> v.getIdentifierChar() == Character.toLowerCase(identifierChar)).findFirst().orElse(null);
     }
 
     /**
