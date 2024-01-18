@@ -5,12 +5,16 @@ import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.enums.ClickAction;
+import it.angrybear.enums.Color;
 import it.angrybear.enums.HoverAction;
+import it.angrybear.enums.Style;
 import lombok.Getter;
 import lombok.Setter;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
@@ -28,28 +32,21 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     public BaseComponent serializeSimpleTextComponent(@Nullable TextComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        String rawText = getBaseSerializer().serializeSimpleTextComponent(component);
-        if (rawText == null) return null;
-        BaseComponent[] components = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(rawText);
-        if (component.getReset())
-            for (BaseComponent c : components) {
-                c.setBold(false);
-                c.setStrikethrough(false);
-                c.setItalic(false);
-                c.setObfuscated(false);
-                c.setUnderlined(false);
-            }
-
-        BaseComponent c1 = components[0];
-        for (int i = 1; i < components.length; i++) c1.addExtra(components[i]);
-        return c1;
+        BaseComponent c = new net.md_5.bungee.api.chat.TextComponent(component.getText());
+        if (component.getReset()) c = reset(c);
+        else {
+            Color color = component.getColor();
+            if (color != null) c = applyColor(c, color);
+            for (Style style : component.getStyles()) c = applyStyle(c, style, component.getStyle(style));
+        }
+        return c;
     }
 
     @Override
     public BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent comp = serializeSimpleTextComponent(component.getChild());
+        BaseComponent comp = serializeComponent(component.getChild());
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
         HoverEvent.Action action = HoverEvent.Action.valueOf(hoverAction.name());
@@ -94,7 +91,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     public BaseComponent serializeClickComponent(@Nullable ClickComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent comp = serializeSimpleTextComponent(component.getChild());
+        BaseComponent comp = serializeComponent(component.getChild());
 
         ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
         ClickEvent.Action action = ClickEvent.Action.valueOf(clickAction.name());
@@ -135,15 +132,54 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         return (T) bc1;
     }
 
+    @Override
+    public <T> @Nullable T applyColor(@Nullable T component, @NotNull Color color) {
+        if (component == null) return null;
+        BaseComponent c = (BaseComponent) component;
+        ChatColor chatColor;
+        if (color.isCustom()) return component;
+        else chatColor = ChatColor.valueOf(color.name());
+        c.setColor(chatColor);
+        return component;
+    }
+
+    @Override
+    public <T> @Nullable T applyStyle(@Nullable T component, @NotNull Style style, @Nullable Boolean value) {
+        if (component == null) return null;
+        BaseComponent c = (BaseComponent) component;
+        setStyle(c, style, value != null && value);
+        return component;
+    }
+
+    private void setStyle(@NotNull BaseComponent component, @NotNull Style style, boolean value) {
+        String methodName = style.getName();
+        methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1).toLowerCase();
+        try {
+            Method method = component.getClass().getMethod("set" + methodName, Boolean.class);
+            method.invoke(component, value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public <T> @Nullable T reset(@Nullable T component) {
+        if (component == null) return null;
+        BaseComponent c = (BaseComponent) component;
+        c.setColor(ChatColor.WHITE);
+        c.setBold(false);
+        c.setStrikethrough(false);
+        c.setItalic(false);
+        c.setObfuscated(false);
+        c.setUnderlined(false);
+        return component;
+    }
+
     private void applyForAllComponents(BaseComponent component, Consumer<BaseComponent> function) {
         if (component == null) return;
         function.accept(component);
         if (component.getExtra() == null) return;
         component.getExtra().forEach(e -> applyForAllComponents(e, function));
-    }
-
-    private ComponentSerializer getBaseSerializer() {
-        return sectionSign();
     }
 
     @Override

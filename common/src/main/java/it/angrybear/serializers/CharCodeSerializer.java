@@ -34,10 +34,13 @@ public class CharCodeSerializer extends ComponentSerializer {
     @Override
     public @Nullable String serializeSimpleTextComponent(@Nullable TextComponent component) {
         if (component == null) return null;
-        Color color = component.getColor();
         String output = "";
-        if (color != null) output += applyColor(output, color);
-        for (Style style : component.getStyles()) output += applyStyle(output, style, component.getStyle(style));
+        if (component.getReset()) output = reset(output);
+        else {
+            Color color = component.getColor();
+            if (color != null) output += applyColor(output, color);
+            for (Style style : component.getStyles()) output += applyStyle(output, style, component.getStyle(style));
+        }
         output += component.getText();
         return output;
     }
