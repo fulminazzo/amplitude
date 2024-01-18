@@ -40,7 +40,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         correctComponents(component);
         if (component == null) return null;
         BaseComponent c = new net.md_5.bungee.api.chat.TextComponent(component.getText());
-        if (component.getReset()) c = reset(c);
+        if (component.isReset()) c = reset(c);
         else {
             Color color = component.getColor();
             if (color != null) c = applyColor(c, color);

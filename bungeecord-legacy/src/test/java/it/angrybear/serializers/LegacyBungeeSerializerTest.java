@@ -64,6 +64,7 @@ class LegacyBungeeSerializerTest {
                 + "<hex color=#FF00AA>are you ready? "
                 + "<bold>Hope you are... "
                 + "<reset>This should be reset. "
+                + "<red>"
                 ;
 
         BaseComponent c2 = createComponent(ChatColor.RED.toString());
@@ -71,6 +72,7 @@ class LegacyBungeeSerializerTest {
         addExtra(c2, createComponent("are you ready? "));
         addExtra(c2, createComponent(ChatColor.BOLD + "Hope you are... "));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
+        addExtra(c2, createComponent(ChatColor.RED.toString()));
 
         BaseComponent temp = c2;
         for (Object[] objects : getClickTests()) {
@@ -85,12 +87,10 @@ class LegacyBungeeSerializerTest {
             BaseComponent c = createComponent("");
 
             BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
-            resetComponent(component);
             component.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(action.name()), option));
             c.addExtra(component);
 
-            BaseComponent cc = createComponent(ChatColor.WHITE + " ");
-            resetComponent(cc);
+            BaseComponent cc = createComponent(" ");
             if (!action.equals(ClickAction.COPY_TO_CLIPBOARD)) {
                 c.addExtra(cc);
                 addExtra(temp, c);
@@ -103,8 +103,7 @@ class LegacyBungeeSerializerTest {
             rawText += String.format("<click action=%s %s=\"%s\">%s</click> ", action, required, option, text);
         }
 
-        BaseComponent cd = createComponent(ChatColor.WHITE + " ");
-        resetComponent(cd);
+        BaseComponent cd = createComponent(" ");
         temp.addExtra(cd);
         temp = cd;
 
@@ -120,12 +119,10 @@ class LegacyBungeeSerializerTest {
             BaseComponent c = createComponent("");
 
             BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
-            resetComponent(component);
             component.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), new BaseComponent[]{content}));
             c.addExtra(component);
 
-            BaseComponent cc = createComponent(ChatColor.WHITE + " ");
-            resetComponent(cc);
+            BaseComponent cc = createComponent(" ");
             if (!action.equals(HoverAction.SHOW_ITEM)) c.addExtra(cc);
 
             addExtra(temp, c);
