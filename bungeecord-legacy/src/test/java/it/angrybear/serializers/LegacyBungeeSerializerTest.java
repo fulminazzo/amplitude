@@ -64,7 +64,6 @@ class LegacyBungeeSerializerTest {
                 + "<hex color=#FF00AA>are you ready? "
                 + "<bold>Hope you are... "
                 + "<reset>This should be reset. "
-                + "<red>"
                 ;
 
         BaseComponent c2 = createComponent(ChatColor.RED.toString());
@@ -72,7 +71,7 @@ class LegacyBungeeSerializerTest {
         addExtra(c2, createComponent("are you ready? "));
         addExtra(c2, createComponent(ChatColor.BOLD + "Hope you are... "));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
-        addExtra(c2, createComponent(ChatColor.RED.toString()));
+        addExtra(c2, createComponent(ChatColor.WHITE.toString()));
 
         BaseComponent temp = c2;
         for (Object[] objects : getClickTests()) {

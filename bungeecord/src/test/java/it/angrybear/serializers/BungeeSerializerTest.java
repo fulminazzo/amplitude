@@ -1,12 +1,10 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.ClickComponent;
 import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.enums.ClickAction;
 import it.angrybear.enums.HoverAction;
-import it.angrybear.exceptions.InvalidOptionException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -16,18 +14,16 @@ import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static org.mockito.Mockito.*;
 
 @SuppressWarnings("deprecation")
 class BungeeSerializerTest {
@@ -78,6 +74,7 @@ class BungeeSerializerTest {
         addExtra(c2, createComponent(ChatColor.of("#FF00AA") + "are you ready? "));
         addExtra(c2, createComponent(ChatColor.of("#FF00AA") + ChatColor.BOLD.toString() + "Hope you are... "));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
+        addExtra(c2, createComponent(ChatColor.WHITE.toString()));
 
         BaseComponent temp = c2;
         for (Object[] objects : getClickTests()) {
@@ -92,12 +89,10 @@ class BungeeSerializerTest {
             BaseComponent c = createComponent("");
 
             BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
-            resetComponent(component);
             component.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(action.name()), option));
             c.addExtra(component);
 
             BaseComponent cc = createComponent(ChatColor.WHITE + " ");
-            resetComponent(cc);
             if (!action.equals(ClickAction.COPY_TO_CLIPBOARD)) {
                 c.addExtra(cc);
                 addExtra(temp, c);
@@ -111,7 +106,6 @@ class BungeeSerializerTest {
         }
 
         BaseComponent cd = createComponent(ChatColor.WHITE + " ");
-        resetComponent(cd);
         temp.addExtra(cd);
         temp = cd;
 
@@ -127,12 +121,10 @@ class BungeeSerializerTest {
             BaseComponent c = createComponent("");
 
             BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
-            resetComponent(component);
             component.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
             c.addExtra(component);
 
             BaseComponent cc = createComponent(ChatColor.WHITE + " ");
-            resetComponent(cc);
             if (!action.equals(HoverAction.SHOW_ITEM)) c.addExtra(cc);
 
             addExtra(temp, c);
