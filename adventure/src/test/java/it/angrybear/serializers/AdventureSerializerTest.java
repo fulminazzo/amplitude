@@ -7,6 +7,7 @@ import it.angrybear.components.TextComponent;
 import it.angrybear.enums.ClickAction;
 import it.angrybear.enums.HoverAction;
 import it.angrybear.exceptions.InvalidOptionException;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
@@ -14,17 +15,18 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class AdventureSerializerTest {
     private static final AdventureSerializer serializer = new AdventureSerializer();
@@ -65,85 +67,73 @@ class AdventureSerializerTest {
 
     @Test
     void testMultiple() {
-//        String rawText = "<red>"
-//                + "<bold>Hello world, "
-//                + "<hex color=#FF00AA>are you ready? "
-//                + "<bold>Hope you are... "
-//                + "<reset>This should be reset. "
-//                ;
-//
-//        BaseComponent c2 = createComponent(ChatColor.RED.toString());
-//        addExtra(c2, createComponent(ChatColor.BOLD + "Hello world, "));
-//        addExtra(c2, createComponent(ChatColor.of("#FF00AA") + "are you ready? "));
-//        addExtra(c2, createComponent(ChatColor.of("#FF00AA") + ChatColor.BOLD.toString() + "Hope you are... "));
-//        addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
-//
-//        BaseComponent temp = c2;
-//        for (Object[] objects : getClickTests()) {
-//            ClickAction action = (ClickAction) objects[0];
-//            final String option = (String) objects[1];
-//
-//            if (action.equals(ClickAction.OPEN_FILE)) continue;
-//
-//            final String text = String.format("Click %s Demo", action.name());
-//            final String required = new ArrayList<>(action.getRequiredOptions().keySet()).get(0);
-//
-//            BaseComponent c = createComponent("");
-//
-//            BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
-//            resetComponent(component);
-//            component.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(action.name()), option));
-//            c.addExtra(component);
-//
-//            BaseComponent cc = createComponent(ChatColor.WHITE + " ");
-//            resetComponent(cc);
-//            if (!action.equals(ClickAction.COPY_TO_CLIPBOARD)) {
-//                c.addExtra(cc);
-//                addExtra(temp, c);
-//                temp = cc;
-//            } else{
-//                addExtra(temp, c);
-//                temp = c;
-//            }
-//
-//            rawText += String.format("<click action=%s %s=\"%s\">%s</click> ", action, required, option, text);
-//        }
-//
-//        BaseComponent cd = createComponent(ChatColor.WHITE + " ");
-//        resetComponent(cd);
-//        temp.addExtra(cd);
-//        temp = cd;
-//
-//        for (Object[] objects : getHoverTests()) {
-//            HoverAction action = (HoverAction) objects[0];
-//            final Content content = (Content) objects[1];
-//            final String option = (String) objects[2];
-//
-//            if (action.equals(HoverAction.SHOW_ACHIEVEMENT)) continue;
-//
-//            final String text = String.format("Hover %s Demo", action.name());
-//
-//            BaseComponent c = createComponent("");
-//
-//            BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
-//            resetComponent(component);
-//            component.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
-//            c.addExtra(component);
-//
-//            BaseComponent cc = createComponent(ChatColor.WHITE + " ");
-//            resetComponent(cc);
-//            if (!action.equals(HoverAction.SHOW_ITEM)) c.addExtra(cc);
-//
-//            addExtra(temp, c);
-//            temp = cc;
-//
-//            rawText += String.format("<hover action=%s %s>%s</hover> ", action, option, text);
-//        }
-//
-//        TextComponent c1 = new TextComponent(rawText);
-//        BaseComponent c = serializer.serializeComponent(c1);
-//        assertNotNull(c);
-//        assertEquals(c2.toString(), c.toString(), rawText);
+        String rawText = "<red>"
+                + "<bold>Hello world, "
+                + "<hex color=#FF00AA>are you ready? "
+                + "<bold>Hope you are... "
+                + "<reset>This should be reset. "
+                ;
+
+        Component c2 = Component.text("").color(NamedTextColor.RED);
+        c2 = addExtra(c2, Component.text("Hello world, ")
+                .color(NamedTextColor.RED)
+                .decorate(TextDecoration.BOLD));
+        c2 = addExtra(c2, Component.text("are you ready? ")
+                .color(TextColor.fromHexString("#FF00AA"))
+                .decorate(TextDecoration.BOLD));
+        c2 = addExtra(c2, Component.text("Hope you are... ")
+                .color(TextColor.fromHexString("#FF00AA"))
+                .decorate(TextDecoration.BOLD));
+        c2 = addExtra(c2, Component.text("This should be reset. ")
+                .color(NamedTextColor.WHITE)
+                .decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.FALSE)
+                .decoration(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE)
+                .decoration(TextDecoration.UNDERLINED, TextDecoration.State.FALSE)
+        );
+
+        for (Object[] objects : getClickTests()) {
+            ClickAction action = (ClickAction) objects[0];
+            final String option = (String) objects[1];
+
+            if (action.equals(ClickAction.OPEN_FILE)) continue;
+
+            final String text = String.format("Click %s Demo", action.name());
+            final String required = new ArrayList<>(action.getRequiredOptions().keySet()).get(0);
+
+            Component c = Component.text(text)
+                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.valueOf(action.name()), option));
+            c2 = addExtra(c2, c);
+
+            if (!action.equals(ClickAction.COPY_TO_CLIPBOARD))
+                c2 = addExtra(c2, Component.text(" "));
+
+            rawText += String.format("<click action=%s %s=\"%s\">%s</click> ", action, required, option, text);
+        }
+
+        c2 = addExtra(c2, Component.text(" "));
+
+        for (Object[] objects : getHoverTests()) {
+            HoverAction action = (HoverAction) objects[0];
+            final HoverEvent<?> hoverEvent = (HoverEvent<?>) objects[1];
+            final String option = (String) objects[2];
+
+            final String text = String.format("Hover %s Demo", action.name());
+
+            Component component = Component.text(text).hoverEvent(hoverEvent);
+            c2 = addExtra(c2, component);
+
+            if (!action.equals(HoverAction.SHOW_ITEM))
+                c2 = addExtra(c2, Component.text(" "));
+
+            rawText += String.format("<hover action=%s %s>%s</hover> ", action, option, text);
+        }
+
+        TextComponent c1 = new TextComponent(rawText);
+        Component c = serializer.serializeComponent(c1);
+        assertNotNull(c);
+        assertEquals(c2, c, rawText);
     }
 
     @Test
@@ -192,14 +182,23 @@ class AdventureSerializerTest {
 
     @Test
     void testSend() {
-//        TextComponent component = new TextComponent("This is an example");
-//        ProxiedPlayer player = mock(ProxiedPlayer.class);
-//        serializer.send(player, component);
-//        verify(player, atLeastOnce()).sendMessage((BaseComponent) serializer.serializeComponent(component));
+        TextComponent component = new TextComponent("This is an example");
+        Audience player = mock(Audience.class);
+        serializer.send(player, component);
+        verify(player, atLeastOnce()).sendMessage(serializer.serializeComponent(component));
     }
 
     @Test
     void testSerializerMethod() {
         assertEquals(AdventureSerializer.class, ComponentSerializer.serializer().getClass());
+    }
+
+    private Component addExtra(Component c1, Component c2) {
+        List<Component> children = new ArrayList<>(c1.children());
+        if (children.isEmpty()) return c1.append(c2);
+        else {
+            children.set(children.size() - 1, addExtra(children.get(children.size() - 1), c2));
+            return c1.children(children);
+        }
     }
 }

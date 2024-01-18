@@ -19,6 +19,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -31,11 +32,13 @@ public class AdventureSerializer extends ComponentSerializer {
         String rawText = component.getText();
         if (rawText == null) return null;
         Component textComponent = Component.text(rawText);
-        Color color = component.getColor();
-        if (color != null) textComponent = textComponent.color(getColor(color));
-        for (Style style : component.getStyles())
-            if (!style.equals(Style.RESET))
-                textComponent.decoration(TextDecoration.valueOf(style.name()));
+        if (component.isReset()) textComponent = reset(textComponent);
+        else {
+            Color color = component.getColor();
+            if (color != null) textComponent = applyColor(textComponent, color);
+            for (Style style : component.getStyles())
+                textComponent = applyStyle(textComponent, style, component.getStyle(style));
+        }
         return textComponent;
     }
 
@@ -54,7 +57,10 @@ public class AdventureSerializer extends ComponentSerializer {
                 String count = component.getTagOption("Count");
                 count = count.substring(0, count.length() - 1);
                 String rawTag = component.getTagOption("Tag");
-                hoverEvent = HoverEvent.showItem(Key.key(id), Integer.parseInt(count), BinaryTagHolder.binaryTagHolder(rawTag));
+                if (rawTag == null || rawTag.isEmpty()) rawTag = component.getTagOption("tag");
+                if (rawTag == null || rawTag.isEmpty())
+                    hoverEvent = HoverEvent.showItem(Key.key(id), Integer.parseInt(count));
+                else hoverEvent = HoverEvent.showItem(Key.key(id), Integer.parseInt(count), BinaryTagHolder.binaryTagHolder(rawTag));
                 break;
             }
             case SHOW_ENTITY: {
@@ -106,16 +112,54 @@ public class AdventureSerializer extends ComponentSerializer {
         Component tc1 = (Component) component1;
         Component tc2 = (Component) component2;
         if (tc1 == null) return null;
-        if (tc2 != null) tc1 = tc1.append(tc1);
+        if (tc1.equals(Component.empty())) return (T) tc2;
+        if (tc2 != null) tc1 = tc1.append(tc2);
         return (T) tc1;
     }
 
     @Override
-    public <T, P> void send(@Nullable P player, @Nullable T component) {
-
+    public <T> @Nullable T applyColor(T component, Color color) {
+        Component c = (Component) component;
+        return (T) c.color(getColor(color));
     }
 
-    private NamedTextColor getColor(Color color) {
+    @Override
+    public <T> @Nullable T applyStyle(T component, Style style, Boolean value) {
+        Component c = (Component) component;
+        return (T) c.decoration(TextDecoration.valueOf(style.name()), value);
+    }
+
+    @Override
+    public <T> @Nullable T reset(T component) {
+        Component c = (Component) component;
+        c = c.color(NamedTextColor.WHITE);
+        for (TextDecoration decoration : TextDecoration.values())
+            c = c.decoration(decoration, false);
+        return (T) c;
+    }
+
+    @Override
+    public <T, P> void send(@Nullable P player, @Nullable T component) {
+        if (player == null) return;
+        if (component == null) return;
+        try {
+            try {
+                final Class<?> clazz = Class.forName("net.kyori.adventure.audience.Audience");
+                if (!clazz.isAssignableFrom(player.getClass()))
+                    throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
+                Method sendMessage = player.getClass().getMethod("sendMessage", Component.class);
+                sendMessage.setAccessible(true);
+                sendMessage.invoke(player, component);
+                return;
+            } catch (ClassNotFoundException ignored) {}
+
+            throw new Exception("Platform not recognized: this serializer works only on BungeeCord or Spigot.");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private TextColor getColor(Color color) {
         for (Field field : NamedTextColor.class.getFields())
             if (field.getName().equals(color.name())) {
                 try {
@@ -124,6 +168,6 @@ public class AdventureSerializer extends ComponentSerializer {
                     throw new RuntimeException(e);
                 }
             }
-        return null;
+        return TextColor.fromHexString(color.getCode());
     }
 }
