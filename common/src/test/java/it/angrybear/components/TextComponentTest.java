@@ -90,12 +90,12 @@ class TextComponentTest {
 
     private static TextComponent[] getTestCloneComponents() {
         return new TextComponent[]{
-//                new TextComponent("<red>Hello world"),
-//                new OptionComponentTest.MockContainer("<mock option=\"test\">Hello world"),
-//                new HexComponent("<hex color=\"#FF00AA\">Hello world"),
+                new TextComponent("<red>Hello world"),
+                new OptionComponentTest.MockContainer("<mock option=\"test\">Hello world"),
+                new HexComponent("<hex color=\"#FF00AA\">Hello world"),
                 new ContainerComponentTest.MockContainer("<mock option=\"test\">Hello world</mock>"),
-//                new ClickComponent("<click action=OPEN_URL url=https://www.google.com>Hello world</click>"),
-//                new HoverComponent("<hover action=SHOW_TEXT text=\"Simple text\">Hello world</hover>")
+                new ClickComponent("<click action=OPEN_URL url=https://www.google.com>Hello world</click>"),
+                new HoverComponent("<hover action=SHOW_TEXT text=\"Simple text\">Hello world</hover>")
         };
     }
 
