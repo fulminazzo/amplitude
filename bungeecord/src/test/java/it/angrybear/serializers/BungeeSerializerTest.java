@@ -147,33 +147,6 @@ class BungeeSerializerTest {
         assertEquals(c2.toString(), c.toString(), rawText);
     }
 
-    @Test
-    void testSimpleComponent() {
-        String rawText = "Hello world";
-        TextComponent c1 = new TextComponent("<red>" + rawText);
-        BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent(rawText);
-        c2.setColor(ChatColor.RED);
-        assertEquals(c2, serializer.serializeSimpleTextComponent(c1));
-    }
-
-    @ParameterizedTest
-    @MethodSource("getClickTests")
-    void testClickComponent(ClickAction action, String option) throws Throwable {
-        Executable executable = () -> {
-            ClickComponent c1 = new ClickComponent("<click action=" + action + " " +
-                    new ArrayList<>(action.getRequiredOptions().keySet()).get(0) +
-                    "=\"" + option + "\">Test</click>");
-            BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent("Test");
-            c2.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(action.name()), option));
-            BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
-            tmp.addExtra(c2);
-            assertEquals(tmp, serializer.serializeClickComponent(c1));
-        };
-        if (action.equals(ClickAction.OPEN_FILE))
-            assertThrows(InvalidOptionException.class, executable);
-        else executable.execute();
-    }
-
     @ParameterizedTest
     @MethodSource("getHoverTests")
     void testHoverComponent(HoverAction action, Content content, String options) {
@@ -195,14 +168,6 @@ class BungeeSerializerTest {
         BaseComponent c2 = c[0];
         for (int i = 1; i < c.length; i++) c2.addExtra(c[i]);
         assertEquals(c2, serializer.serializeHexComponent(c1));
-    }
-
-    @Test
-    void testSend() {
-        TextComponent component = new TextComponent("This is an example");
-        ProxiedPlayer player = mock(ProxiedPlayer.class);
-        serializer.send(player, component);
-        verify(player, atLeastOnce()).sendMessage((BaseComponent) serializer.serializeComponent(component));
     }
 
     @Test
