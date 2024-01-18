@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * A component that supports options.
@@ -28,13 +29,18 @@ import java.util.regex.Pattern;
 @Getter
 public abstract class OptionComponent extends TextComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
+    protected final @NotNull String tagName;
     protected final @NotNull Map<String, String> tagOptions;
+
+    public OptionComponent() {
+        throw new RuntimeException("Cannot omit tag name");
+    }
 
     /**
      * Instantiates a new Option component.
      */
-    public OptionComponent() {
-        this(null);
+    public OptionComponent(@NotNull String tagName) {
+        this(null, tagName);
     }
 
     /**
@@ -42,7 +48,8 @@ public abstract class OptionComponent extends TextComponent {
      *
      * @param rawText the raw text
      */
-    public OptionComponent(@Nullable String rawText) {
+    public OptionComponent(@Nullable String rawText, @NotNull String tagName) {
+        this.tagName = tagName;
         this.tagOptions = new HashMap<>();
         setContent(rawText);
     }
@@ -50,7 +57,12 @@ public abstract class OptionComponent extends TextComponent {
     @Override
     public void setContent(@Nullable String rawText) {
         if (rawText == null) return;
-        super.setContent(rawText);
+        final Matcher matcher = TAG_REGEX.matcher(rawText);
+        if (matcher.find()) {
+            final String tag = matcher.group(1).split(" ")[0];
+            if (tag.equals(tagName)) super.setContent(rawText.substring(matcher.group().length()));
+            else setNext(rawText);
+        } else setNext(rawText);
         setOptions(rawText);
     }
 
@@ -130,6 +142,27 @@ public abstract class OptionComponent extends TextComponent {
      */
     protected Map<String, OptionValidator> getRequiredOptions() {
         return new HashMap<>();
+    }
+
+    /**
+     * Gets tag regex from the tag name.
+     *
+     * @param tagName the tag name
+     * @return the tag regex
+     */
+    public static @NotNull Pattern getTagRegex(String tagName) {
+        String regex = "<" + tagName + " ?((?:(?!<" + tagName + ")(?!</" + tagName + ">).)*)";
+        return Pattern.compile(regex);
+    }
+
+    @Override
+    protected @NotNull String serializeSingle() {
+        String options = this.tagOptions.entrySet().stream()
+                .map(e -> String.format("%s=\"%s\"", e.getKey(), e.getValue()))
+                .collect(Collectors.joining(" "));
+        String tag = "<" + tagName;
+        if (!options.isEmpty()) tag += " " + options;
+        return tag + String.format(">%s", getText());
     }
 
     /**

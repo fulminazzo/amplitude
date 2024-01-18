@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 @Getter
 public abstract class ContainerComponent extends OptionComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
-    protected final @NotNull String tagName;
     protected TextComponent child;
 
     /**
@@ -37,9 +36,7 @@ public abstract class ContainerComponent extends OptionComponent {
      * @param tagName the tag name
      */
     public ContainerComponent(@Nullable String rawText, @NotNull String tagName) {
-        this.tagName = tagName;
-
-        setContent(rawText);
+        super(rawText, tagName);
     }
 
     @Override
@@ -115,15 +112,9 @@ public abstract class ContainerComponent extends OptionComponent {
         setSameOptions(child);
     }
 
-    /**
-     * Gets tag regex from the tag name.
-     *
-     * @param tagName the tag name
-     * @return the tag regex
-     */
-    public static @NotNull Pattern getTagRegex(String tagName) {
-        String regex = "<" + tagName + " ?((?:(?!<" + tagName + ")(?!</" + tagName + ">).)*)";
-        return Pattern.compile(regex);
+    @Override
+    protected @NotNull String serializeSingle() {
+        return super.serializeSingle() + "</" + tagName + ">";
     }
 
     /**

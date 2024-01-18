@@ -8,9 +8,7 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -32,7 +30,11 @@ import java.util.regex.Pattern;
  */
 @Getter
 public class TextComponent {
-    public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<>();
+    public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<String, Function<String, TextComponent>>(){{
+        put("click", ClickComponent::new);
+        put("hover", HoverComponent::new);
+        put("hex", HexComponent::new);
+    }};
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
     protected TextComponent next;
     protected Color color;
@@ -67,12 +69,6 @@ public class TextComponent {
      * @param rawText the raw text
      */
     public void setContent(@Nullable String rawText) {
-        if (CONTAINER_COMPONENTS.isEmpty()) {
-            CONTAINER_COMPONENTS.put("click", ClickComponent::new);
-            CONTAINER_COMPONENTS.put("hover", HoverComponent::new);
-            CONTAINER_COMPONENTS.put("hex", HexComponent::new);
-        }
-
         if (rawText == null || rawText.isEmpty()) return;
         this.text = null;
         final Matcher matcher = TAG_REGEX.matcher(rawText);
@@ -568,6 +564,33 @@ public class TextComponent {
     public boolean isEmpty() {
         for (Object o : getOptions()) if (o != null) return false;
         return text == null || text.isEmpty();
+    }
+
+    /**
+     * Clones the current component into another identical one.
+     *
+     * @param <T> the type of the component
+     * @return the clone
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends TextComponent> T copy() {
+        final String serialize = this.serialize();
+        Class<T> clazz = (Class<T>) this.getClass();
+        try {
+            Constructor<T> constructor = clazz.getConstructor(String.class);
+            constructor.setAccessible(true);
+            return constructor.newInstance(serialize);
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            try {
+                Constructor<T> constructor = clazz.getConstructor();
+                constructor.setAccessible(true);
+                T t = constructor.newInstance();
+                t.setContent(serialize);
+                return t;
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException ex) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**

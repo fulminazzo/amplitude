@@ -34,7 +34,7 @@ public class HexComponent extends OptionComponent {
      * @param rawText the raw text
      */
     public HexComponent(String rawText) {
-        super(rawText);
+        super(rawText, "hex");
     }
 
     @Override
@@ -57,13 +57,5 @@ public class HexComponent extends OptionComponent {
      */
     public String getHexColor() {
         return getTagOption("color").toUpperCase();
-    }
-
-    @Override
-    public @NotNull String serializeSingle() {
-        String output = super.serializeSingle();
-        if (color != null)
-            output = output.substring(String.format("<%s>", color.getName()).length());
-        return String.format("<hex color=\"%s\">", getHexColor()) + output;
     }
 }

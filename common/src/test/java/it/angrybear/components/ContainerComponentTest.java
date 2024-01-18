@@ -133,6 +133,13 @@ class ContainerComponentTest {
         assertEquals(Color.RED, mockContainer.getChild().getColor());
     }
 
+    @Test
+    void testSerialize() {
+        String rawText = "<mock color=\"RED\">Hello world</mock>";
+        MockContainer mockContainer = new MockContainer(rawText);
+        assertEquals(rawText, mockContainer.serialize());
+    }
+
     private static String mockContainerComponent(String next, String children) {
         String mock = mockComponent(null, null, null, null, null, null, null, null, null);
         mock = mock.replace("color:", String.format("child: %s, color:", children));

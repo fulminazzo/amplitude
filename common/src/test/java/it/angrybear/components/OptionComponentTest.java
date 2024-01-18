@@ -89,18 +89,24 @@ class OptionComponentTest {
         assertFalse(new MockContainer("<mock key=\"value\">").isEmpty());
     }
 
+    @Test
+    void testSerialize() {
+        String rawText = "<mock color=\"RED\">Hello world";
+        MockContainer mockContainer = new MockContainer(rawText);
+        assertEquals(rawText, mockContainer.serialize());
+    }
 
     static class MockContainer extends OptionComponent {
 
         public MockContainer(String rawText) {
-            super(rawText);
+            super(rawText, "mock");
         }
     }
 
     static class MockRequiredContainer extends OptionComponent {
 
         public MockRequiredContainer(String rawText) {
-            super(rawText);
+            super(rawText, "mock");
         }
 
         @Override
