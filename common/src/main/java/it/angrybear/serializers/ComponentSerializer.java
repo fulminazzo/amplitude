@@ -138,6 +138,15 @@ public abstract class ComponentSerializer {
     public abstract <T> @Nullable T serializeInsertionComponent(InsertionComponent component);
 
     /**
+     * Serialize a {@link FontComponent}.
+     *
+     * @param <T>       the type parameter
+     * @param component the component
+     * @return the output
+     */
+    public abstract <T> @Nullable T serializeFontComponent(FontComponent component);
+
+    /**
      * Sum two serialized components.
      *
      * @param <T>        the type parameter
