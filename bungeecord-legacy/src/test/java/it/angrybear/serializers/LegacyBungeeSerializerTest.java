@@ -65,7 +65,7 @@ class LegacyBungeeSerializerTest {
                 + "<bold>Hope you are... "
                 + "<font id=\"ILLAGERALT\">or else... "
                 + "<reset>This should be reset. "
-                + "<insertion text=\"Hello there!\">This too</insertion>"
+                + "<insertion text=\"Hello there!\">Insert DEMO </insertion>"
                 ;
 
         BaseComponent c2 = createComponent(ChatColor.RED.toString());
@@ -75,7 +75,7 @@ class LegacyBungeeSerializerTest {
         addExtra(c2, createComponent(ChatColor.BOLD + "or else... "));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
         addExtra(c2, createComponent(ChatColor.WHITE.toString()));
-        addExtra(c2, createComponent("This too", c -> c.setInsertion("Hello there!")));
+        addExtra(c2, createComponent("Insert DEMO ", c -> c.setInsertion("Hello there!")));
         addExtra(c2, createComponent(""));
 
         BaseComponent temp = c2;
@@ -227,7 +227,7 @@ class LegacyBungeeSerializerTest {
         c.setStrikethrough(false);
         c.setItalic(false);
         c.setObfuscated(false);
-        c.setUnderlined(false);
+        c.setUnderlinedd(false);
     }
 
     private BaseComponent createComponent(String text) {

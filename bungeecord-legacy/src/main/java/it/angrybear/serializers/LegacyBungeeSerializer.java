@@ -189,7 +189,6 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     protected void setStyle(@NotNull BaseComponent component, @NotNull Style style, boolean value) {
         String methodName = style.getName();
         methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1).toLowerCase();
-        if (style == Style.UNDERLINE) methodName += "d";
         try {
             Method method = component.getClass().getMethod("set" + methodName, Boolean.class);
             method.invoke(component, value);
