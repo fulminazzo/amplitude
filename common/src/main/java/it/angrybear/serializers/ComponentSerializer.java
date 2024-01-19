@@ -204,7 +204,7 @@ public abstract class ComponentSerializer {
         c = applyFont(c, Font.DEFAULT);
         for (Style style : Style.values())
             if (style != Style.RESET) c = applyStyle(c, style, false);
-        return component;
+        return c;
     }
 
     /**
