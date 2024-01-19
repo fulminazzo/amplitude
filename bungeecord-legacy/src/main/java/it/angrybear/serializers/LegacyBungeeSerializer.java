@@ -1,10 +1,7 @@
 package it.angrybear.serializers;
 
 import it.angrybear.components.*;
-import it.angrybear.enums.ClickAction;
-import it.angrybear.enums.Color;
-import it.angrybear.enums.HoverAction;
-import it.angrybear.enums.Style;
+import it.angrybear.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
@@ -41,6 +38,8 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         else {
             Color color = component.getColor();
             if (color != null) c = applyColor(c, color);
+            Font font = component.getFont();
+            if (font != null) c = applyFont(c, font);
             for (Style style : component.getStyles()) c = applyStyle(c, style, component.getStyle(style));
         }
         return c;
@@ -132,6 +131,13 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
+    public @Nullable BaseComponent serializeFontComponent(@Nullable FontComponent component) {
+        correctComponents(component);
+        if (component == null) return null;
+        return serializeSimpleTextComponent(component);
+    }
+
+    @Override
     public <T> @Nullable T sumTwoSerializedComponents(@Nullable T component1, @Nullable T component2) {
         BaseComponent bc1 = (BaseComponent) component1;
         BaseComponent bc2 = (BaseComponent) component2;
@@ -164,6 +170,11 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         if (component == null) return null;
         BaseComponent c = (BaseComponent) component;
         setStyle(c, style, value != null && value);
+        return component;
+    }
+
+    @Override
+    public <T> @Nullable T applyFont(T component, Font font) {
         return component;
     }
 

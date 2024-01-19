@@ -63,6 +63,7 @@ class LegacyBungeeSerializerTest {
                 + "<bold>Hello world, "
                 + "<hex color=#FF00AA>are you ready? "
                 + "<bold>Hope you are... "
+                + "<font id=\"ILLAGERALT\">or else... "
                 + "<reset>This should be reset. "
                 + "<insertion text=\"Hello there!\">This too</insertion>"
                 ;
@@ -71,6 +72,7 @@ class LegacyBungeeSerializerTest {
         addExtra(c2, createComponent(ChatColor.BOLD + "Hello world, "));
         addExtra(c2, createComponent("are you ready? "));
         addExtra(c2, createComponent(ChatColor.BOLD + "Hope you are... "));
+        addExtra(c2, createComponent(ChatColor.BOLD + "or else... "));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
         addExtra(c2, createComponent(ChatColor.WHITE.toString()));
         addExtra(c2, createComponent("This too", c -> c.setInsertion("Hello there!")));
