@@ -32,8 +32,8 @@ class ChatFormatterTest {
             "ITALIC,I",
             "STRIKETHROUGH,s",
             "STRIKETHROUGH,S",
-            "UNDERLINE,u",
-            "UNDERLINE,U"
+            "UNDERLINED,u",
+            "UNDERLINED,U"
     })
     void testAdditionalStyleCharacters(String expected, String character) {
         assertEquals(Style.valueOf(expected), ChatFormatter.getChatFormatter(character.charAt(0)));
