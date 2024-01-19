@@ -32,10 +32,6 @@ public abstract class OptionComponent extends TextComponent {
     protected final @NotNull String tagName;
     protected final @NotNull Map<String, String> tagOptions;
 
-    public OptionComponent() {
-        throw new RuntimeException("Cannot omit tag name");
-    }
-
     /**
      * Instantiates a new Option component.
      */
