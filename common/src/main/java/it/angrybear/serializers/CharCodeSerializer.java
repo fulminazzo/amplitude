@@ -2,6 +2,7 @@ package it.angrybear.serializers;
 
 import it.angrybear.components.*;
 import it.angrybear.enums.Color;
+import it.angrybear.enums.Font;
 import it.angrybear.enums.Style;
 import it.angrybear.exceptions.InvalidOptionException;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,8 @@ public class CharCodeSerializer extends ComponentSerializer {
         else {
             Color color = component.getColor();
             if (color != null) output += applyColor(output, color);
+            Font font = component.getFont();
+            if (font != null) output += applyFont(output, font);
             for (Style style : component.getStyles()) output += applyStyle(output, style, component.getStyle(style));
         }
         output += component.getText();
@@ -96,6 +99,11 @@ public class CharCodeSerializer extends ComponentSerializer {
         if (component == null) return null;
         if (value == null || !value) return (T) "";
         return (T) (charCode + style.getIdentifierChar());
+    }
+
+    @Override
+    public <T> @Nullable T applyFont(T component, Font font) {
+        return component;
     }
 
     @Override
