@@ -23,7 +23,7 @@ public class InsertionComponent extends ContainerComponent {
         super(rawText, "insertion");
     }
 
-    public String getText() {
+    public String getInsertionText() {
         return getTagOption("text");
     }
 

@@ -11,7 +11,7 @@ class InsertionComponentTest {
     void testInsertion() {
         String rawText = "<insertion text=\"Amazing\">Hello world</insertion>";
         InsertionComponent component = new InsertionComponent(rawText);
-        assertEquals("Amazing", component.getText());
+        assertEquals("Amazing", component.getInsertionText());
     }
 
     @Test
