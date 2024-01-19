@@ -33,6 +33,7 @@ public class TextComponent {
         put("click", ClickComponent::new);
         put("hover", HoverComponent::new);
         put("hex", HexComponent::new);
+        put("insertion", InsertionComponent::new);
     }};
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
     @Getter
