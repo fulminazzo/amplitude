@@ -182,7 +182,7 @@ class BungeeSerializerTest {
         c.setStrikethrough(false);
         c.setItalic(false);
         c.setObfuscated(false);
-        c.setUnderlinedd(false);
+        c.setUnderlined(false);
         c.setFont("default");
     }
 
