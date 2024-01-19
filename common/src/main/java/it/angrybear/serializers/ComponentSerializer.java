@@ -1,9 +1,6 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.ClickComponent;
-import it.angrybear.components.HexComponent;
-import it.angrybear.components.HoverComponent;
-import it.angrybear.components.TextComponent;
+import it.angrybear.components.*;
 import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
@@ -130,6 +127,15 @@ public abstract class ComponentSerializer {
      * @return the output
      */
     public abstract <T> @Nullable T serializeHexComponent(HexComponent component);
+
+    /**
+     * Serialize a {@link InsertionComponent}.
+     *
+     * @param <T>       the type parameter
+     * @param component the component
+     * @return the output
+     */
+    public abstract <T> @Nullable T serializeInsertionComponent(InsertionComponent component);
 
     /**
      * Sum two serialized components.
