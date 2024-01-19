@@ -2,6 +2,7 @@ package it.angrybear.serializers;
 
 import it.angrybear.components.*;
 import it.angrybear.enums.Color;
+import it.angrybear.enums.Font;
 import it.angrybear.enums.Style;
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import org.jetbrains.annotations.NotNull;
@@ -176,6 +177,16 @@ public abstract class ComponentSerializer {
      * @return the result component
      */
     public abstract <T> @Nullable T applyStyle(T component, Style style, Boolean value);
+
+    /**
+     * Apply the specified font to the component.
+     *
+     * @param <T>       the type parameter
+     * @param component the component
+     * @param font      the font
+     * @return the result component
+     */
+    public abstract <T> @Nullable T applyFont(T component, Font font);
 
     /**
      * Reset the component style and colors.
