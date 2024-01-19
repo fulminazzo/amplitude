@@ -1,9 +1,6 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.ClickComponent;
-import it.angrybear.components.HexComponent;
-import it.angrybear.components.HoverComponent;
-import it.angrybear.components.TextComponent;
+import it.angrybear.components.*;
 import it.angrybear.enums.ClickAction;
 import it.angrybear.enums.Color;
 import it.angrybear.enums.HoverAction;
@@ -16,6 +13,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
@@ -113,6 +111,14 @@ public class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
+    public @Nullable Component serializeInsertionComponent(@Nullable InsertionComponent component) {
+        if (component == null) return null;
+        Component c = serializeComponent(component.getChild());
+        if (c == null) c = Component.text("");
+        return c.insertion(component.getInsertionText());
+    }
+
+    @Override
     public <T> @Nullable T sumTwoSerializedComponents(@Nullable T component1, @Nullable T component2) {
         Component tc1 = (Component) component1;
         Component tc2 = (Component) component2;
@@ -123,13 +129,13 @@ public class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T applyColor(T component, Color color) {
+    public <T> @Nullable T applyColor(T component, @NotNull Color color) {
         Component c = (Component) component;
         return (T) c.color(getColor(color));
     }
 
     @Override
-    public <T> @Nullable T applyStyle(T component, Style style, Boolean value) {
+    public <T> @Nullable T applyStyle(T component, @NotNull Style style, Boolean value) {
         Component c = (Component) component;
         return (T) c.decoration(TextDecoration.valueOf(style.name()), value);
     }
@@ -164,7 +170,7 @@ public class AdventureSerializer extends ComponentSerializer {
         }
     }
 
-    private TextColor getColor(Color color) {
+    private @Nullable TextColor getColor(@NotNull Color color) {
         for (Field field : NamedTextColor.class.getFields())
             if (field.getName().equals(color.name())) {
                 try {

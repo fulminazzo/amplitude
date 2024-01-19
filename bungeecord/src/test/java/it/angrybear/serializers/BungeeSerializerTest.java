@@ -67,6 +67,7 @@ class BungeeSerializerTest {
                 + "<hex color=#FF00AA>are you ready? "
                 + "<bold>Hope you are... "
                 + "<reset>This should be reset. "
+                + "<insertion text=\"Hello there!\">This too</insertion>"
                 ;
 
         BaseComponent c2 = createComponent(ChatColor.RED.toString());
@@ -74,7 +75,9 @@ class BungeeSerializerTest {
         addExtra(c2, createComponent(ChatColor.of("#FF00AA") + "are you ready? "));
         addExtra(c2, createComponent(ChatColor.of("#FF00AA") + ChatColor.BOLD.toString() + "Hope you are... "));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
-        addExtra(c2, createComponent(ChatColor.WHITE.toString()));
+        addExtra(c2, createComponent(""));
+        addExtra(c2, createComponent("This too", c -> c.setInsertion("Hello there!")));
+        addExtra(c2, createComponent(""));
 
         BaseComponent temp = c2;
         for (Object[] objects : getClickTests()) {

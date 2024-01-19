@@ -1,9 +1,6 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.ClickComponent;
-import it.angrybear.components.HexComponent;
-import it.angrybear.components.HoverComponent;
-import it.angrybear.components.TextComponent;
+import it.angrybear.components.*;
 import it.angrybear.enums.ClickAction;
 import it.angrybear.enums.Color;
 import it.angrybear.enums.HoverAction;
@@ -36,7 +33,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     private boolean showingHex = false;
 
     @Override
-    public BaseComponent serializeSimpleTextComponent(@Nullable TextComponent component) {
+    public @Nullable BaseComponent serializeSimpleTextComponent(@Nullable TextComponent component) {
         correctComponents(component);
         if (component == null) return null;
         BaseComponent c = new net.md_5.bungee.api.chat.TextComponent(component.getText());
@@ -50,10 +47,11 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
+    public @Nullable BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
         correctComponents(component);
         if (component == null) return null;
         BaseComponent comp = serializeComponent(component.getChild());
+        if (comp == null) comp = new net.md_5.bungee.api.chat.TextComponent();
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
         HoverEvent.Action action = HoverEvent.Action.valueOf(hoverAction.name());
@@ -95,10 +93,11 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public BaseComponent serializeClickComponent(@Nullable ClickComponent component) {
+    public @Nullable BaseComponent serializeClickComponent(@Nullable ClickComponent component) {
         correctComponents(component);
         if (component == null) return null;
         BaseComponent comp = serializeComponent(component.getChild());
+        if (comp == null) comp = new net.md_5.bungee.api.chat.TextComponent();
 
         ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
         ClickEvent.Action action = ClickEvent.Action.valueOf(clickAction.name());
@@ -113,13 +112,23 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public BaseComponent serializeHexComponent(@Nullable HexComponent component) {
+    public @Nullable BaseComponent serializeHexComponent(@Nullable HexComponent component) {
         correctComponents(component);
         if (component == null) return null;
         String rawText = component.getText();
         if (rawText == null) rawText = "";
         if (showingHex) rawText = component.getHexColor() + rawText;
         return new net.md_5.bungee.api.chat.TextComponent(rawText);
+    }
+
+    @Override
+    public @Nullable BaseComponent serializeInsertionComponent(@Nullable InsertionComponent component) {
+        correctComponents(component);
+        if (component == null) return null;
+        BaseComponent comp = serializeComponent(component.getChild());
+        if (comp == null) comp = new net.md_5.bungee.api.chat.TextComponent();
+        comp.setInsertion(component.getInsertionText());
+        return comp;
     }
 
     @Override
@@ -195,7 +204,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
      * @param component the component
      * @param function  the function
      */
-    protected void applyForAllComponents(BaseComponent component, Consumer<BaseComponent> function) {
+    protected void applyForAllComponents(@Nullable BaseComponent component, @NotNull Consumer<BaseComponent> function) {
         if (component == null) return;
         function.accept(component);
         if (component.getExtra() == null) return;
@@ -203,7 +212,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T, P> void send(P player, T component) {
+    public <T, P> void send(@Nullable P player, @Nullable T component) {
         if (player == null) return;
         if (component == null) return;
         try {
@@ -242,7 +251,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
      *
      * @param component the component to correct
      */
-    protected void correctComponents(TextComponent component) {
+    protected void correctComponents(@Nullable TextComponent component) {
         if (component == null) return;
         TextComponent c1 = component.getNext();
         if (!(c1 instanceof HexComponent)) return;

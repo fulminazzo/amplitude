@@ -1,9 +1,6 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.ClickComponent;
-import it.angrybear.components.HexComponent;
-import it.angrybear.components.HoverComponent;
-import it.angrybear.components.TextComponent;
+import it.angrybear.components.*;
 import it.angrybear.enums.Color;
 import it.angrybear.enums.Style;
 import it.angrybear.exceptions.InvalidOptionException;
@@ -62,6 +59,12 @@ public class CharCodeSerializer extends ComponentSerializer {
         color = color.substring(1);
         color = charCode + "x" + charCode + String.join(charCode, color.split(""));
         return color + component.getText();
+    }
+
+    @Override
+    public @Nullable String serializeInsertionComponent(@Nullable InsertionComponent component) {
+        if (component == null) return null;
+        return serializeComponent(component.getChild());
     }
 
     @Override

@@ -72,6 +72,7 @@ class AdventureSerializerTest {
                 + "<hex color=#FF00AA>are you ready? "
                 + "<bold>Hope you are... "
                 + "<reset>This should be reset. "
+                + "<insertion text=\"Hello there!\">This too</insertion>"
                 ;
 
         Component c2 = Component.text("").color(NamedTextColor.RED);
@@ -91,6 +92,9 @@ class AdventureSerializerTest {
                 .decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.FALSE)
                 .decoration(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE)
                 .decoration(TextDecoration.UNDERLINED, TextDecoration.State.FALSE)
+        );
+        c2 = addExtra(c2, Component.text("This too")
+                .insertion("Hello there!")
         );
 
         for (Object[] objects : getClickTests()) {
