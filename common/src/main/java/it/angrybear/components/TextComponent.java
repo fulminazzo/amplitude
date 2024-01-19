@@ -1,8 +1,10 @@
 package it.angrybear.components;
 
 import it.angrybear.enums.Color;
+import it.angrybear.enums.Font;
 import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
+import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -30,20 +32,39 @@ import java.util.regex.Pattern;
  */
 public class TextComponent {
     public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<String, Function<String, TextComponent>>(){{
-        put("click", ClickComponent::new);
-        put("hover", HoverComponent::new);
-        put("hex", HexComponent::new);
-        put("insertion", InsertionComponent::new);
+        Set<Class<?>> classes = ClassUtils.findClassesInPackage(TextComponent.class.getPackage().getName());
+        for (Class<?> clazz : classes) {
+            if (!TextComponent.class.isAssignableFrom(clazz)) continue;
+            if (Modifier.isAbstract(clazz.getModifiers())) continue;
+            if (clazz.equals(TextComponent.class)) continue;
+            try {
+                Constructor<?> constructor = clazz.getConstructor(String.class);
+                String className = clazz.getSimpleName().toLowerCase();
+                if (className.endsWith("component"))
+                    className = className.substring(0, className.length() - "component".length());
+                put(className, s -> {
+                    try {
+                        return (TextComponent) constructor.newInstance(s);
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        Throwable cause = e.getCause();
+                        if (cause instanceof RuntimeException) throw (RuntimeException) cause;
+                        else throw new RuntimeException(cause);
+                    }
+                });
+            } catch (NoSuchMethodException ignored) {}
+        }
     }};
-    public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
+    public static final Pattern TAG_REGEX = Pattern.compile("<((?:\"[^<>]*<|>[^<>]*\"|'[^<>]*<|>[^<>]*'|[^>])+(?:>\\\\\")?)>");
     @Getter
     protected TextComponent next;
     @Getter
     protected Color color;
-    protected Boolean magic;
+    @Getter
+    protected Font font;
+    protected Boolean obfuscated;
     protected Boolean bold;
     protected Boolean strikethrough;
-    protected Boolean underline;
+    protected Boolean underlined;
     protected Boolean italic;
     protected Boolean reset;
     @Getter
@@ -164,7 +185,7 @@ public class TextComponent {
     public void setSameOptions(@Nullable TextComponent textComponent) {
         if (textComponent == null) return;
 
-        if (isReset()) return;
+        if (isReset() || textComponent.isReset()) return;
 
         try {
             for (Field field : getOptionFields()) {
@@ -265,31 +286,51 @@ public class TextComponent {
     }
 
     /**
-     * Gets magic.
+     * Sets font.
      *
-     * @return the magic
+     * @param font the font
      */
-    public boolean isMagic() {
-        return magic != null && magic;
+    public void setFont(Font font) {
+        setFont(font, true);
     }
 
     /**
-     * Sets magic.
+     * Sets font.
      *
-     * @param magic the magic
-     */
-    public void setMagic(Boolean magic) {
-        setMagic(magic, true);
-    }
-
-    /**
-     * Sets magic.
-     *
-     * @param magic     the magic
+     * @param font      the font
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
-    public void setMagic(Boolean magic, boolean propagate) {
-        this.magic = magic;
+    public void setFont(Font font, boolean propagate) {
+        this.font = font;
+        if (propagate) setSameOptions(next);
+    }
+
+    /**
+     * Gets obfuscated.
+     *
+     * @return the obfuscated
+     */
+    public boolean isObfuscated() {
+        return obfuscated != null && obfuscated;
+    }
+
+    /**
+     * Sets obfuscated.
+     *
+     * @param obfuscated the obfuscated
+     */
+    public void setObfuscated(Boolean obfuscated) {
+        setObfuscated(obfuscated, true);
+    }
+
+    /**
+     * Sets obfuscated.
+     *
+     * @param obfuscated     the obfuscated
+     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     */
+    public void setObfuscated(Boolean obfuscated, boolean propagate) {
+        this.obfuscated = obfuscated;
         if (propagate) setSameOptions(next);
     }
 
@@ -352,31 +393,31 @@ public class TextComponent {
     }
 
     /**
-     * Gets underline.
+     * Gets underlined.
      *
-     * @return the underline
+     * @return the underlined
      */
-    public boolean isUnderline() {
-        return underline != null && underline;
+    public boolean isUnderlined() {
+        return underlined != null && underlined;
     }
 
     /**
-     * Sets underline.
+     * Sets underlined.
      *
-     * @param underline the underline
+     * @param underlined the underlined
      */
-    public void setUnderline(Boolean underline) {
-        setUnderline(underline, true);
+    public void setUnderlined(Boolean underlined) {
+        setUnderlined(underlined, true);
     }
 
     /**
-     * Sets underline.
+     * Sets underlined.
      *
-     * @param underline the underline
+     * @param underlined the underlined
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
-    public void setUnderline(Boolean underline, boolean propagate) {
-        this.underline = underline;
+    public void setUnderlined(Boolean underlined, boolean propagate) {
+        this.underlined = underlined;
         if (propagate) setSameOptions(next);
     }
 
@@ -430,6 +471,7 @@ public class TextComponent {
     /**
      * Sets reset.
      *
+     * @param reset     the reset
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
     public void reset(Boolean reset, boolean propagate) {
@@ -439,6 +481,7 @@ public class TextComponent {
             for (Style style : Style.values())
                 if (style != Style.RESET)
                     setStyle(style, false, false);
+            setFont(Font.DEFAULT, false);
             if (propagate) setSameOptions(next);
         }
     }
@@ -472,8 +515,8 @@ public class TextComponent {
     /**
      * Sets style.
      *
-     * @param style     the style
-     * @param value     the value
+     * @param style the style
+     * @param value the value
      */
     public void setStyle(@Nullable Style style, Boolean value) {
         setStyle(style, value, true);

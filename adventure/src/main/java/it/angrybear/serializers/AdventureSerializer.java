@@ -1,10 +1,7 @@
 package it.angrybear.serializers;
 
 import it.angrybear.components.*;
-import it.angrybear.enums.ClickAction;
-import it.angrybear.enums.Color;
-import it.angrybear.enums.HoverAction;
-import it.angrybear.enums.Style;
+import it.angrybear.enums.*;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
@@ -39,6 +36,8 @@ public class AdventureSerializer extends ComponentSerializer {
         else {
             Color color = component.getColor();
             if (color != null) textComponent = applyColor(textComponent, color);
+            Font font = component.getFont();
+            if (font != null) textComponent = applyFont(textComponent, font);
             for (Style style : component.getStyles())
                 textComponent = applyStyle(textComponent, style, component.getStyle(style));
         }
@@ -49,7 +48,7 @@ public class AdventureSerializer extends ComponentSerializer {
     public @Nullable Component serializeHoverComponent(@Nullable HoverComponent component) {
         if (component == null) return null;
         Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.text("");
+        if (c == null) c = Component.empty();
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
 
@@ -91,7 +90,7 @@ public class AdventureSerializer extends ComponentSerializer {
     public @Nullable Component serializeClickComponent(@Nullable ClickComponent component) {
         if (component == null) return null;
         Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.text("");
+        if (c == null) c = Component.empty();
 
         ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
         ClickEvent.Action action = ClickEvent.Action.valueOf(clickAction.name());
@@ -114,8 +113,16 @@ public class AdventureSerializer extends ComponentSerializer {
     public @Nullable Component serializeInsertionComponent(@Nullable InsertionComponent component) {
         if (component == null) return null;
         Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.text("");
+        if (c == null) c = Component.empty();
         return c.insertion(component.getInsertionText());
+    }
+
+    @Override
+    public @Nullable Component serializeFontComponent(@Nullable FontComponent component) {
+        if (component == null) return null;
+        Component c = serializeSimpleTextComponent(component);
+        if (c == null) c = Component.empty();
+        return c.font(Key.key(component.getFontID().toLowerCase()));
     }
 
     @Override
@@ -129,24 +136,24 @@ public class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T applyColor(T component, @NotNull Color color) {
+    public <T> @Nullable T applyColor(@Nullable T component, @NotNull Color color) {
+        if (component == null) return null;
         Component c = (Component) component;
         return (T) c.color(getColor(color));
     }
 
     @Override
-    public <T> @Nullable T applyStyle(T component, @NotNull Style style, Boolean value) {
+    public <T> @Nullable T applyStyle(@Nullable T component, @NotNull Style style, Boolean value) {
+        if (component == null) return null;
         Component c = (Component) component;
         return (T) c.decoration(TextDecoration.valueOf(style.name()), value);
     }
 
     @Override
-    public <T> @Nullable T reset(T component) {
+    public <T> @Nullable T applyFont(@Nullable T component, Font font) {
+        if (component == null) return null;
         Component c = (Component) component;
-        c = c.color(NamedTextColor.WHITE);
-        for (TextDecoration decoration : TextDecoration.values())
-            c = c.decoration(decoration, false);
-        return (T) c;
+        return (T) c.font(Key.key(font.name().toLowerCase()));
     }
 
     @Override

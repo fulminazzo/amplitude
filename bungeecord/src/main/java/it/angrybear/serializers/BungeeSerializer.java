@@ -4,6 +4,7 @@ import it.angrybear.components.HexComponent;
 import it.angrybear.components.HoverComponent;
 import it.angrybear.components.TextComponent;
 import it.angrybear.enums.Color;
+import it.angrybear.enums.Font;
 import it.angrybear.enums.HoverAction;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -86,6 +87,14 @@ public class BungeeSerializer extends LegacyBungeeSerializer {
         BaseComponent c = (BaseComponent) component;
         ChatColor chatColor = ChatColor.of(color.isCustom() ? color.getCode() : color.getName());
         c.setColor(chatColor);
+        return component;
+    }
+
+    @Override
+    public <T> @Nullable T applyFont(@Nullable T component, @NotNull Font font) {
+        if (component == null) return null;
+        BaseComponent c = (BaseComponent) component;
+        c.setFont(font.name().toLowerCase());
         return component;
     }
 

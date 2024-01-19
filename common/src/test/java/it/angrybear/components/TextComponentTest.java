@@ -1,6 +1,7 @@
 package it.angrybear.components;
 
 import it.angrybear.enums.Color;
+import it.angrybear.enums.Font;
 import it.angrybear.enums.Style;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,7 +42,7 @@ class TextComponentTest {
                         mockComponent(null,
                                 null, null, null, null, null, null, null,
                                 "<reed>Hello world<test>How are you?")},
-                new Object[]{"<magic>Hello world",
+                new Object[]{"<obfuscated>Hello world",
                         mockComponent(null,
                                 null, true, null, null, null, null, null,
                                 "Hello world")},
@@ -53,7 +54,7 @@ class TextComponentTest {
                         mockComponent(null,
                                 null, null, null, false, null, null, null,
                                 "Hello world")},
-                new Object[]{"<underline>Hello world",
+                new Object[]{"<underlined>Hello world",
                         mockComponent(null,
                                 null, null, null, null, true, null, null,
                                 "Hello world")},
@@ -78,7 +79,7 @@ class TextComponentTest {
                 new Object[]{"<red><bold><italic>Hello <reset>world",
                         mockComponent(mockComponent(mockComponent(mockComponent(null,
                                                         "WHITE", false, false, false, false, false, true,
-                                                        "world"),
+                                                        "world").replace("font: null", "font: DEFAULT"),
                                                 "RED", null, true, null, null, true, null,
                                                 "Hello "),
                                         "RED", null, true, null, null, null, null,
@@ -128,6 +129,16 @@ class TextComponentTest {
     }
 
     @Test
+    void testFont() {
+        TextComponent first = new TextComponent("First<bold>second<reset>third");
+        TextComponent second = first.getNext();
+        TextComponent third = second.getNext();
+        first.setFont(Font.ILLAGERALT);
+        assertEquals(Font.ILLAGERALT, second.getFont());
+        assertEquals(Font.DEFAULT, third.getFont());
+    }
+
+    @Test
     void testIsSimilar() {
         TextComponent t1 = new TextComponent("<red>Hello world");
         TextComponent t2 = new TextComponent("<red>How are you");
@@ -165,10 +176,10 @@ class TextComponentTest {
     @ValueSource(strings = {
             "<red>",
             "<bold>",
-            "<magic>",
+            "<obfuscated>",
             "<italic>",
             "<strikethrough>",
-            "<underline>",
+            "<underlined>",
             "<reset>",
             "Text"
     })
@@ -238,15 +249,16 @@ class TextComponentTest {
         assertEquals(expected, TextComponent.fromRaw(rawText).getClass());
     }
 
-    static String mockComponent(String next, String color, Boolean magic,
-                                Boolean bold, Boolean strikethrough, Boolean underline,
+    static String mockComponent(String next, String color, Boolean obfuscated,
+                                Boolean bold, Boolean strikethrough, Boolean underlined,
                                 Boolean italic, Boolean reset, String text) {
         return String.format("{next: %s, ", next) +
                 String.format("color: %s, ", color) +
-                String.format("magic: %s, ", magic) +
+                "font: null, " +
+                String.format("obfuscated: %s, ", obfuscated) +
                 String.format("bold: %s, ", bold) +
                 String.format("strikethrough: %s, ", strikethrough) +
-                String.format("underline: %s, ", underline) +
+                String.format("underlined: %s, ", underlined) +
                 String.format("italic: %s, ", italic) +
                 String.format("reset: %s, ", reset) +
                 String.format("text: %s}", text);

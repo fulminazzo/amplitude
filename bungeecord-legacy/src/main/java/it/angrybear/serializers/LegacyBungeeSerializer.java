@@ -1,10 +1,7 @@
 package it.angrybear.serializers;
 
 import it.angrybear.components.*;
-import it.angrybear.enums.ClickAction;
-import it.angrybear.enums.Color;
-import it.angrybear.enums.HoverAction;
-import it.angrybear.enums.Style;
+import it.angrybear.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
@@ -41,6 +38,8 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         else {
             Color color = component.getColor();
             if (color != null) c = applyColor(c, color);
+            Font font = component.getFont();
+            if (font != null) c = applyFont(c, font);
             for (Style style : component.getStyles()) c = applyStyle(c, style, component.getStyle(style));
         }
         return c;
@@ -132,6 +131,14 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
+    public @Nullable BaseComponent serializeFontComponent(@Nullable FontComponent component) {
+        correctComponents(component);
+        if (component == null) return null;
+        BaseComponent c = serializeSimpleTextComponent(component);
+        return applyFont(c, Font.valueOf(component.getFontID()));
+    }
+
+    @Override
     public <T> @Nullable T sumTwoSerializedComponents(@Nullable T component1, @Nullable T component2) {
         BaseComponent bc1 = (BaseComponent) component1;
         BaseComponent bc2 = (BaseComponent) component2;
@@ -167,6 +174,11 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         return component;
     }
 
+    @Override
+    public <T> @Nullable T applyFont(@Nullable T component, @NotNull Font font) {
+        return component;
+    }
+
     /**
      * Sets style.
      *
@@ -183,19 +195,6 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public <T> @Nullable T reset(@Nullable T component) {
-        if (component == null) return null;
-        BaseComponent c = (BaseComponent) component;
-        c.setColor(ChatColor.WHITE);
-        c.setBold(false);
-        c.setStrikethrough(false);
-        c.setItalic(false);
-        c.setObfuscated(false);
-        c.setUnderlined(false);
-        return component;
     }
 
     /**

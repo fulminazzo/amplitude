@@ -43,13 +43,6 @@ public class HexComponent extends OptionComponent {
         setColor(new Color(getHexColor()));
     }
 
-    @Override
-    protected @NotNull Map<String, OptionValidator> getRequiredOptions() {
-        Map<String, OptionValidator> options = new HashMap<>();
-        options.put("color", new HexColorValidator());
-        return options;
-    }
-
     /**
      * Gets hex color.
      *
@@ -57,5 +50,12 @@ public class HexComponent extends OptionComponent {
      */
     public String getHexColor() {
         return getTagOption("color").toUpperCase();
+    }
+
+    @Override
+    protected @NotNull Map<String, OptionValidator> getRequiredOptions() {
+        Map<String, OptionValidator> options = new HashMap<>();
+        options.put("color", new HexColorValidator());
+        return options;
     }
 }

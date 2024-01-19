@@ -71,8 +71,9 @@ class AdventureSerializerTest {
                 + "<bold>Hello world, "
                 + "<hex color=#FF00AA>are you ready? "
                 + "<bold>Hope you are... "
+                + "<font id=\"ILLAGERALT\">or else... "
                 + "<reset>This should be reset. "
-                + "<insertion text=\"Hello there!\">This too</insertion>"
+                + "<insertion text=\"Hello there!\">Insert DEMO </insertion>"
                 ;
 
         Component c2 = Component.text("").color(NamedTextColor.RED);
@@ -85,6 +86,11 @@ class AdventureSerializerTest {
         c2 = addExtra(c2, Component.text("Hope you are... ")
                 .color(TextColor.fromHexString("#FF00AA"))
                 .decorate(TextDecoration.BOLD));
+        c2 = addExtra(c2, Component.text("or else... ")
+                .color(TextColor.fromHexString("#FF00AA"))
+                .decorate(TextDecoration.BOLD)
+                .font(Key.key("illageralt"))
+        );
         c2 = addExtra(c2, Component.text("This should be reset. ")
                 .color(NamedTextColor.WHITE)
                 .decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)
@@ -92,8 +98,9 @@ class AdventureSerializerTest {
                 .decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.FALSE)
                 .decoration(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE)
                 .decoration(TextDecoration.UNDERLINED, TextDecoration.State.FALSE)
+                .font(Key.key("default"))
         );
-        c2 = addExtra(c2, Component.text("This too")
+        c2 = addExtra(c2, Component.text("Insert DEMO ")
                 .insertion("Hello there!")
         );
 

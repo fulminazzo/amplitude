@@ -21,8 +21,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 @SuppressWarnings("deprecation")
@@ -66,17 +65,19 @@ class BungeeSerializerTest {
                 + "<bold>Hello world, "
                 + "<hex color=#FF00AA>are you ready? "
                 + "<bold>Hope you are... "
+                + "<font id=\"ILLAGERALT\">or else... "
                 + "<reset>This should be reset. "
-                + "<insertion text=\"Hello there!\">This too</insertion>"
+                + "<insertion text=\"Hello there!\">Insert DEMO </insertion>"
                 ;
 
         BaseComponent c2 = createComponent(ChatColor.RED.toString());
         addExtra(c2, createComponent(ChatColor.BOLD + "Hello world, "));
         addExtra(c2, createComponent(ChatColor.of("#FF00AA") + "are you ready? "));
         addExtra(c2, createComponent(ChatColor.of("#FF00AA") + ChatColor.BOLD.toString() + "Hope you are... "));
+        addExtra(c2, createComponent(ChatColor.BOLD + "or else... ", c -> c.setFont("illageralt")));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
         addExtra(c2, createComponent(""));
-        addExtra(c2, createComponent("This too", c -> c.setInsertion("Hello there!")));
+        addExtra(c2, createComponent("Insert DEMO ", c -> c.setInsertion("Hello there!")));
         addExtra(c2, createComponent(""));
 
         BaseComponent temp = c2;
@@ -182,6 +183,7 @@ class BungeeSerializerTest {
         c.setItalic(false);
         c.setObfuscated(false);
         c.setUnderlined(false);
+        c.setFont("default");
     }
 
     private BaseComponent createComponent(String text) {
