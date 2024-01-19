@@ -52,7 +52,7 @@ public class TextComponent {
             } catch (NoSuchMethodException ignored) {}
         }
     }};
-    public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
+    public static final Pattern TAG_REGEX = Pattern.compile("<((?:\"[^<>]*<|>[^<>]*\"|'[^<>]*<|>[^<>]*'|[^>])+(?:>\\\\\")?)>");
     @Getter
     protected TextComponent next;
     @Getter
