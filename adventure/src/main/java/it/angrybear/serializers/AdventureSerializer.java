@@ -1,10 +1,7 @@
 package it.angrybear.serializers;
 
 import it.angrybear.components.*;
-import it.angrybear.enums.ClickAction;
-import it.angrybear.enums.Color;
-import it.angrybear.enums.HoverAction;
-import it.angrybear.enums.Style;
+import it.angrybear.enums.*;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
@@ -16,6 +13,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.xml.bind.annotation.XmlType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -39,6 +37,8 @@ public class AdventureSerializer extends ComponentSerializer {
         else {
             Color color = component.getColor();
             if (color != null) textComponent = applyColor(textComponent, color);
+            Font font = component.getFont();
+            if (font != null) textComponent = applyFont(textComponent, font);
             for (Style style : component.getStyles())
                 textComponent = applyStyle(textComponent, style, component.getStyle(style));
         }
@@ -137,21 +137,32 @@ public class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T applyColor(T component, @NotNull Color color) {
+    public <T> @Nullable T applyColor(@Nullable T component, @NotNull Color color) {
+        if (component == null) return null;
         Component c = (Component) component;
         return (T) c.color(getColor(color));
     }
 
     @Override
-    public <T> @Nullable T applyStyle(T component, @NotNull Style style, Boolean value) {
+    public <T> @Nullable T applyStyle(@Nullable T component, @NotNull Style style, Boolean value) {
+        if (component == null) return null;
         Component c = (Component) component;
         return (T) c.decoration(TextDecoration.valueOf(style.name()), value);
     }
 
     @Override
-    public <T> @Nullable T reset(T component) {
+    public <T> @Nullable T applyFont(@Nullable T component, Font font) {
+        if (component == null) return null;
+        Component c = (Component) component;
+        return (T) c.font(Key.key(font.name().toLowerCase()));
+    }
+
+    @Override
+    public <T> @Nullable T reset(@Nullable T component) {
+        if (component == null) return null;
         Component c = (Component) component;
         c = c.color(NamedTextColor.WHITE);
+        c = c.font(Key.key("default"));
         for (TextDecoration decoration : TextDecoration.values())
             c = c.decoration(decoration, false);
         return (T) c;

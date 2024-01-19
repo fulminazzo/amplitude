@@ -98,6 +98,7 @@ class AdventureSerializerTest {
                 .decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.FALSE)
                 .decoration(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE)
                 .decoration(TextDecoration.UNDERLINED, TextDecoration.State.FALSE)
+                .font(Key.key("default"))
         );
         c2 = addExtra(c2, Component.text("This too")
                 .insertion("Hello there!")
