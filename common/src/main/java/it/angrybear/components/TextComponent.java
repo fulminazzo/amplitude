@@ -4,6 +4,7 @@ import it.angrybear.enums.Color;
 import it.angrybear.enums.Font;
 import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
+import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -31,10 +32,25 @@ import java.util.regex.Pattern;
  */
 public class TextComponent {
     public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<String, Function<String, TextComponent>>(){{
-        put("click", ClickComponent::new);
-        put("hover", HoverComponent::new);
-        put("hex", HexComponent::new);
-        put("insertion", InsertionComponent::new);
+        Set<Class<?>> classes = ClassUtils.findClassesInPackage(TextComponent.class.getPackage().getName());
+        for (Class<?> clazz : classes) {
+            if (!TextComponent.class.isAssignableFrom(clazz)) continue;
+            if (Modifier.isAbstract(clazz.getModifiers())) continue;
+            if (clazz.equals(TextComponent.class)) continue;
+            try {
+                Constructor<?> constructor = clazz.getConstructor(String.class);
+                String className = clazz.getSimpleName().toLowerCase();
+                if (className.endsWith("component"))
+                    className = className.substring(0, className.length() - "component".length());
+                put(className, s -> {
+                    try {
+                        return (TextComponent) constructor.newInstance(s);
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            } catch (NoSuchMethodException ignored) {}
+        }
     }};
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\".*>.*\"|'.*>.*'|[^>])+)>");
     @Getter
