@@ -21,6 +21,8 @@ class CharCodeSerializerTest {
             "&nHello world,<underline>Hello world",
             "&oHello world,<italic>Hello world",
             "&oHello &rworld,<italic>Hello <reset>world",
+            "Hello world,<insertion text=\"Invisible\">Hello world</insertion>",
+            "Hello world,<font id=\"ILLAGERALT\">Hello world",
             "&c&c&lHello world,<red><bold>Hello world",
             "&c&c&l&c&l&oHello world,<red><bold><italic>Hello world",
             "&c&c&l&c&l&oHello &rworld,<red><bold><italic>Hello <reset>world"
@@ -39,6 +41,8 @@ class CharCodeSerializerTest {
             "§mHello world,<strikethrough>Hello world",
             "§nHello world,<underline>Hello world",
             "§oHello world,<italic>Hello world",
+            "Hello world,<insertion text=\"Invisible\">Hello world</insertion>",
+            "Hello world,<font id=\"ILLAGERALT\">Hello world",
             "§c§c§lHello world,<red><bold>Hello world",
             "§c§c§l§c§l§oHello world,<red><bold><italic>Hello world",
             "§c§c§l§c§l§oHello §rworld,<red><bold><italic>Hello <reset>world"
@@ -57,6 +61,8 @@ class CharCodeSerializerTest {
             "<COLOR>mHello world,<strikethrough>Hello world",
             "<COLOR>nHello world,<underline>Hello world",
             "<COLOR>oHello world,<italic>Hello world",
+            "Hello world,<insertion text=\"Invisible\">Hello world</insertion>",
+            "Hello world,<font id=\"ILLAGERALT\">Hello world",
             "<COLOR>c<COLOR>c<COLOR>lHello world,<red><bold>Hello world",
             "<COLOR>c<COLOR>c<COLOR>l<COLOR>c<COLOR>l<COLOR>oHello world,<red><bold><italic>Hello world",
             "<COLOR>c<COLOR>c<COLOR>l<COLOR>c<COLOR>l<COLOR>oHello <COLOR>rworld,<red><bold><italic>Hello <reset>world"

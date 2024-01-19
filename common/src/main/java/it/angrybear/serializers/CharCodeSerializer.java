@@ -68,6 +68,12 @@ public class CharCodeSerializer extends ComponentSerializer {
     }
 
     @Override
+    public @Nullable String serializeFontComponent(@Nullable FontComponent component) {
+        if (component == null) return null;
+        return serializeSimpleTextComponent(component);
+    }
+
+    @Override
     public <T> @Nullable T sumTwoSerializedComponents(@NotNull T component1, @NotNull T component2) {
         return (T) (component1 + component2.toString());
     }
