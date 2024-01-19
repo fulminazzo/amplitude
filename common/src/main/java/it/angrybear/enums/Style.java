@@ -11,9 +11,9 @@ public enum Style implements ChatFormatter {
     /**
      * Magic or obfuscated style (corresponds to &amp;k).
      * <p>
-     * Tag: &#60;magic&#62;
+     * Tag: &#60;obfuscated&#62;
      */
-    MAGIC('k'),
+    OBFUSCATED('k'),
     /**
      * Bold style (corresponds to &amp;l).
      * <p>

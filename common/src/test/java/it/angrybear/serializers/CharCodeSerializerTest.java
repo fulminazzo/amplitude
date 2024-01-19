@@ -15,7 +15,7 @@ class CharCodeSerializerTest {
             "<reed>Hello world,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world</click>",
             "<reed>Hello world how are you today?,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world</click> how are you today?",
             "<reed>Hello world &dhow are you today?,<reed>Hello <click action=OPEN_URL url=https://www.google.com>world <light_purple>how</click> are you today?",
-            "&kHello world,<magic>Hello world",
+            "&kHello world,<obfuscated>Hello world",
             "&lHello world,<bold>Hello world",
             "&mHello world,<strikethrough>Hello world",
             "&nHello world,<underline>Hello world",
@@ -36,7 +36,7 @@ class CharCodeSerializerTest {
     @CsvSource({
             "§cHello world,<red>Hello world",
             "<reed>Hello world,<reed>Hello world",
-            "§kHello world,<magic>Hello world",
+            "§kHello world,<obfuscated>Hello world",
             "§lHello world,<bold>Hello world",
             "§mHello world,<strikethrough>Hello world",
             "§nHello world,<underline>Hello world",
@@ -56,7 +56,7 @@ class CharCodeSerializerTest {
     @CsvSource({
             "<COLOR>cHello world,<red>Hello world",
             "<reed>Hello world,<reed>Hello world",
-            "<COLOR>kHello world,<magic>Hello world",
+            "<COLOR>kHello world,<obfuscated>Hello world",
             "<COLOR>lHello world,<bold>Hello world",
             "<COLOR>mHello world,<strikethrough>Hello world",
             "<COLOR>nHello world,<underline>Hello world",

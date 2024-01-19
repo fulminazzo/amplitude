@@ -42,7 +42,7 @@ class TextComponentTest {
                         mockComponent(null,
                                 null, null, null, null, null, null, null,
                                 "<reed>Hello world<test>How are you?")},
-                new Object[]{"<magic>Hello world",
+                new Object[]{"<obfuscated>Hello world",
                         mockComponent(null,
                                 null, true, null, null, null, null, null,
                                 "Hello world")},
@@ -176,7 +176,7 @@ class TextComponentTest {
     @ValueSource(strings = {
             "<red>",
             "<bold>",
-            "<magic>",
+            "<obfuscated>",
             "<italic>",
             "<strikethrough>",
             "<underline>",
@@ -249,13 +249,13 @@ class TextComponentTest {
         assertEquals(expected, TextComponent.fromRaw(rawText).getClass());
     }
 
-    static String mockComponent(String next, String color, Boolean magic,
+    static String mockComponent(String next, String color, Boolean obfuscated,
                                 Boolean bold, Boolean strikethrough, Boolean underline,
                                 Boolean italic, Boolean reset, String text) {
         return String.format("{next: %s, ", next) +
                 String.format("color: %s, ", color) +
                 "font: null, " +
-                String.format("magic: %s, ", magic) +
+                String.format("obfuscated: %s, ", obfuscated) +
                 String.format("bold: %s, ", bold) +
                 String.format("strikethrough: %s, ", strikethrough) +
                 String.format("underline: %s, ", underline) +

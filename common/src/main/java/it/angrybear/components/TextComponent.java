@@ -61,7 +61,7 @@ public class TextComponent {
     protected Color color;
     @Getter
     protected Font font;
-    protected Boolean magic;
+    protected Boolean obfuscated;
     protected Boolean bold;
     protected Boolean strikethrough;
     protected Boolean underline;
@@ -306,31 +306,31 @@ public class TextComponent {
     }
 
     /**
-     * Gets magic.
+     * Gets obfuscated.
      *
-     * @return the magic
+     * @return the obfuscated
      */
-    public boolean isMagic() {
-        return magic != null && magic;
+    public boolean isObfuscated() {
+        return obfuscated != null && obfuscated;
     }
 
     /**
-     * Sets magic.
+     * Sets obfuscated.
      *
-     * @param magic the magic
+     * @param obfuscated the obfuscated
      */
-    public void setMagic(Boolean magic) {
-        setMagic(magic, true);
+    public void setObfuscated(Boolean obfuscated) {
+        setObfuscated(obfuscated, true);
     }
 
     /**
-     * Sets magic.
+     * Sets obfuscated.
      *
-     * @param magic     the magic
+     * @param obfuscated     the obfuscated
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
-    public void setMagic(Boolean magic, boolean propagate) {
-        this.magic = magic;
+    public void setObfuscated(Boolean obfuscated, boolean propagate) {
+        this.obfuscated = obfuscated;
         if (propagate) setSameOptions(next);
     }
 
