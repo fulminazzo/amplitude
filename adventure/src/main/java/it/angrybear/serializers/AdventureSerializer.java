@@ -13,7 +13,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.annotation.XmlType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -155,17 +154,6 @@ public class AdventureSerializer extends ComponentSerializer {
         if (component == null) return null;
         Component c = (Component) component;
         return (T) c.font(Key.key(font.name().toLowerCase()));
-    }
-
-    @Override
-    public <T> @Nullable T reset(@Nullable T component) {
-        if (component == null) return null;
-        Component c = (Component) component;
-        c = c.color(NamedTextColor.WHITE);
-        c = c.font(Key.key("default"));
-        for (TextDecoration decoration : TextDecoration.values())
-            c = c.decoration(decoration, false);
-        return (T) c;
     }
 
     @Override

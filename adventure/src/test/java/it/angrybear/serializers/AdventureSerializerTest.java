@@ -73,7 +73,7 @@ class AdventureSerializerTest {
                 + "<bold>Hope you are... "
                 + "<font id=\"ILLAGERALT\">or else... "
                 + "<reset>This should be reset. "
-                + "<insertion text=\"Hello there!\">This too</insertion>"
+                + "<insertion text=\"Hello there!\">Insert DEMO </insertion>"
                 ;
 
         Component c2 = Component.text("").color(NamedTextColor.RED);
@@ -100,7 +100,7 @@ class AdventureSerializerTest {
                 .decoration(TextDecoration.UNDERLINED, TextDecoration.State.FALSE)
                 .font(Key.key("default"))
         );
-        c2 = addExtra(c2, Component.text("This too")
+        c2 = addExtra(c2, Component.text("Insert DEMO ")
                 .insertion("Hello there!")
         );
 
