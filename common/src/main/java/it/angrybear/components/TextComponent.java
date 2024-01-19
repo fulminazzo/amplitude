@@ -464,7 +464,7 @@ public class TextComponent {
      *
      * @param reset the reset
      */
-    public void reset(Boolean reset) {
+    public void reset(@NotNull Boolean reset) {
         reset(reset, true);
     }
 
@@ -474,7 +474,7 @@ public class TextComponent {
      * @param reset     the reset
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
-    public void reset(Boolean reset, boolean propagate) {
+    public void reset(@NotNull Boolean reset, boolean propagate) {
         this.reset = reset;
         if (reset) {
             setColor(Color.WHITE, false);
@@ -610,7 +610,7 @@ public class TextComponent {
      * @return the clone
      */
     @SuppressWarnings("unchecked")
-    public <T extends TextComponent> T copy() {
+    public <T extends TextComponent> @NotNull T copy() {
         final String serialize = this.serialize();
         Class<T> clazz = (Class<T>) this.getClass();
         try {

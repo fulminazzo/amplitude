@@ -3,6 +3,7 @@ package it.angrybear.enums;
 import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -135,7 +136,7 @@ public class Color implements ChatFormatter {
     }
 
     @Override
-    public String name() {
+    public @NotNull String name() {
         Field[] fields = Color.class.getDeclaredFields();
         for (Field field : fields)
             try {
@@ -154,7 +155,7 @@ public class Color implements ChatFormatter {
      * @param name the name
      * @return the color
      */
-    public static Color valueOf(String name) {
+    public static @Nullable Color valueOf(String name) {
         return Arrays.stream(values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
@@ -164,7 +165,7 @@ public class Color implements ChatFormatter {
      * @param identifierChar the identifier char
      * @return the color
      */
-    public static Color valueOf(char identifierChar) {
+    public static @Nullable Color valueOf(char identifierChar) {
         return Arrays.stream(values()).filter(v -> v.getIdentifierChar() == Character.toLowerCase(identifierChar)).findFirst().orElse(null);
     }
 
@@ -173,7 +174,7 @@ public class Color implements ChatFormatter {
      *
      * @return the values
      */
-    public static Color[] values() {
+    public static Color @NotNull [] values() {
         List<Color> values = new ArrayList<>();
         for (Field field : Color.class.getDeclaredFields())
             try {
@@ -201,7 +202,7 @@ public class Color implements ChatFormatter {
      * @param color the color
      * @return the boolean
      */
-    public boolean equals(Color color) {
+    public boolean equals(@Nullable Color color) {
         if (color == null) return false;
         if (identifierChar != '?') return identifierChar == color.identifierChar;
         else return code.equals(color.code);

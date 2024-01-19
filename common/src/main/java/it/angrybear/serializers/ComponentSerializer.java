@@ -214,7 +214,7 @@ public abstract class ComponentSerializer {
      * @param player    the player
      * @param component the component
      */
-    public <P> void send(P player, TextComponent component) {
+    public <P> void send(@Nullable P player, @Nullable TextComponent component) {
         if (player == null) return;
         if (component == null) return;
         Object object = serializeComponent(component);
@@ -231,7 +231,7 @@ public abstract class ComponentSerializer {
      */
     public abstract <T, P> void send(P player, T component);
 
-    private Method findSerializeMethod(@NotNull TextComponent component) {
+    private @NotNull Method findSerializeMethod(@NotNull TextComponent component) {
         Class<?> tmp = this.getClass();
         while (tmp != null) {
             Method method = Stream.concat(Arrays.stream(tmp.getDeclaredMethods()), Arrays.stream(tmp.getMethods()))

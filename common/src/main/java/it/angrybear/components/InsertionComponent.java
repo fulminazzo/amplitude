@@ -1,6 +1,7 @@
 package it.angrybear.components;
 
 import it.angrybear.interfaces.validators.OptionValidator;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class InsertionComponent extends ContainerComponent {
     }
 
     @Override
-    protected Map<String, OptionValidator> getRequiredOptions() {
+    protected @NotNull Map<String, OptionValidator> getRequiredOptions() {
         return new HashMap<String, OptionValidator>(){{
             put("text", null);
         }};

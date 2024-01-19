@@ -48,7 +48,7 @@ public class HexComponent extends OptionComponent {
      *
      * @return the hex color
      */
-    public String getHexColor() {
+    public @NotNull String getHexColor() {
         return getTagOption("color").toUpperCase();
     }
 

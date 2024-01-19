@@ -150,7 +150,7 @@ public class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T applyFont(@Nullable T component, Font font) {
+    public <T> @Nullable T applyFont(@Nullable T component, @NotNull Font font) {
         if (component == null) return null;
         Component c = (Component) component;
         return (T) c.font(Key.key(font.name().toLowerCase()));

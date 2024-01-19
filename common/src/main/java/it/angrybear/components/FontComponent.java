@@ -35,7 +35,7 @@ public class FontComponent extends OptionComponent {
         setFont(Font.valueOf(getFontID()));
     }
 
-    public String getFontID() {
+    public @NotNull String getFontID() {
         return getTagOption("id").toUpperCase();
     }
 
