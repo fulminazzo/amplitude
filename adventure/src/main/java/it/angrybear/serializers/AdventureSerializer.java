@@ -49,7 +49,7 @@ public class AdventureSerializer extends ComponentSerializer {
     public @Nullable Component serializeHoverComponent(@Nullable HoverComponent component) {
         if (component == null) return null;
         Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.text("");
+        if (c == null) c = Component.empty();
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
 
@@ -91,7 +91,7 @@ public class AdventureSerializer extends ComponentSerializer {
     public @Nullable Component serializeClickComponent(@Nullable ClickComponent component) {
         if (component == null) return null;
         Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.text("");
+        if (c == null) c = Component.empty();
 
         ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
         ClickEvent.Action action = ClickEvent.Action.valueOf(clickAction.name());
@@ -114,8 +114,16 @@ public class AdventureSerializer extends ComponentSerializer {
     public @Nullable Component serializeInsertionComponent(@Nullable InsertionComponent component) {
         if (component == null) return null;
         Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.text("");
+        if (c == null) c = Component.empty();
         return c.insertion(component.getInsertionText());
+    }
+
+    @Override
+    public @Nullable Component serializeFontComponent(@Nullable FontComponent component) {
+        if (component == null) return null;
+        Component c = serializeSimpleTextComponent(component);
+        if (c == null) c = Component.empty();
+        return c.font(Key.key(component.getFontID().toLowerCase()));
     }
 
     @Override
