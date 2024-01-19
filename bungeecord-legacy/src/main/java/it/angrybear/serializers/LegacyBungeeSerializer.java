@@ -134,7 +134,8 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     public @Nullable BaseComponent serializeFontComponent(@Nullable FontComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        return serializeSimpleTextComponent(component);
+        BaseComponent c = serializeSimpleTextComponent(component);
+        return applyFont(c, Font.valueOf(component.getFontID()));
     }
 
     @Override
@@ -174,7 +175,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T applyFont(T component, Font font) {
+    public <T> @Nullable T applyFont(@Nullable T component, @NotNull Font font) {
         return component;
     }
 
@@ -188,25 +189,13 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     protected void setStyle(@NotNull BaseComponent component, @NotNull Style style, boolean value) {
         String methodName = style.getName();
         methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1).toLowerCase();
+        if (style == Style.UNDERLINE) methodName += "d";
         try {
             Method method = component.getClass().getMethod("set" + methodName, Boolean.class);
             method.invoke(component, value);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public <T> @Nullable T reset(@Nullable T component) {
-        if (component == null) return null;
-        BaseComponent c = (BaseComponent) component;
-        c.setColor(ChatColor.WHITE);
-        c.setBold(false);
-        c.setStrikethrough(false);
-        c.setItalic(false);
-        c.setObfuscated(false);
-        c.setUnderlined(false);
-        return component;
     }
 
     /**
