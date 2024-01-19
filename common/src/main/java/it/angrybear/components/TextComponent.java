@@ -46,7 +46,9 @@ public class TextComponent {
                     try {
                         return (TextComponent) constructor.newInstance(s);
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
+                        Throwable cause = e.getCause();
+                        if (cause instanceof RuntimeException) throw (RuntimeException) cause;
+                        else throw new RuntimeException(cause);
                     }
                 });
             } catch (NoSuchMethodException ignored) {}
