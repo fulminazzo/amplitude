@@ -79,7 +79,7 @@ public interface ChatFormatter {
                 - bold (<b>)
                 - italic (<i>)
                 - strikethrough (<s>)
-                - underline (<u>)
+                - underlined (<u>)
              */
             else if (c instanceof Style && !c.equals(Style.OBFUSCATED))
                 if (c.name().toLowerCase().charAt(0) == identifierChar)

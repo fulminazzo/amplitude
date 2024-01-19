@@ -54,7 +54,7 @@ class TextComponentTest {
                         mockComponent(null,
                                 null, null, null, false, null, null, null,
                                 "Hello world")},
-                new Object[]{"<underline>Hello world",
+                new Object[]{"<underlined>Hello world",
                         mockComponent(null,
                                 null, null, null, null, true, null, null,
                                 "Hello world")},
@@ -179,7 +179,7 @@ class TextComponentTest {
             "<obfuscated>",
             "<italic>",
             "<strikethrough>",
-            "<underline>",
+            "<underlined>",
             "<reset>",
             "Text"
     })
@@ -250,7 +250,7 @@ class TextComponentTest {
     }
 
     static String mockComponent(String next, String color, Boolean obfuscated,
-                                Boolean bold, Boolean strikethrough, Boolean underline,
+                                Boolean bold, Boolean strikethrough, Boolean underlined,
                                 Boolean italic, Boolean reset, String text) {
         return String.format("{next: %s, ", next) +
                 String.format("color: %s, ", color) +
@@ -258,7 +258,7 @@ class TextComponentTest {
                 String.format("obfuscated: %s, ", obfuscated) +
                 String.format("bold: %s, ", bold) +
                 String.format("strikethrough: %s, ", strikethrough) +
-                String.format("underline: %s, ", underline) +
+                String.format("underlined: %s, ", underlined) +
                 String.format("italic: %s, ", italic) +
                 String.format("reset: %s, ", reset) +
                 String.format("text: %s}", text);

@@ -64,7 +64,7 @@ public class TextComponent {
     protected Boolean obfuscated;
     protected Boolean bold;
     protected Boolean strikethrough;
-    protected Boolean underline;
+    protected Boolean underlined;
     protected Boolean italic;
     protected Boolean reset;
     @Getter
@@ -393,31 +393,31 @@ public class TextComponent {
     }
 
     /**
-     * Gets underline.
+     * Gets underlined.
      *
-     * @return the underline
+     * @return the underlined
      */
-    public boolean isUnderline() {
-        return underline != null && underline;
+    public boolean isUnderlined() {
+        return underlined != null && underlined;
     }
 
     /**
-     * Sets underline.
+     * Sets underlined.
      *
-     * @param underline the underline
+     * @param underlined the underlined
      */
-    public void setUnderline(Boolean underline) {
-        setUnderline(underline, true);
+    public void setUnderlined(Boolean underlined) {
+        setUnderlined(underlined, true);
     }
 
     /**
-     * Sets underline.
+     * Sets underlined.
      *
-     * @param underline the underline
+     * @param underlined the underlined
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
-    public void setUnderline(Boolean underline, boolean propagate) {
-        this.underline = underline;
+    public void setUnderlined(Boolean underlined, boolean propagate) {
+        this.underlined = underlined;
         if (propagate) setSameOptions(next);
     }
 

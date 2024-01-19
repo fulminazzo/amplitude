@@ -27,11 +27,11 @@ public enum Style implements ChatFormatter {
      */
     STRIKETHROUGH('m'),
     /**
-     * Underline style (corresponds to &amp;n).
+     * Underlined style (corresponds to &amp;n).
      * <p>
-     * Tag: &#60;underline&#62;
+     * Tag: &#60;underlined&#62;
      */
-    UNDERLINE('n'),
+    UNDERLINED('n'),
     /**
      * Italic style (corresponds to &amp;o).
      * <p>
