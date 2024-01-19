@@ -1,6 +1,7 @@
 package it.angrybear.components;
 
 import it.angrybear.enums.Color;
+import it.angrybear.enums.Font;
 import it.angrybear.enums.Style;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -128,6 +129,16 @@ class TextComponentTest {
     }
 
     @Test
+    void testFont() {
+        TextComponent first = new TextComponent("First<bold>second<reset>third");
+        TextComponent second = first.getNext();
+        TextComponent third = second.getNext();
+        first.setFont(Font.ILLAGERALT);
+        assertEquals(Font.ILLAGERALT, second.getFont());
+        assertNull(third.getFont());
+    }
+
+    @Test
     void testIsSimilar() {
         TextComponent t1 = new TextComponent("<red>Hello world");
         TextComponent t2 = new TextComponent("<red>How are you");
@@ -243,6 +254,7 @@ class TextComponentTest {
                                 Boolean italic, Boolean reset, String text) {
         return String.format("{next: %s, ", next) +
                 String.format("color: %s, ", color) +
+                "font: null, " +
                 String.format("magic: %s, ", magic) +
                 String.format("bold: %s, ", bold) +
                 String.format("strikethrough: %s, ", strikethrough) +

@@ -1,6 +1,7 @@
 package it.angrybear.components;
 
 import it.angrybear.enums.Color;
+import it.angrybear.enums.Font;
 import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
@@ -40,6 +41,8 @@ public class TextComponent {
     protected TextComponent next;
     @Getter
     protected Color color;
+    @Getter
+    protected Font font;
     protected Boolean magic;
     protected Boolean bold;
     protected Boolean strikethrough;
@@ -164,7 +167,7 @@ public class TextComponent {
     public void setSameOptions(@Nullable TextComponent textComponent) {
         if (textComponent == null) return;
 
-        if (isReset()) return;
+        if (isReset() || textComponent.isReset()) return;
 
         try {
             for (Field field : getOptionFields()) {
@@ -261,6 +264,26 @@ public class TextComponent {
      */
     public void setColor(Color color, boolean propagate) {
         this.color = color;
+        if (propagate) setSameOptions(next);
+    }
+
+    /**
+     * Sets font.
+     *
+     * @param font the font
+     */
+    public void setFont(Font font) {
+        setFont(font, true);
+    }
+
+    /**
+     * Sets font.
+     *
+     * @param font      the font
+     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     */
+    public void setFont(Font font, boolean propagate) {
+        this.font = font;
         if (propagate) setSameOptions(next);
     }
 
@@ -430,6 +453,7 @@ public class TextComponent {
     /**
      * Sets reset.
      *
+     * @param reset     the reset
      * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
     public void reset(Boolean reset, boolean propagate) {
@@ -472,8 +496,8 @@ public class TextComponent {
     /**
      * Sets style.
      *
-     * @param style     the style
-     * @param value     the value
+     * @param style the style
+     * @param value the value
      */
     public void setStyle(@Nullable Style style, Boolean value) {
         setStyle(style, value, true);
