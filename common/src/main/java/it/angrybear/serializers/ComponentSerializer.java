@@ -84,7 +84,9 @@ public abstract class ComponentSerializer {
         try {
             output = (T) method.invoke(this, component);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) throw (RuntimeException) cause;
+            else throw new RuntimeException(cause);
         }
 
         if (component.getNext() != null)
@@ -195,7 +197,15 @@ public abstract class ComponentSerializer {
      * @param component the component
      * @return the result component
      */
-    public abstract <T> @Nullable T reset(T component);
+    public <T> @Nullable T reset(@Nullable T component) {
+        if (component == null) return null;
+        T c = component;
+        c = applyColor(c, Color.WHITE);
+        c = applyFont(c, Font.DEFAULT);
+        for (Style style : Style.values())
+            if (style != Style.RESET) c = applyStyle(c, style, false);
+        return component;
+    }
 
     /**
      * Send to player.
