@@ -479,6 +479,7 @@ public class TextComponent {
             for (Style style : Style.values())
                 if (style != Style.RESET)
                     setStyle(style, false, false);
+            setFont(Font.DEFAULT, false);
             if (propagate) setSameOptions(next);
         }
     }

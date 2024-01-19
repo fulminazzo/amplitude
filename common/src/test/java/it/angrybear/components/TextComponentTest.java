@@ -79,7 +79,7 @@ class TextComponentTest {
                 new Object[]{"<red><bold><italic>Hello <reset>world",
                         mockComponent(mockComponent(mockComponent(mockComponent(null,
                                                         "WHITE", false, false, false, false, false, true,
-                                                        "world"),
+                                                        "world").replace("font: null", "font: DEFAULT"),
                                                 "RED", null, true, null, null, true, null,
                                                 "Hello "),
                                         "RED", null, true, null, null, null, null,
@@ -135,7 +135,7 @@ class TextComponentTest {
         TextComponent third = second.getNext();
         first.setFont(Font.ILLAGERALT);
         assertEquals(Font.ILLAGERALT, second.getFont());
-        assertNull(third.getFont());
+        assertEquals(Font.DEFAULT, third.getFont());
     }
 
     @Test
