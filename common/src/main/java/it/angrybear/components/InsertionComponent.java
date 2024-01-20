@@ -12,7 +12,7 @@ import java.util.Map;
  * Insertions are texts that are written in the player chat box upon pressing SHIFT + LEFT CLICK.
  * A text option is required.
  * <p>
- * Example: "&#60;insertion text=\"Amazing!\"&#62;Hello world&#60;/insertion&#62;"
+ * Example: "&#60;insertion text="Amazing!"&#62;Hello world&#60;/insertion&#62;"
  */
 public class InsertionComponent extends ContainerComponent {
 

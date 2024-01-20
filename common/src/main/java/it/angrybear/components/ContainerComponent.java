@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * This means that for any container component, opening and closing tags are required.
  * If those are not provided, a {@link InvalidComponentException} will be thrown.
  * <p>
- * Example: "&#60;component&#62;This is contained&#60;/component&#62; is a valid container component.
+ * Example: "&#60;component&#62;This is contained&#60;/component&#62;" is a valid container component.
  */
 @Getter
 public abstract class ContainerComponent extends OptionComponent {
