@@ -66,7 +66,7 @@ public class TranslatableComponent extends ContainerComponent {
      *
      * @param rawArgument the raw argument
      */
-    public void addArgument(String rawArgument) {
+    public void addArgument(@Nullable String rawArgument) {
         if (rawArgument != null) this.arguments.add(TextComponent.fromRaw(rawArgument));
     }
 
@@ -75,7 +75,7 @@ public class TranslatableComponent extends ContainerComponent {
      *
      * @param textComponent the text component
      */
-    public void addArgument(TextComponent textComponent) {
+    public void addArgument(@Nullable TextComponent textComponent) {
         if (textComponent != null) this.arguments.add(textComponent);
     }
 
@@ -84,7 +84,7 @@ public class TranslatableComponent extends ContainerComponent {
      *
      * @param textComponent the text component
      */
-    public void removeArgument(TextComponent textComponent) {
+    public void removeArgument(@Nullable TextComponent textComponent) {
         if (textComponent != null) this.arguments.removeIf(t -> t.equals(textComponent));
     }
 
@@ -93,7 +93,7 @@ public class TranslatableComponent extends ContainerComponent {
      *
      * @param rawArguments the raw arguments
      */
-    public void setArguments(String... rawArguments) {
+    public void setArguments(String @Nullable ... rawArguments) {
         List<TextComponent> arguments = null;
         if (rawArguments != null) {
             arguments = new ArrayList<>();
@@ -111,7 +111,7 @@ public class TranslatableComponent extends ContainerComponent {
      *
      * @param arguments the arguments
      */
-    public void setArguments(List<TextComponent> arguments) {
+    public void setArguments(@Nullable List<TextComponent> arguments) {
         this.arguments.clear();
         if (arguments != null) this.arguments.addAll(arguments);
     }

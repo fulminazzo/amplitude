@@ -41,8 +41,8 @@ public class FontComponent extends OptionComponent {
 
     @Override
     protected @NotNull Map<String, OptionValidator> getRequiredOptions() {
-        Map<String, OptionValidator> options = new HashMap<>();
-        options.put("id", new FontValidator());
-        return options;
+        return new HashMap<String, OptionValidator>(){{
+            put("id", new FontValidator());
+        }};
     }
 }

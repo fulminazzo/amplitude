@@ -54,8 +54,8 @@ public class HexComponent extends OptionComponent {
 
     @Override
     protected @NotNull Map<String, OptionValidator> getRequiredOptions() {
-        Map<String, OptionValidator> options = new HashMap<>();
-        options.put("color", new HexColorValidator());
-        return options;
+        return new HashMap<String, OptionValidator>(){{
+            put("color", new HexColorValidator());
+        }};
     }
 }
