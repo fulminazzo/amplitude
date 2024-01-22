@@ -22,6 +22,7 @@ class CharCodeSerializerTest {
             "&oHello world,<italic>Hello world",
             "&oHello &rworld,<italic>Hello <reset>world",
             "Hello world,<insertion text=\"Invisible\">Hello world</insertion>",
+            "Hello world,<translatable>Hello world</translatable>",
             "Hello world,<font id=\"ILLAGERALT\">Hello world",
             "&c&c&lHello world,<red><bold>Hello world",
             "&c&c&l&c&l&oHello world,<red><bold><italic>Hello world",
