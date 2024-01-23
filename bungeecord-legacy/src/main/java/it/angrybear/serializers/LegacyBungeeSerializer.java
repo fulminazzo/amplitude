@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link ComponentSerializer} for Minecraft 1.16 and below.
@@ -139,13 +140,41 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
+    public @Nullable BaseComponent serializeTranslateComponent(@Nullable TranslatableComponent component) {
+        correctComponents(component);
+        if (component == null) return null;
+        final String rawText;
+        final TextComponent child = component.getChild();
+        if (child == null) rawText = "";
+        else rawText = child.serialize();
+
+        net.md_5.bungee.api.chat.TranslatableComponent c = new net.md_5.bungee.api.chat.TranslatableComponent(rawText);
+        c.setWith(component.getArguments().stream()
+                .map(this::serializeComponent)
+                .map(bc -> bc == null ? new TextComponent() : bc)
+                .filter(bc -> bc instanceof BaseComponent)
+                .map(bc -> (BaseComponent) bc)
+                .collect(Collectors.toList()));
+
+        if (component.isReset()) c = reset(c);
+        else {
+            Color color = component.getColor();
+            if (color != null) c = applyColor(c, color);
+            Font font = component.getFont();
+            if (font != null) c = applyFont(c, font);
+            for (Style style : component.getStyles()) c = applyStyle(c, style, component.getStyle(style));
+        }
+        return c;
+    }
+
+    @Override
     public <T> @Nullable T sumTwoSerializedComponents(@Nullable T component1, @Nullable T component2) {
         BaseComponent bc1 = (BaseComponent) component1;
         BaseComponent bc2 = (BaseComponent) component2;
         if (bc1 == null) return null;
         if (bc1 instanceof net.md_5.bungee.api.chat.TextComponent) {
             net.md_5.bungee.api.chat.TextComponent tc1 = (net.md_5.bungee.api.chat.TextComponent) bc1;
-            if (tc1.getText() == null) tc1.setText("");
+            if (tc1.getText() == null || tc1.getText().isEmpty()) tc1.setText("");
         }
         if (bc2 instanceof net.md_5.bungee.api.chat.TextComponent) {
             net.md_5.bungee.api.chat.TextComponent tc2 = (net.md_5.bungee.api.chat.TextComponent) bc2;

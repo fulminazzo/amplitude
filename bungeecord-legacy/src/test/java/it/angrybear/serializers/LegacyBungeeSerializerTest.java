@@ -1,9 +1,6 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.ClickComponent;
-import it.angrybear.components.HexComponent;
-import it.angrybear.components.HoverComponent;
-import it.angrybear.components.TextComponent;
+import it.angrybear.components.*;
 import it.angrybear.enums.ClickAction;
 import it.angrybear.enums.HoverAction;
 import it.angrybear.exceptions.InvalidOptionException;
@@ -66,6 +63,7 @@ class LegacyBungeeSerializerTest {
                 + "<font id=\"ILLAGERALT\">or else... "
                 + "<reset>This should be reset. "
                 + "<insertion text=\"Hello there!\">Insert DEMO </insertion>"
+                + "<translatable arguments=\"Diamond Sword&1&\\\"Alex & Friends\\\"\">commands.give.successful.single</translatable>"
                 ;
 
         BaseComponent c2 = createComponent(ChatColor.RED.toString());
@@ -77,6 +75,11 @@ class LegacyBungeeSerializerTest {
         addExtra(c2, createComponent(ChatColor.WHITE.toString()));
         addExtra(c2, createComponent("Insert DEMO ", c -> c.setInsertion("Hello there!")));
         addExtra(c2, createComponent(""));
+        net.md_5.bungee.api.chat.TranslatableComponent tc = new net.md_5.bungee.api.chat.TranslatableComponent("commands.give.successful.single");
+        tc.addWith(new net.md_5.bungee.api.chat.TextComponent("Diamond Sword"));
+        tc.addWith(new net.md_5.bungee.api.chat.TextComponent("1"));
+        tc.addWith(new net.md_5.bungee.api.chat.TextComponent("Alex & Friends"));
+        addExtra(c2, tc);
 
         BaseComponent temp = c2;
         for (Object[] objects : getClickTests()) {
