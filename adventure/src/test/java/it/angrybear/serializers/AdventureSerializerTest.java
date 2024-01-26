@@ -74,6 +74,7 @@ class AdventureSerializerTest {
                 + "<font id=\"ILLAGERALT\">or else... "
                 + "<reset>This should be reset. "
                 + "<insertion text=\"Hello there!\">Insert DEMO </insertion>"
+                + "<translatable arguments=\"Diamond Sword&1&\\\"Alex & Friends\\\"\">commands.give.successful.single</translatable>"
                 ;
 
         Component c2 = Component.text("").color(NamedTextColor.RED);
@@ -103,6 +104,9 @@ class AdventureSerializerTest {
         c2 = addExtra(c2, Component.text("Insert DEMO ")
                 .insertion("Hello there!")
         );
+        c2 = addExtra(c2, Component.translatable("commands.give.successful.single").args(
+                Component.text("Diamond Sword"), Component.text("1"), Component.text("Alex & Friends")
+        ));
 
         for (Object[] objects : getClickTests()) {
             ClickAction action = (ClickAction) objects[0];

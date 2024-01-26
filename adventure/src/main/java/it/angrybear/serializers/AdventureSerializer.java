@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link ComponentSerializer} that supports the <a href="https://docs.advntr.dev/index.html">Adventure API</a>.
@@ -31,17 +32,17 @@ public class AdventureSerializer extends ComponentSerializer {
         if (component == null) return null;
         String rawText = component.getText();
         if (rawText == null) return null;
-        Component textComponent = Component.text(rawText);
-        if (component.isReset()) textComponent = reset(textComponent);
+        Component c = Component.text(rawText);
+        if (component.isReset()) c = reset(c);
         else {
             Color color = component.getColor();
-            if (color != null) textComponent = applyColor(textComponent, color);
+            if (color != null) c = applyColor(c, color);
             Font font = component.getFont();
-            if (font != null) textComponent = applyFont(textComponent, font);
+            if (font != null) c = applyFont(c, font);
             for (Style style : component.getStyles())
-                textComponent = applyStyle(textComponent, style, component.getStyle(style));
+                c = applyStyle(c, style, component.getStyle(style));
         }
-        return textComponent;
+        return c;
     }
 
     @Override
@@ -123,6 +124,35 @@ public class AdventureSerializer extends ComponentSerializer {
         Component c = serializeSimpleTextComponent(component);
         if (c == null) c = Component.empty();
         return c.font(Key.key(component.getFontID().toLowerCase()));
+    }
+
+    @Override
+    public @Nullable Component serializeTranslateComponent(TranslatableComponent component) {
+        if (component == null) return null;
+        final String rawText;
+        final TextComponent child = component.getChild();
+        if (child == null) rawText = "";
+        else rawText = child.serialize();
+
+        net.kyori.adventure.text.TranslatableComponent c = Component.translatable(rawText);
+        c = c.args(component.getArguments().stream()
+                .map(this::serializeComponent)
+                .map(bc -> bc == null ? Component.empty() : bc)
+                .map(bc -> (Component) bc)
+                .collect(Collectors.toList())
+        );
+
+        if (component.isReset()) c = reset(c);
+        else {
+            Color color = component.getColor();
+            if (color != null) c = applyColor(c, color);
+            Font font = component.getFont();
+            if (font != null) c = applyFont(c, font);
+            for (Style style : component.getStyles())
+                c = applyStyle(c, style, component.getStyle(style));
+        }
+
+        return c;
     }
 
     @Override
