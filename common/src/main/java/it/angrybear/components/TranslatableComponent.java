@@ -14,17 +14,17 @@ import java.util.List;
 /**
  * An implementation of {@link ContainerComponent} that allows creating translatable texts.
  * These are translated using Minecraft default translations (so they will not work for general phrases).
- * To pass any argument, you can specify the non-mandatory option "arguments" separated with '&'.
+ * To pass any argument, you can specify the non-mandatory option "arguments" separated with '&amp;'.
  * <p>
- * Example: \"&#60;translatable arguments="Diamond Sword&1&\"Alex & friends\""&#62;commands.give.success.single&#60;/translate&#62;\"
+ * Example: \"&#60;translatable arguments="Diamond Sword&amp;1&amp;\"Alex &amp; friends\""&#62;commands.give.success.single&#60;/translate&#62;\"
  * will create:
  * <ul>
  *     <li><i>Diamond Sword</i> as first argument</li>
  *     <li><i>1</i> as second argument</li>
- *     <li><i>Alex & friends</i> as third argument</li>
+ *     <li><i>Alex &amp; friends</i> as third argument</li>
  *     <li><b>commands.give.success.single</b> as content to be translated</li>
  * </ul>
- * The result in chat will be: "Gave Diamond Sword 1 to Alex & friends".
+ * The result in chat will be: "Gave Diamond Sword 1 to Alex &amp; friends".
  */
 @Getter
 public class TranslatableComponent extends ContainerComponent {
