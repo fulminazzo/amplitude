@@ -545,6 +545,33 @@ public class TextComponent {
     }
 
     /**
+     * Compares this component with the given one.
+     *
+     * @param textComponent the text component
+     * @return true only if all the styles, font and color applied to this component are also applied to the given one and vice versa.
+     */
+    public boolean allOptionsMatch(@NotNull TextComponent textComponent) {
+        return compareOptions(textComponent) && textComponent.compareOptions(this);
+    }
+
+    /**
+     * Compares this component with the given one.
+     *
+     * @param textComponent the text component
+     * @return true only if all the styles, font and color applied to this component are also applied to the given one
+     */
+    public boolean compareOptions(@NotNull TextComponent textComponent) {
+        if (color != null && !color.equals(textComponent.color)) return false;
+        if (font != null && !font.equals(textComponent.font)) return false;
+        if (obfuscated != null && !obfuscated.equals(textComponent.obfuscated)) return false;
+        if (bold != null && !bold.equals(textComponent.bold)) return false;
+        if (strikethrough != null && !strikethrough.equals(textComponent.strikethrough)) return false;
+        if (underlined != null && !underlined.equals(textComponent.underlined)) return false;
+        if (italic != null && !italic.equals(textComponent.italic)) return false;
+        return reset == null || reset.equals(textComponent.reset);
+    }
+
+    /**
      * Serialize the current component to a raw text.
      *
      * @return the string
