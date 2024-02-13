@@ -113,6 +113,16 @@ public abstract class ContainerComponent extends OptionComponent {
     }
 
     @Override
+    public boolean contains(@NotNull TextComponent textComponent) {
+        if (!super.contains(textComponent)) return false;
+        if (!this.getClass().equals(textComponent.getClass())) return next != null && next.contains(textComponent);
+        ContainerComponent containerComponent = (ContainerComponent) textComponent;
+        TextComponent c1 = getChild();
+        TextComponent c2 = containerComponent.getChild();
+        return (c1 == null && c2 == null) || (c1 != null && c2 != null && c1.contains(c2));
+    }
+
+    @Override
     protected @NotNull String serializeSingle() {
         return super.serializeSingle() + "</" + tagName + ">";
     }

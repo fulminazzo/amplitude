@@ -545,6 +545,46 @@ public class TextComponent {
     }
 
     /**
+     * Recursively check if the given component is contained in the current one.
+     *
+     * @param textComponent the text component
+     * @return true only if one or more components match the criteria
+     */
+    public boolean contains(@NotNull TextComponent textComponent) {
+        if (strictlyContains(textComponent)) return true;
+        else return next != null && next.contains(textComponent);
+    }
+
+    /**
+     * Check if the given component is contained in the current one.
+     * If not, return false instead of checking the next component.
+     *
+     * @param textComponent the text component
+     * @return true only if one or more components match the criteria
+     */
+    public boolean strictlyContains(@NotNull TextComponent textComponent) {
+        TextComponent next = this.getNext();
+        TextComponent cNext = textComponent.getNext();
+        final String text = this.getText();
+        final String cText = textComponent.getText();
+        // Check classes
+        if (!this.getClass().equals(textComponent.getClass())) return false;
+        // Check options
+        if (!textComponent.compareOptions(this)) return false;
+        // Check text
+        if (text != null) {
+            if (cText == null) return false;
+            else if (text.startsWith(cText) && cNext == null) return true;
+            else if (!text.endsWith(cText)) return false;
+        } else if (cText != null) return false;
+        // Check next
+        TextComponent n1, n2;
+        for (n1 = next, n2 = cNext; n1 != null && n2 != null; n1 = n1.getNext(), n2 = n2.getNext())
+            if (!n1.strictlyContains(n2)) return false;
+        return n2 == null;
+    }
+
+    /**
      * Compares this component with the given one.
      *
      * @param textComponent the text component

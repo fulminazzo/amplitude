@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -149,6 +150,14 @@ public abstract class OptionComponent extends TextComponent {
     public static @NotNull Pattern getTagRegex(String tagName) {
         String regex = "<" + tagName + " ?((?:(?!<" + tagName + ")(?!</" + tagName + ">).)*)";
         return Pattern.compile(regex);
+    }
+
+    @Override
+    public boolean contains(@NotNull TextComponent textComponent) {
+        if (this.getClass().equals(textComponent.getClass())) {
+            if (!super.contains(textComponent)) return false;
+            return this.getTagOptions().equals(((OptionComponent) textComponent).getTagOptions());
+        } else return next != null && next.contains(textComponent);
     }
 
     @Override
