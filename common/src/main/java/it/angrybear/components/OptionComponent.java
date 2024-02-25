@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -35,6 +35,8 @@ public abstract class OptionComponent extends TextComponent {
 
     /**
      * Instantiates a new Option component.
+     *
+     * @param tagName the tag name
      */
     public OptionComponent(@NotNull String tagName) {
         this(null, tagName);
@@ -44,6 +46,7 @@ public abstract class OptionComponent extends TextComponent {
      * Instantiates a new Option component.
      *
      * @param rawText the raw text
+     * @param tagName the tag name
      */
     public OptionComponent(@Nullable String rawText, @NotNull String tagName) {
         this.tagName = tagName;
@@ -130,6 +133,25 @@ public abstract class OptionComponent extends TextComponent {
      */
     public String getTagOption(String key) {
         return this.tagOptions.get(key);
+    }
+
+    /**
+     * Sets tag option.
+     *
+     * @param key   the key
+     * @param value the value
+     */
+    public void setTagOption(String key, String value)  {
+        this.tagOptions.put(key, value);
+    }
+
+    /**
+     * Gets tag options.
+     *
+     * @return the tag options
+     */
+    public Map<String, String> getTagOptions() {
+        return new LinkedHashMap<>(this.tagOptions);
     }
 
     /**
