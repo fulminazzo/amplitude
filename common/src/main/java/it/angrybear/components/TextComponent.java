@@ -545,6 +545,24 @@ public class TextComponent {
     }
 
     /**
+     * Copy all the fields from the given text component to the current one.
+     *
+     * @param textComponent the text component
+     * @return this component modified
+     */
+    public TextComponent copyFrom(final TextComponent textComponent) {
+        for (Field field : TextComponent.class.getDeclaredFields())
+            try {
+                if (Modifier.isStatic(field.getModifiers())) continue;
+                field.setAccessible(true);
+                field.set(this, field.get(textComponent));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        return this;
+    }
+
+    /**
      * Recursively check if the given component is contained in the current one.
      *
      * @param textComponent the text component
