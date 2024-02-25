@@ -551,7 +551,7 @@ public class TextComponent {
      * @param to the replacement
      * @return the text component
      */
-    public TextComponent replace(final TextComponent from, final TextComponent to) {
+    public TextComponent replace(final @NotNull TextComponent from, final @NotNull TextComponent to) {
         return replace(from, to, false);
     }
 
@@ -562,7 +562,7 @@ public class TextComponent {
      * @param to the replacement
      * @return the text component
      */
-    public TextComponent replace(final String from, final String to) {
+    public TextComponent replace(final @NotNull String from, final @NotNull String to) {
         return replace(from, to, false);
     }
 
@@ -574,7 +574,7 @@ public class TextComponent {
      * @param maintainColor if true, colors preceding the replacement will be put next to it.
      * @return the text component
      */
-    public TextComponent replace(final TextComponent from, final TextComponent to, final boolean maintainColor) {
+    public TextComponent replace(final @NotNull TextComponent from, final @NotNull TextComponent to, final boolean maintainColor) {
         return replace(from.serialize(), to.serialize(), maintainColor);
     }
 
@@ -622,7 +622,7 @@ public class TextComponent {
      * @param textComponent the text component
      * @return this component modified
      */
-    public TextComponent copyFrom(final TextComponent textComponent) {
+    public @NotNull TextComponent copyFrom(final @NotNull TextComponent textComponent) {
         for (Field field : TextComponent.class.getDeclaredFields())
             try {
                 if (Modifier.isStatic(field.getModifiers())) continue;
@@ -640,7 +640,7 @@ public class TextComponent {
      * @param textComponent the text component
      * @return true only if one or more components match the criteria
      */
-    public boolean contains(@NotNull TextComponent textComponent) {
+    public boolean contains(final @NotNull TextComponent textComponent) {
         if (strictlyContains(textComponent)) return true;
         else return next != null && next.contains(textComponent);
     }
@@ -652,7 +652,7 @@ public class TextComponent {
      * @param textComponent the text component
      * @return true only if one or more components match the criteria
      */
-    public boolean strictlyContains(@NotNull TextComponent textComponent) {
+    public boolean strictlyContains(final @NotNull TextComponent textComponent) {
         TextComponent next = this.getNext();
         TextComponent cNext = textComponent.getNext();
         final String text = this.getText();
