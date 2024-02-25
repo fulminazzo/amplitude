@@ -168,7 +168,7 @@ public class TextComponent {
     public void addNext(@Nullable TextComponent next) {
         if (next == null) return;
         if (this.next != null) this.next.addNext(next);
-        else this.next = next;
+        else setNext(next);
     }
 
     /**
