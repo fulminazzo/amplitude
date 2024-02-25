@@ -97,7 +97,7 @@ public class TextComponent {
      */
     public void setContent(@Nullable String rawText) {
         if (rawText == null || rawText.isEmpty()) return;
-        this.text = null;
+        this.text = "";
         final Matcher matcher = TAG_REGEX.matcher(rawText);
 
         if (matcher.find()) {
