@@ -31,29 +31,7 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public class TextComponent {
-    public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<String, Function<String, TextComponent>>(){{
-        Set<Class<?>> classes = ClassUtils.findClassesInPackage(TextComponent.class.getPackage().getName());
-        for (Class<?> clazz : classes) {
-            if (!TextComponent.class.isAssignableFrom(clazz)) continue;
-            if (Modifier.isAbstract(clazz.getModifiers())) continue;
-            if (clazz.equals(TextComponent.class)) continue;
-            try {
-                Constructor<?> constructor = clazz.getConstructor(String.class);
-                String className = clazz.getSimpleName().toLowerCase();
-                if (className.endsWith("component"))
-                    className = className.substring(0, className.length() - "component".length());
-                put(className, s -> {
-                    try {
-                        return (TextComponent) constructor.newInstance(s);
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        Throwable cause = e.getCause();
-                        if (cause instanceof RuntimeException) throw (RuntimeException) cause;
-                        else throw new RuntimeException(cause);
-                    }
-                });
-            } catch (NoSuchMethodException ignored) {}
-        }
-    }};
+    public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<>();
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\"[^<>]*<|>[^<>]*\"|'[^<>]*<|>[^<>]*'|[^>])+(?:>\\\\\")?)>");
     @Getter
     protected TextComponent next;
@@ -70,6 +48,31 @@ public class TextComponent {
     @Getter
     @Setter
     protected @Nullable String text;
+
+    static {
+        Set<Class<?>> classes = ClassUtils.findClassesInPackage(TextComponent.class.getPackage().getName(), TextComponent.class);
+        for (Class<?> clazz : classes) {
+            if (!TextComponent.class.isAssignableFrom(clazz)) continue;
+            if (Modifier.isAbstract(clazz.getModifiers())) continue;
+            if (clazz.equals(TextComponent.class)) continue;
+            try {
+                Constructor<?> constructor = clazz.getConstructor(String.class);
+                String className = clazz.getSimpleName().toLowerCase();
+                if (className.endsWith("component"))
+                    className = className.substring(0, className.length() - "component".length());
+                CONTAINER_COMPONENTS.put(className, s -> {
+                    try {
+                        return (TextComponent) constructor.newInstance(s);
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        Throwable cause = e.getCause();
+                        if (cause instanceof RuntimeException) throw (RuntimeException) cause;
+                        else throw new RuntimeException(cause);
+                    }
+                });
+            } catch (NoSuchMethodException ignored) {
+            }
+        }
+    }
 
     /**
      * Instantiates a new Text component.
