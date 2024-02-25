@@ -33,6 +33,20 @@ public class HoverComponent extends ContainerComponent implements IEventComponen
         super(rawText, "hover");
     }
 
+    /**
+     * Sets hover action.
+     *
+     * @param action    the action
+     * @param component the component
+     */
+    public void setHoverAction(HoverAction action, TextComponent component) {
+        setTagOption("action", action.name());
+        final Map<String, OptionValidator> requiredOptions = action.getRequiredOptions();
+        for (String key : requiredOptions.keySet())
+            setTagOption(key, component.serialize());
+        checkOptions();
+    }
+
     @Override
     public Map<String, OptionValidator> getRequiredOptions() {
         return IEventComponent.super.getRequiredOptions();
