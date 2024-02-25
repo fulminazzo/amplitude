@@ -114,6 +114,13 @@ public abstract class OptionComponent extends TextComponent {
             }
         }
 
+        checkOptions();
+    }
+
+    /**
+     * Check options.
+     */
+    protected void checkOptions() {
         final Map<String, OptionValidator> requiredOptions = this.getRequiredOptions();
         for (String key : requiredOptions.keySet()) {
             String option = tagOptions.get(key);
