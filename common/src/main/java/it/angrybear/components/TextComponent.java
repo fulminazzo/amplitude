@@ -152,6 +152,26 @@ public class TextComponent {
     }
 
     /**
+     * Add next.
+     *
+     * @param rawText the raw text
+     */
+    public void addNext(@Nullable String rawText) {
+        addNext(rawText == null ? null : new TextComponent(rawText));
+    }
+
+    /**
+     * Add next.
+     *
+     * @param next the next
+     */
+    public void addNext(@Nullable TextComponent next) {
+        if (next == null) return;
+        if (this.next != null) this.next.addNext(next);
+        else this.next = next;
+    }
+
+    /**
      * Set the next component (if {@link #isSimilar(TextComponent)} merge it with the current component).
      * Then, apply {@link #setSameOptions(TextComponent)} method.
      *
@@ -551,7 +571,7 @@ public class TextComponent {
      * Replaces a section in the current text component.
      *
      * @param from the section to replace
-     * @param to the replacement
+     * @param to   the replacement
      * @return the text component
      */
     public TextComponent replace(final @NotNull TextComponent from, final @NotNull TextComponent to) {
@@ -562,7 +582,7 @@ public class TextComponent {
      * Replace text component.
      *
      * @param from the section to replace
-     * @param to the replacement
+     * @param to   the replacement
      * @return the text component
      */
     public TextComponent replace(final @NotNull String from, final @NotNull String to) {
@@ -572,8 +592,8 @@ public class TextComponent {
     /**
      * Replace text component.
      *
-     * @param from           the section to replace
-     * @param to           the replacement
+     * @param from          the section to replace
+     * @param to            the replacement
      * @param maintainColor if true, colors preceding the replacement will be put next to it.
      * @return the text component
      */
