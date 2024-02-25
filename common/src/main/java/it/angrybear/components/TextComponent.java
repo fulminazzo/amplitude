@@ -326,8 +326,8 @@ public class TextComponent {
     /**
      * Sets obfuscated.
      *
-     * @param obfuscated     the obfuscated
-     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param obfuscated the obfuscated
+     * @param propagate  if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
     public void setObfuscated(Boolean obfuscated, boolean propagate) {
         this.obfuscated = obfuscated;
@@ -414,7 +414,7 @@ public class TextComponent {
      * Sets underlined.
      *
      * @param underlined the underlined
-     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate  if true, use {@link #setSameOptions(TextComponent)} to update the next component
      */
     public void setUnderlined(Boolean underlined, boolean propagate) {
         this.underlined = underlined;
@@ -542,6 +542,78 @@ public class TextComponent {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Replaces a section in the current text component.
+     *
+     * @param from the section to replace
+     * @param to the replacement
+     * @return the text component
+     */
+    public TextComponent replace(final TextComponent from, final TextComponent to) {
+        return replace(from, to, false);
+    }
+
+    /**
+     * Replace text component.
+     *
+     * @param from the section to replace
+     * @param to the replacement
+     * @return the text component
+     */
+    public TextComponent replace(final String from, final String to) {
+        return replace(from, to, false);
+    }
+
+    /**
+     * Replace text component.
+     *
+     * @param from           the section to replace
+     * @param to           the replacement
+     * @param maintainColor if true, colors preceding the replacement will be put next to it.
+     * @return the text component
+     */
+    public TextComponent replace(final TextComponent from, final TextComponent to, final boolean maintainColor) {
+        return replace(from.serialize(), to.serialize(), maintainColor);
+    }
+
+    /**
+     * Replace text component.
+     *
+     * @param from          the section to replace
+     * @param to            the replacement
+     * @param maintainColor if true, colors preceding the replacement will be put next to it.
+     * @return the text component
+     */
+    public TextComponent replace(final @NotNull String from, final @NotNull String to, final boolean maintainColor) {
+        final HashSet<ChatFormatter> colors = new LinkedHashSet<>();
+        final String serialized = serialize();
+        String finalSerialized = "";
+        String tmp = "";
+        for (char c : serialized.toCharArray()) {
+            tmp += c;
+            if (tmp.endsWith(from)) {
+                tmp = tmp.substring(0, tmp.length() - from.length());
+                finalSerialized += tmp;
+                finalSerialized += to;
+                if (maintainColor) {
+                    final Matcher tagMatcher = TAG_REGEX.matcher(tmp);
+                    while (tagMatcher.find()) {
+                        final ChatFormatter formatter = ChatFormatter.getChatFormatter(tagMatcher.group(1));
+                        if (formatter == null) continue;
+                        if (formatter == Style.RESET) colors.clear();
+                        else if (formatter instanceof Color) colors.removeIf(s -> s instanceof Color);
+                        colors.add(formatter);
+                    }
+                    for (final ChatFormatter color : colors)
+                        finalSerialized += "<" + color.getName() + ">";
+                }
+                tmp = "";
+            }
+        }
+        TextComponent textComponent = new TextComponent(finalSerialized + tmp);
+        return copyFrom(textComponent);
     }
 
     /**
