@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'it.angrybear'
-version = '1.4'
+version = '1.5'
 
 ext.libraries = [
         bungeecord: 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT',
