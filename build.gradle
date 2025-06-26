@@ -15,7 +15,7 @@ ext.libraries = [
         velocity: 'com.velocitypowered:velocity-api:3.2.0-SNAPSHOT',
         json: 'com.google.code.gson:gson:2.10.1',
 
-        fulmicollection: 'it.fulminazzo:FulmiCollection:1.3.5'
+        fulmicollection: 'it.fulminazzo:FulmiCollection:1.8.1'
 ]
 
 allprojects {
