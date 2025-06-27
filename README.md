@@ -59,7 +59,7 @@ This section will describe each one in its **serialized** and **Java** form.
 Note that every component can be **serialized** and **deserialized** using provided functions:
 
 - to **deserialize**, it is possible to use
-  [Component#fromRaw(String)](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/Component.java):
+  [Component#fromRaw(String)](../main/common/src/main/java/it/fulminazzo/amplitude/component/Component.java):
 
   ```java
   String serialized;
@@ -85,7 +85,7 @@ Note that every component can be **serialized** and **deserialized** using provi
 
 ### Component
 
-[Component](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/Component.java)
+[Component](../main/common/src/main/java/it/fulminazzo/amplitude/component/Component.java)
 is the most basic component of **Amplitude**.
 It provides support for basic text, as well as coloring and text style.
 
@@ -99,7 +99,7 @@ It provides support for basic text, as well as coloring and text style.
   ```
 
 - **Coloring**: allows to change the color of the text using Minecraft default colors.
-  [Here](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/Color.java)
+  [Here](../main/common/src/main/java/it/fulminazzo/amplitude/component/Color.java)
   it is possible to find all the available ones.
 
   ```java
@@ -117,7 +117,7 @@ It provides support for basic text, as well as coloring and text style.
   ```
 
 - **Style**: allows to change the style of the text using Minecraft styles (bold, italic, etc...).
-  [Here](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/Style.java)
+  [Here](../main/common/src/main/java/it/fulminazzo/amplitude/component/Style.java)
   it is possible to find all the available ones.
 
   ```java
@@ -151,7 +151,7 @@ It provides support for basic text, as well as coloring and text style.
 ### HexComponent
 
 As the name implies,
-[HexComponent](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/HexComponent.java)
+[HexComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/HexComponent.java)
 provides support for **HEX colors** (only available in **Minecraft 1.16+**).
 
 ```java
