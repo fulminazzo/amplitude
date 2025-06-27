@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.component.*;
 import net.kyori.adventure.key.Key;
@@ -18,15 +18,15 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * Implementation of {@link ComponentSerializer} that supports the <a href="https://docs.advntr.dev/index.html">Adventure API</a>.
+ * Implementation of {@link ComponentConverter} that supports the <a href="https://docs.advntr.dev/index.html">Adventure API</a>.
  * This means
  * that it can be used in every version of <a href="https://papermc.io/software/paper">PaperMC</a> from 1.16 and in <a href="https://papermc.io/software/velocity">Velocity</a>.
  */
 @SuppressWarnings("unchecked")
-public final class AdventureSerializer extends ComponentSerializer {
+public final class AdventureConverter extends ComponentConverter {
 
     @Override
-    public @Nullable net.kyori.adventure.text.Component serializeSimpleComponent(@Nullable Component component) {
+    public @Nullable net.kyori.adventure.text.Component convertSimpleComponent(@Nullable Component component) {
         if (component == null) return null;
         String rawText = component.getText();
         if (rawText == null) return null;
@@ -44,9 +44,9 @@ public final class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable net.kyori.adventure.text.Component serializeHoverComponent(@Nullable HoverComponent component) {
+    public @Nullable net.kyori.adventure.text.Component convertHoverComponent(@Nullable HoverComponent component) {
         if (component == null) return null;
-        net.kyori.adventure.text.Component c = serializeComponent(component.getChild());
+        net.kyori.adventure.text.Component c = convertComponent(component.getChild());
         if (c == null) c = net.kyori.adventure.text.Component.empty();
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
@@ -86,9 +86,9 @@ public final class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable net.kyori.adventure.text.Component serializeClickComponent(@Nullable ClickComponent component) {
+    public @Nullable net.kyori.adventure.text.Component convertClickComponent(@Nullable ClickComponent component) {
         if (component == null) return null;
-        net.kyori.adventure.text.Component c = serializeComponent(component.getChild());
+        net.kyori.adventure.text.Component c = convertComponent(component.getChild());
         if (c == null) c = net.kyori.adventure.text.Component.empty();
 
         ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
@@ -101,31 +101,31 @@ public final class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable net.kyori.adventure.text.Component serializeHexComponent(@Nullable HexComponent component) {
+    public @Nullable net.kyori.adventure.text.Component convertHexComponent(@Nullable HexComponent component) {
         if (component == null) return null;
-        net.kyori.adventure.text.Component c = serializeSimpleComponent(component);
+        net.kyori.adventure.text.Component c = convertSimpleComponent(component);
         if (c == null) return null;
         return c.color(TextColor.fromHexString(component.getHexColor()));
     }
 
     @Override
-    public @Nullable net.kyori.adventure.text.Component serializeInsertionComponent(@Nullable InsertionComponent component) {
+    public @Nullable net.kyori.adventure.text.Component convertInsertionComponent(@Nullable InsertionComponent component) {
         if (component == null) return null;
-        net.kyori.adventure.text.Component c = serializeComponent(component.getChild());
+        net.kyori.adventure.text.Component c = convertComponent(component.getChild());
         if (c == null) c = net.kyori.adventure.text.Component.empty();
         return c.insertion(component.getInsertionText());
     }
 
     @Override
-    public @Nullable net.kyori.adventure.text.Component serializeFontComponent(@Nullable FontComponent component) {
+    public @Nullable net.kyori.adventure.text.Component convertFontComponent(@Nullable FontComponent component) {
         if (component == null) return null;
-        net.kyori.adventure.text.Component c = serializeSimpleComponent(component);
+        net.kyori.adventure.text.Component c = convertSimpleComponent(component);
         if (c == null) c = net.kyori.adventure.text.Component.empty();
         return c.font(Key.key(component.getFontID().toLowerCase()));
     }
 
     @Override
-    public @Nullable net.kyori.adventure.text.Component serializeTranslateComponent(TranslatableComponent component) {
+    public @Nullable net.kyori.adventure.text.Component convertTranslateComponent(TranslatableComponent component) {
         if (component == null) return null;
         final String rawText;
         final Component child = component.getChild();
@@ -134,7 +134,7 @@ public final class AdventureSerializer extends ComponentSerializer {
 
         net.kyori.adventure.text.TranslatableComponent c = net.kyori.adventure.text.Component.translatable(rawText);
         c = c.args(component.getArguments().stream()
-                .map(this::serializeComponent)
+                .map(this::convertComponent)
                 .map(bc -> bc == null ? net.kyori.adventure.text.Component.empty() : bc)
                 .map(bc -> (net.kyori.adventure.text.Component) bc)
                 .collect(Collectors.toList())
@@ -154,7 +154,7 @@ public final class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T sumTwoSerializedComponents(@Nullable T component1, @Nullable T component2) {
+    public <T> @Nullable T sumTwoConvertedComponents(@Nullable T component1, @Nullable T component2) {
         net.kyori.adventure.text.Component tc1 = (net.kyori.adventure.text.Component) component1;
         net.kyori.adventure.text.Component tc2 = (net.kyori.adventure.text.Component) component2;
         if (tc1 == null) return null;

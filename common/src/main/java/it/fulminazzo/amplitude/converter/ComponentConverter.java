@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.component.*;
 import org.jetbrains.annotations.NotNull;
@@ -15,30 +15,30 @@ import java.util.stream.Stream;
 /**
  * An abstract class that allows creating serializers for text components.
  */
-public abstract class ComponentSerializer {
+public abstract class ComponentConverter {
 
     /**
-     * A method to get the first valid ComponentSerializer from the current package.
-     * It tries to instantiate every class that is not {@link CharCodeSerializer},
-     * {@link AmpersandSerializer} or {@link SectionSignSerializer}.
-     * If it fails with every class, return a new {@link SectionSignSerializer};
+     * A method to get the first valid ComponentConverter from the current package.
+     * It tries to instantiate every class that is not {@link CharCodeConverter},
+     * {@link AmpersandConverter} or {@link SectionSignConverter}.
+     * If it fails with every class, return a new {@link SectionSignConverter};
      *
      * @return the component serializer
      */
     @SuppressWarnings("unchecked")
-    public static @NotNull ComponentSerializer serializer() {
+    public static @NotNull ComponentConverter converter() {
         Set<String> classes = getClassesInPackage();
         for (String className : classes) {
             try {
                 Class<?> clazz = Class.forName(className);
-                Constructor<? extends ComponentSerializer> constructor = (Constructor<? extends ComponentSerializer>) clazz.getConstructor();
+                Constructor<? extends ComponentConverter> constructor = (Constructor<? extends ComponentConverter>) clazz.getConstructor();
                 return constructor.newInstance();
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             } catch (Exception ignored) {
             }
         }
-        return new SectionSignSerializer();
+        return new SectionSignConverter();
     }
 
     /**
@@ -48,7 +48,7 @@ public abstract class ComponentSerializer {
      */
     static @NotNull Set<String> getClassesInPackage() {
         return Stream.of("Adventure", "Bungee", "LegacyBungee")
-                .map(c -> ComponentSerializer.class.getPackage().getName() + "." + c + "Serializer")
+                .map(c -> ComponentConverter.class.getPackage().getName() + "." + c + "Converter")
                 .collect(Collectors.toSet());
     }
 
@@ -57,8 +57,8 @@ public abstract class ComponentSerializer {
      *
      * @return the section sign serializer
      */
-    public static @NotNull SectionSignSerializer sectionSign() {
-        return new SectionSignSerializer();
+    public static @NotNull SectionSignConverter sectionSign() {
+        return new SectionSignConverter();
     }
 
     /**
@@ -66,22 +66,22 @@ public abstract class ComponentSerializer {
      *
      * @return the ampersand serializer
      */
-    public static @NotNull AmpersandSerializer ampersand() {
-        return new AmpersandSerializer();
+    public static @NotNull AmpersandConverter ampersand() {
+        return new AmpersandConverter();
     }
 
     /**
-     * Serialize a general {@link Component} and its siblings.
+     * Convert a general {@link Component} and its siblings.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
     @SuppressWarnings("unchecked")
-    public <T> @Nullable T serializeComponent(@Nullable Component component) {
+    public <T> @Nullable T convertComponent(@Nullable Component component) {
         if (component == null) return null;
 
-        Method method = findSerializeMethod(component);
+        Method method = findConvertMethod(component);
         T output;
         try {
             output = (T) method.invoke(this, component);
@@ -92,83 +92,83 @@ public abstract class ComponentSerializer {
         }
 
         if (component.getNext() != null)
-            output = sumTwoSerializedComponents(output, serializeComponent(component.getNext()));
+            output = sumTwoConvertedComponents(output, convertComponent(component.getNext()));
 
         return output;
     }
 
     /**
-     * Serialize a {@link Component}.
+     * Convert a {@link Component}.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
-    public abstract <T> @Nullable T serializeSimpleComponent(Component component);
+    public abstract <T> @Nullable T convertSimpleComponent(Component component);
 
     /**
-     * Serialize a {@link HoverComponent}.
+     * Convert a {@link HoverComponent}.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
-    public abstract <T> @Nullable T serializeHoverComponent(HoverComponent component);
+    public abstract <T> @Nullable T convertHoverComponent(HoverComponent component);
 
     /**
-     * Serialize a {@link ClickComponent}.
+     * Convert a {@link ClickComponent}.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
-    public abstract <T> @Nullable T serializeClickComponent(ClickComponent component);
+    public abstract <T> @Nullable T convertClickComponent(ClickComponent component);
 
     /**
-     * Serialize a {@link HexComponent}.
+     * Convert a {@link HexComponent}.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
-    public abstract <T> @Nullable T serializeHexComponent(HexComponent component);
+    public abstract <T> @Nullable T convertHexComponent(HexComponent component);
 
     /**
-     * Serialize a {@link InsertionComponent}.
+     * Convert a {@link InsertionComponent}.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
-    public abstract <T> @Nullable T serializeInsertionComponent(InsertionComponent component);
+    public abstract <T> @Nullable T convertInsertionComponent(InsertionComponent component);
 
     /**
-     * Serialize a {@link FontComponent}.
+     * Convert a {@link FontComponent}.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
-    public abstract <T> @Nullable T serializeFontComponent(FontComponent component);
+    public abstract <T> @Nullable T convertFontComponent(FontComponent component);
 
     /**
-     * Serialize a {@link TranslatableComponent}.
+     * Convert a {@link TranslatableComponent}.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
-    public abstract <T> @Nullable T serializeTranslateComponent(TranslatableComponent component);
+    public abstract <T> @Nullable T convertTranslateComponent(TranslatableComponent component);
 
     /**
-     * Serialize a {@link CustomComponent}.
+     * Convert a {@link CustomComponent}.
      *
      * @param <T>       the type of the component
      * @param component the component
      * @return the t
      */
-    public <T> @Nullable T serializeCustomComponent(CustomComponent component) {
-        return serializeComponent(component.toMinecraft());
+    public <T> @Nullable T convertCustomComponent(CustomComponent component) {
+        return convertComponent(component.toMinecraft());
     }
 
     /**
@@ -179,7 +179,7 @@ public abstract class ComponentSerializer {
      * @param component2 the second component
      * @return the result component
      */
-    public abstract <T> @Nullable T sumTwoSerializedComponents(T component1, T component2);
+    public abstract <T> @Nullable T sumTwoConvertedComponents(T component1, T component2);
 
     /**
      * Apply the specified color to the component.
@@ -239,7 +239,7 @@ public abstract class ComponentSerializer {
     public <P> void send(@Nullable P player, @Nullable Component component) {
         if (player == null) return;
         if (component == null) return;
-        Object object = serializeComponent(component);
+        Object object = convertComponent(component);
         send(player, object);
     }
 
@@ -253,7 +253,7 @@ public abstract class ComponentSerializer {
      */
     public abstract <T, P> void send(P player, T component);
 
-    private @NotNull Method findSerializeMethod(@NotNull Component component) {
+    private @NotNull Method findConvertMethod(@NotNull Component component) {
         Class<?> tmp = this.getClass();
         while (tmp != null) {
             Method method = Stream.concat(Arrays.stream(tmp.getDeclaredMethods()), Arrays.stream(tmp.getMethods()))
@@ -268,7 +268,7 @@ public abstract class ComponentSerializer {
             tmp = tmp.getSuperclass();
         }
         try {
-            return ComponentSerializer.class.getMethod("serializeSimpleComponent", Component.class);
+            return ComponentConverter.class.getMethod("convertSimpleComponent", Component.class);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

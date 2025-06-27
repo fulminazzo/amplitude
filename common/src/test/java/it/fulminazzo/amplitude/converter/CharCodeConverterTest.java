@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.RoseFluoComponent;
 import it.fulminazzo.amplitude.component.Component;
@@ -8,15 +8,15 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CharCodeSerializerTest {
+class CharCodeConverterTest {
 
     @Test
-    void testSerializeCustomComponent() {
+    void testConvertCustomComponent() {
         // Load CustomComponent
         new RoseFluoComponent();
         Component component = Component.fromRaw("<blue>Hello<rose>world<red>!");
 
-        String serialized = ComponentSerializer.ampersand().serializeComponent(component);
+        String serialized = ComponentConverter.ampersand().convertComponent(component);
         assertEquals("&9Hello&9world&c!", serialized);
     }
 
@@ -42,7 +42,7 @@ class CharCodeSerializerTest {
     })
     void testVariousMessagesAmpersand(String expected, String rawText) {
         Component component = new Component(rawText);
-        assertEquals(expected, ComponentSerializer.ampersand().serializeComponent(component));
+        assertEquals(expected, ComponentConverter.ampersand().convertComponent(component));
     }
 
     @ParameterizedTest
@@ -62,7 +62,7 @@ class CharCodeSerializerTest {
     })
     void testVariousMessagesSectionSign(String expected, String rawText) {
         Component component = new Component(rawText);
-        assertEquals(expected, ComponentSerializer.sectionSign().serializeComponent(component));
+        assertEquals(expected, ComponentConverter.sectionSign().convertComponent(component));
     }
 
     @ParameterizedTest
@@ -82,6 +82,6 @@ class CharCodeSerializerTest {
     })
     void testVariousMessagesAbstract(String expected, String rawText) {
         Component component = new Component(rawText);
-        assertEquals(expected, new CharCodeSerializer("<COLOR>").serializeComponent(component));
+        assertEquals(expected, new CharCodeConverter("<COLOR>").convertComponent(component));
     }
 }

@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.component.*;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * Implementation of {@link ComponentSerializer} for Minecraft 1.16 and below.
+ * Implementation of {@link ComponentConverter} for Minecraft 1.16 and below.
  * It supports every fork of <a href="https://www.spigotmc.org/wiki/bungeecord/">BungeeCord</a> and <a href="https://www.spigotmc.org/wiki/spigot/">Spigot</a>,
  * since it uses the BungeeCord API to create components.
  * <p>
@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unchecked"})
 @Getter
 @Setter
-public class LegacyBungeeSerializer extends ComponentSerializer {
+public class LegacyBungeeConverter extends ComponentConverter {
     private boolean showingHex = false;
 
     @Override
-    public @Nullable BaseComponent serializeSimpleComponent(@Nullable Component component) {
+    public @Nullable BaseComponent convertSimpleComponent(@Nullable Component component) {
         correctComponents(component);
         if (component == null) return null;
         BaseComponent c = new TextComponent(component.getText());
@@ -47,10 +47,10 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
+    public @Nullable BaseComponent convertHoverComponent(@Nullable HoverComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent comp = serializeComponent(component.getChild());
+        BaseComponent comp = convertComponent(component.getChild());
         if (comp == null) comp = new TextComponent();
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
@@ -93,10 +93,10 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable BaseComponent serializeClickComponent(@Nullable ClickComponent component) {
+    public @Nullable BaseComponent convertClickComponent(@Nullable ClickComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent comp = serializeComponent(component.getChild());
+        BaseComponent comp = convertComponent(component.getChild());
         if (comp == null) comp = new TextComponent();
 
         ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
@@ -112,7 +112,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable BaseComponent serializeHexComponent(@Nullable HexComponent component) {
+    public @Nullable BaseComponent convertHexComponent(@Nullable HexComponent component) {
         correctComponents(component);
         if (component == null) return null;
         String rawText = component.getText();
@@ -122,25 +122,25 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable BaseComponent serializeInsertionComponent(@Nullable InsertionComponent component) {
+    public @Nullable BaseComponent convertInsertionComponent(@Nullable InsertionComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent comp = serializeComponent(component.getChild());
+        BaseComponent comp = convertComponent(component.getChild());
         if (comp == null) comp = new TextComponent();
         comp.setInsertion(component.getInsertionText());
         return comp;
     }
 
     @Override
-    public @Nullable BaseComponent serializeFontComponent(@Nullable FontComponent component) {
+    public @Nullable BaseComponent convertFontComponent(@Nullable FontComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent c = serializeSimpleComponent(component);
+        BaseComponent c = convertSimpleComponent(component);
         return applyFont(c, Font.valueOf(component.getFontID()));
     }
 
     @Override
-    public @Nullable BaseComponent serializeTranslateComponent(@Nullable TranslatableComponent component) {
+    public @Nullable BaseComponent convertTranslateComponent(@Nullable TranslatableComponent component) {
         correctComponents(component);
         if (component == null) return null;
         final String rawText;
@@ -150,7 +150,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
 
         net.md_5.bungee.api.chat.TranslatableComponent c = new net.md_5.bungee.api.chat.TranslatableComponent(rawText);
         c.setWith(component.getArguments().stream()
-                .map(this::serializeComponent)
+                .map(this::convertComponent)
                 .map(bc -> bc == null ? new Component() : bc)
                 .filter(bc -> bc instanceof BaseComponent)
                 .map(bc -> (BaseComponent) bc)
@@ -168,7 +168,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public <T> @Nullable T sumTwoSerializedComponents(@Nullable T component1, @Nullable T component2) {
+    public <T> @Nullable T sumTwoConvertedComponents(@Nullable T component1, @Nullable T component2) {
         BaseComponent bc1 = (BaseComponent) component1;
         BaseComponent bc2 = (BaseComponent) component2;
         if (bc1 == null) return null;

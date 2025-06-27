@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.component.*;
 import it.fulminazzo.amplitude.exception.InvalidOptionException;
@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SuppressWarnings("deprecation")
-class LegacyBungeeSerializerTest {
-    private static final LegacyBungeeSerializer serializer = new LegacyBungeeSerializer();
+class LegacyBungeeConverterTest {
+    private static final LegacyBungeeConverter serializer = new LegacyBungeeConverter();
 
     private static Object[][] getClickTests() {
         return new Object[][]{
@@ -137,7 +137,7 @@ class LegacyBungeeSerializerTest {
         }
 
         Component c1 = new Component(rawText);
-        BaseComponent c = serializer.serializeComponent(c1);
+        BaseComponent c = serializer.convertComponent(c1);
         assertNotNull(c);
         assertEquals(c2.toString(), c.toString(), rawText);
     }
@@ -148,7 +148,7 @@ class LegacyBungeeSerializerTest {
         Component c1 = new Component("<red>" + rawText);
         BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent(rawText);
         c2.setColor(ChatColor.RED);
-        assertEquals(c2, serializer.serializeSimpleComponent(c1));
+        assertEquals(c2, serializer.convertSimpleComponent(c1));
     }
 
     @ParameterizedTest
@@ -162,7 +162,7 @@ class LegacyBungeeSerializerTest {
             c2.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(action.name()), option));
             BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
             tmp.addExtra(c2);
-            assertEquals(tmp, serializer.serializeClickComponent(c1));
+            assertEquals(tmp, serializer.convertClickComponent(c1));
         };
         if (action.equals(ClickAction.OPEN_FILE))
             assertThrows(InvalidOptionException.class, executable);
@@ -177,7 +177,7 @@ class LegacyBungeeSerializerTest {
         c2.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), new BaseComponent[]{content}));
         BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
         tmp.addExtra(c2);
-        assertEquals(tmp.toString(), serializer.serializeHoverComponent(c1).toString());
+        assertEquals(tmp.toString(), serializer.convertHoverComponent(c1).toString());
     }
 
     @Test
@@ -188,7 +188,7 @@ class LegacyBungeeSerializerTest {
         BaseComponent[] c = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(rawText);
         BaseComponent c2 = c[0];
         for (int i = 1; i < c.length; i++) c2.addExtra(c[i]);
-        assertEquals(c2, serializer.serializeHexComponent(c1));
+        assertEquals(c2, serializer.convertHexComponent(c1));
     }
 
     @Test
@@ -200,7 +200,7 @@ class LegacyBungeeSerializerTest {
         BaseComponent c2 = c[0];
         for (int i = 1; i < c.length; i++) c2.addExtra(c[i]);
         serializer.setShowingHex(true);
-        assertEquals(c2, serializer.serializeHexComponent(c1));
+        assertEquals(c2, serializer.convertHexComponent(c1));
         serializer.setShowingHex(false);
     }
 
@@ -209,12 +209,12 @@ class LegacyBungeeSerializerTest {
         Component component = new Component("This is an example");
         ProxiedPlayer player = mock(ProxiedPlayer.class);
         serializer.send(player, component);
-        verify(player, atLeastOnce()).sendMessage((BaseComponent) serializer.serializeComponent(component));
+        verify(player, atLeastOnce()).sendMessage((BaseComponent) serializer.convertComponent(component));
     }
 
     @Test
-    void testSerializerMethod() {
-        assertEquals(LegacyBungeeSerializer.class, ComponentSerializer.serializer().getClass());
+    void testConverterMethod() {
+        assertEquals(LegacyBungeeConverter.class, ComponentConverter.converter().getClass());
     }
 
     private void addExtra(BaseComponent c1, BaseComponent c2) {

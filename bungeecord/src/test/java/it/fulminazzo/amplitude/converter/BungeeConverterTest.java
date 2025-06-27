@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.component.HexComponent;
 import it.fulminazzo.amplitude.component.HoverComponent;
@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 @SuppressWarnings("deprecation")
-class BungeeSerializerTest {
-    private static final BungeeSerializer serializer = new BungeeSerializer();
+class BungeeConverterTest {
+    private static final BungeeConverter serializer = new BungeeConverter();
 
     private static Object[][] getClickTests() {
         return new Object[][]{
@@ -144,7 +144,7 @@ class BungeeSerializerTest {
         }
 
         Component c1 = new Component(rawText);
-        BaseComponent c = serializer.serializeComponent(c1);
+        BaseComponent c = serializer.convertComponent(c1);
         assertNotNull(c);
         assertEquals(c2.toString(), c.toString(), rawText);
     }
@@ -158,7 +158,7 @@ class BungeeSerializerTest {
         c2.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
         BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
         tmp.addExtra(c2);
-        assertEquals(tmp.toString(), serializer.serializeHoverComponent(c1).toString());
+        assertEquals(tmp.toString(), serializer.convertHoverComponent(c1).toString());
     }
 
     @Test
@@ -169,12 +169,12 @@ class BungeeSerializerTest {
         BaseComponent[] c = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(ChatColor.of(color) + rawText);
         BaseComponent c2 = c[0];
         for (int i = 1; i < c.length; i++) c2.addExtra(c[i]);
-        assertEquals(c2, serializer.serializeHexComponent(c1));
+        assertEquals(c2, serializer.convertHexComponent(c1));
     }
 
     @Test
-    void testSerializerMethod() {
-        assertEquals(BungeeSerializer.class, ComponentSerializer.serializer().getClass());
+    void testConverterMethod() {
+        assertEquals(BungeeConverter.class, ComponentConverter.converter().getClass());
     }
 
     private void addExtra(BaseComponent c1, BaseComponent c2) {

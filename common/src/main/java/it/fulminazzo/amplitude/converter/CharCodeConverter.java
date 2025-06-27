@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.component.*;
 import it.fulminazzo.amplitude.exception.InvalidOptionException;
@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An implementation of {@link ComponentSerializer} that mimics the Minecraft default behavior.
+ * An implementation of {@link ComponentConverter} that mimics the Minecraft default behavior.
  * <p>
  * For example, using '<i>&amp;</i>' as {@link #charCode} will result in the following conversion:
  * <p>
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * =&#62; "&amp;cHello &amp;6friend!"
  */
 @SuppressWarnings("unchecked")
-class CharCodeSerializer extends ComponentSerializer {
+class CharCodeConverter extends ComponentConverter {
     private final String charCode;
 
     /**
@@ -22,12 +22,12 @@ class CharCodeSerializer extends ComponentSerializer {
      *
      * @param charCode the char code
      */
-    public CharCodeSerializer(String charCode) {
+    public CharCodeConverter(String charCode) {
         this.charCode = charCode;
     }
 
     @Override
-    public @Nullable String serializeSimpleComponent(@Nullable Component component) {
+    public @Nullable String convertSimpleComponent(@Nullable Component component) {
         if (component == null) return null;
         String output = "";
         if (component.isReset()) output = reset(output);
@@ -43,17 +43,17 @@ class CharCodeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable String serializeHoverComponent(@Nullable HoverComponent component) throws InvalidOptionException {
-        return component == null ? null : serializeComponent(component.getChild());
+    public @Nullable String convertHoverComponent(@Nullable HoverComponent component) throws InvalidOptionException {
+        return component == null ? null : convertComponent(component.getChild());
     }
 
     @Override
-    public @Nullable String serializeClickComponent(@Nullable ClickComponent component) throws InvalidOptionException {
-        return component == null ? null : serializeComponent(component.getChild());
+    public @Nullable String convertClickComponent(@Nullable ClickComponent component) throws InvalidOptionException {
+        return component == null ? null : convertComponent(component.getChild());
     }
 
     @Override
-    public @Nullable String serializeHexComponent(@Nullable HexComponent component) throws InvalidOptionException {
+    public @Nullable String convertHexComponent(@Nullable HexComponent component) throws InvalidOptionException {
         if (component == null) return null;
         String color = component.getHexColor();
         color = color.substring(1);
@@ -62,25 +62,25 @@ class CharCodeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable String serializeInsertionComponent(@Nullable InsertionComponent component) {
+    public @Nullable String convertInsertionComponent(@Nullable InsertionComponent component) {
         if (component == null) return null;
-        return serializeComponent(component.getChild());
+        return convertComponent(component.getChild());
     }
 
     @Override
-    public @Nullable String serializeFontComponent(@Nullable FontComponent component) {
+    public @Nullable String convertFontComponent(@Nullable FontComponent component) {
         if (component == null) return null;
-        return serializeSimpleComponent(component);
+        return convertSimpleComponent(component);
     }
 
     @Override
-    public @Nullable String serializeTranslateComponent(@Nullable TranslatableComponent component) {
+    public @Nullable String convertTranslateComponent(@Nullable TranslatableComponent component) {
         if (component == null) return null;
-        return serializeSimpleComponent(component.getChild());
+        return convertSimpleComponent(component.getChild());
     }
 
     @Override
-    public <T> @Nullable T sumTwoSerializedComponents(@NotNull T component1, @NotNull T component2) {
+    public <T> @Nullable T sumTwoConvertedComponents(@NotNull T component1, @NotNull T component2) {
         return (T) (component1 + component2.toString());
     }
 

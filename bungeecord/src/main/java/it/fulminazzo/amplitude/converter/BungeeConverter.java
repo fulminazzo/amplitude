@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.component.HexComponent;
 import it.fulminazzo.amplitude.component.HoverComponent;
@@ -19,21 +19,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Implementation of {@link ComponentSerializer} for Minecraft 1.16 and above.
- * It uses {@link LegacyBungeeSerializer} for most of its methods, but rewrites the following:
+ * Implementation of {@link ComponentConverter} for Minecraft 1.16 and above.
+ * It uses {@link LegacyBungeeConverter} for most of its methods, but rewrites the following:
  * <ul>
- *     <li>implements Hex colors in {@link #serializeHexComponent(HexComponent)}</li>
+ *     <li>implements Hex colors in {@link #convertHexComponent(HexComponent)}</li>
  *     <li>uses new {@link Content} objects to create {@link HoverEvent}</li>
  *     <li>removes {@link #correctComponents(Component)} function to allow for Hex colors</li>
  * </ul>
  */
-public final class BungeeSerializer extends LegacyBungeeSerializer {
+public final class BungeeConverter extends LegacyBungeeConverter {
 
     @Override
-    public BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
+    public BaseComponent convertHoverComponent(@Nullable HoverComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent comp = serializeComponent(component.getChild());
+        BaseComponent comp = convertComponent(component.getChild());
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
         HoverEvent.Action action = HoverEvent.Action.valueOf(hoverAction.name());
@@ -76,7 +76,7 @@ public final class BungeeSerializer extends LegacyBungeeSerializer {
     }
 
     @Override
-    public BaseComponent serializeHexComponent(@Nullable HexComponent component) {
+    public BaseComponent convertHexComponent(@Nullable HexComponent component) {
         if (component == null) return null;
         BaseComponent comp = new TextComponent(component.getText());
         return applyColor(comp, component.getColor());

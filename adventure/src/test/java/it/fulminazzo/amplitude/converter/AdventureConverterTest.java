@@ -1,4 +1,4 @@
-package it.fulminazzo.amplitude.serializer;
+package it.fulminazzo.amplitude.converter;
 
 import it.fulminazzo.amplitude.component.ClickComponent;
 import it.fulminazzo.amplitude.component.HexComponent;
@@ -27,8 +27,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class AdventureSerializerTest {
-    private static final AdventureSerializer serializer = new AdventureSerializer();
+class AdventureConverterTest {
+    private static final AdventureConverter serializer = new AdventureConverter();
 
     private static Object[][] getClickTests() {
         return new Object[][]{
@@ -145,7 +145,7 @@ class AdventureSerializerTest {
         }
 
         Component c1 = new Component(rawText);
-        net.kyori.adventure.text.Component c = serializer.serializeComponent(c1);
+        net.kyori.adventure.text.Component c = serializer.convertComponent(c1);
         assertNotNull(c);
         assertEquals(c2, c, rawText);
     }
@@ -156,7 +156,7 @@ class AdventureSerializerTest {
         Component c1 = new Component("<red>" + rawText);
         net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text(rawText);
         c2 = c2.color(NamedTextColor.RED);
-        assertEquals(c2, serializer.serializeSimpleComponent(c1));
+        assertEquals(c2, serializer.convertSimpleComponent(c1));
     }
 
     @ParameterizedTest
@@ -168,7 +168,7 @@ class AdventureSerializerTest {
                     "=\"" + option + "\">Test</click>");
             net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text("Test");
             c2 = c2.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.valueOf(action.name()), option));
-            assertEquals(c2, serializer.serializeClickComponent(c1));
+            assertEquals(c2, serializer.convertClickComponent(c1));
         };
         if (action.equals(ClickAction.OPEN_FILE))
             assertThrows(InvalidOptionException.class, executable);
@@ -181,7 +181,7 @@ class AdventureSerializerTest {
         HoverComponent c1 = new HoverComponent("<hover action=" + action + " " + options + ">Test</hover>");
         net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text("Test");
         c2 = c2.hoverEvent(hoverEvent);
-        assertEquals(c2, serializer.serializeHoverComponent(c1));
+        assertEquals(c2, serializer.convertHoverComponent(c1));
     }
 
     @Test
@@ -191,7 +191,7 @@ class AdventureSerializerTest {
         HexComponent c1 = new HexComponent("<hex color=" + color + ">" + rawText);
         net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text(rawText)
                         .color(TextColor.fromHexString(color));
-        assertEquals(c2, serializer.serializeHexComponent(c1));
+        assertEquals(c2, serializer.convertHexComponent(c1));
     }
 
     @Test
@@ -199,12 +199,12 @@ class AdventureSerializerTest {
         Component component = new Component("This is an example");
         Audience player = mock(Audience.class);
         serializer.send(player, component);
-        verify(player, atLeastOnce()).sendMessage(serializer.serializeComponent(component));
+        verify(player, atLeastOnce()).sendMessage(serializer.convertComponent(component));
     }
 
     @Test
-    void testSerializerMethod() {
-        assertEquals(AdventureSerializer.class, ComponentSerializer.serializer().getClass());
+    void testConverterMethod() {
+        assertEquals(AdventureConverter.class, ComponentConverter.converter().getClass());
     }
 
     private net.kyori.adventure.text.Component addExtra(net.kyori.adventure.text.Component c1, net.kyori.adventure.text.Component c2) {
