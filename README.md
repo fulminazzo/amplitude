@@ -160,3 +160,17 @@ Component component = new HexComponent("<hex color=#FF00AA>I'm colorful!");
 String serialized = "<hex color=#FF00AA>I'm colorful!";
 Component deserialized = Component.fromRaw(serialized);
 ```
+### FontComponent
+
+As the name implies,
+[FontComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/FontComponent.java)
+provides support for **Minecraft fonts**.
+[Here](../main/common/src/main/java/it/fulminazzo/amplitude/component/Font.java)
+it is possible to find all the available ones.
+
+```java
+Component component = new FontComponent("<font id=ALT>I'm alternative!");
+// or
+String serialized = "<font id=ALT>I'm alternative!";
+Component deserialized = Component.fromRaw(serialized);
+```
