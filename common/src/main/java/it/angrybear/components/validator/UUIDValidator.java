@@ -8,10 +8,10 @@ import java.util.UUID;
 /**
  * A validator for {@link UUID} objects.
  */
-public class UUIDValidator implements OptionValidator {
+public final class UUIDValidator implements OptionValidator {
 
     @Override
-    public void test(@NotNull String optionName, @NotNull String option) throws InvalidOptionException {
+    public void test(final @NotNull String optionName, final @NotNull String option) throws InvalidOptionException {
         try {
             UUID.fromString(option);
         } catch (Exception e) {

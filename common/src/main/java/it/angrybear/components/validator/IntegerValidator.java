@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class IntegerValidator implements OptionValidator {
 
     @Override
-    public void test(@NotNull String optionName, @NotNull String option) throws InvalidOptionException {
+    public void test(final @NotNull String optionName, final @NotNull String option) throws InvalidOptionException {
         try {
             Integer.valueOf(option);
         } catch (NumberFormatException ex) {

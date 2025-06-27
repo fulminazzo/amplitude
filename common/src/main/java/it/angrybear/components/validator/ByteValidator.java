@@ -6,10 +6,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A validator for {@link Byte} objects.
  */
-public class ByteValidator extends IntegerValidator {
+public final class ByteValidator extends IntegerValidator {
 
     @Override
-    public void test(@NotNull String optionName, @NotNull String option) throws InvalidOptionException {
+    public void test(final @NotNull String optionName, final @NotNull String option) throws InvalidOptionException {
         try {
             if (!option.endsWith("b")) throw new Exception();
             super.test(optionName, option.substring(0, option.length() - 1));
