@@ -1,7 +1,7 @@
 package it.angrybear.exception;
 
-import it.angrybear.components.ClickAction;
-import it.angrybear.components.HoverAction;
+import it.angrybear.component.ClickAction;
+import it.angrybear.component.HoverAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

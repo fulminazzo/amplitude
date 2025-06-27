@@ -1,9 +1,9 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.*;
-import it.angrybear.components.Color;
-import it.angrybear.components.Font;
-import it.angrybear.components.Style;
+import it.angrybear.component.*;
+import it.angrybear.component.Color;
+import it.angrybear.component.Font;
+import it.angrybear.component.Style;
 import it.angrybear.exception.InvalidOptionException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

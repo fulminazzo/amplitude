@@ -1,6 +1,6 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.*;
+import it.angrybear.component.*;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;

@@ -1,11 +1,11 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.HexComponent;
-import it.angrybear.components.HoverComponent;
-import it.angrybear.components.TextComponent;
-import it.angrybear.components.Color;
-import it.angrybear.components.Font;
-import it.angrybear.components.HoverAction;
+import it.angrybear.component.HexComponent;
+import it.angrybear.component.HoverComponent;
+import it.angrybear.component.TextComponent;
+import it.angrybear.component.Color;
+import it.angrybear.component.Font;
+import it.angrybear.component.HoverAction;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;

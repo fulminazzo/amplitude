@@ -1,6 +1,6 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.TextComponent;
+import it.angrybear.component.TextComponent;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 

@@ -1,11 +1,11 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.ClickComponent;
-import it.angrybear.components.HexComponent;
-import it.angrybear.components.HoverComponent;
-import it.angrybear.components.TextComponent;
-import it.angrybear.components.ClickAction;
-import it.angrybear.components.HoverAction;
+import it.angrybear.component.ClickComponent;
+import it.angrybear.component.HexComponent;
+import it.angrybear.component.HoverComponent;
+import it.angrybear.component.TextComponent;
+import it.angrybear.component.ClickAction;
+import it.angrybear.component.HoverAction;
 import it.angrybear.exception.InvalidOptionException;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;

@@ -1,8 +1,8 @@
 package it.angrybear.serializers;
 
-import it.angrybear.components.*;
-import it.angrybear.components.ClickAction;
-import it.angrybear.components.HoverAction;
+import it.angrybear.component.*;
+import it.angrybear.component.ClickAction;
+import it.angrybear.component.HoverAction;
 import it.angrybear.exception.InvalidOptionException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
