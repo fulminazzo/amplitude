@@ -1,4 +1,4 @@
-package it.angrybear.interfaces;
+package it.angrybear.components;
 
 import it.angrybear.components.validator.EnumValidator;
 import it.angrybear.components.validator.OptionValidator;
@@ -35,4 +35,5 @@ public interface IEventComponent {
     Class<? extends IAction> getActionClass();
 
     Map<String, String> getTagOptions();
+
 }

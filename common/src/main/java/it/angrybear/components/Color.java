@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

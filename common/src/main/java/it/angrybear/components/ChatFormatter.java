@@ -1,7 +1,5 @@
-package it.angrybear.interfaces;
+package it.angrybear.components;
 
-import it.angrybear.components.Color;
-import it.angrybear.components.Style;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +33,7 @@ public interface ChatFormatter {
      *
      * @return the name
      */
-    String name();
+    @NotNull String name();
 
     /**
      * Find a valid chat formatter from {@link #getChatFormatters()} using its name.
@@ -97,4 +95,5 @@ public interface ChatFormatter {
         return Stream.concat(Arrays.stream(Style.values()), Arrays.stream(Color.values()))
                 .toArray(ChatFormatter[]::new);
     }
+
 }

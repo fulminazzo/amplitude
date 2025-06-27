@@ -1,7 +1,6 @@
 package it.angrybear.components;
 
 import it.angrybear.exception.InvalidOptionException;
-import it.angrybear.interfaces.IAction;
 import it.angrybear.components.validator.IntegerValidator;
 import it.angrybear.components.validator.OptionValidator;
 import it.angrybear.components.validator.URLValidator;

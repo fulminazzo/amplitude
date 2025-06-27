@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.interfaces.ChatFormatter;
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import lombok.Getter;
 import lombok.Setter;

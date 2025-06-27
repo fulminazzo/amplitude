@@ -1,8 +1,7 @@
-package it.angrybear.interfaces;
+package it.angrybear.components;
 
-import it.angrybear.components.ClickAction;
-import it.angrybear.components.HoverAction;
 import it.angrybear.components.validator.OptionValidator;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -19,12 +18,13 @@ public interface IAction {
      *
      * @return the required options
      */
-    Map<String, OptionValidator> getRequiredOptions();
+    @NotNull Map<String, OptionValidator> getRequiredOptions();
 
     /**
      * Gets the name.
      *
      * @return the name
      */
-    String name();
+    @NotNull String name();
+
 }

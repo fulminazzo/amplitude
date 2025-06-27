@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.interfaces.IAction;
 import it.angrybear.components.validator.ByteValidator;
 import it.angrybear.components.validator.OptionValidator;
 import it.angrybear.components.validator.UUIDValidator;

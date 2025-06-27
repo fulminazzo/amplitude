@@ -1,7 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.interfaces.IAction;
-import it.angrybear.interfaces.IEventComponent;
 import it.angrybear.components.validator.OptionValidator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
