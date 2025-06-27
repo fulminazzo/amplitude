@@ -97,6 +97,7 @@ abstract class ContainerComponent<C> extends OptionComponent<C> {
      * Sets the child component and applies {@link #setSameOptions(Component)} method.
      *
      * @param rawText the raw text
+     * @return this component
      */
     public @NotNull C setChild(@Nullable String rawText) {
         if (rawText == null || rawText.trim().isEmpty()) return (C) this;
@@ -107,6 +108,7 @@ abstract class ContainerComponent<C> extends OptionComponent<C> {
      * Sets the child component and applies {@link #setSameOptions(Component)} method.
      *
      * @param child the child
+     * @return this component
      */
     public @NotNull C setChild(Component child) {
         this.child = child;

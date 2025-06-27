@@ -150,6 +150,7 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
      *
      * @param key   the key
      * @param value the value
+     * @return this component
      */
     public @NotNull C setTagOption(String key, String value) {
         this.tagOptions.put(key, value);
