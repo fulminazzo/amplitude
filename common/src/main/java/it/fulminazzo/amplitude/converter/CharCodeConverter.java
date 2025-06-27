@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * =&#62; "&amp;cHello &amp;6friend!"
  */
 @SuppressWarnings("unchecked")
-class CharCodeConverter extends ComponentConverter {
+public class CharCodeConverter extends ComponentConverter {
     private final String charCode;
 
     /**
