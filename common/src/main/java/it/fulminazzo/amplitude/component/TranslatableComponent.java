@@ -65,35 +65,42 @@ public final class TranslatableComponent extends ContainerComponent<Translatable
      * Add argument.
      *
      * @param rawArgument the raw argument
+     * @return this component
      */
-    public void addArgument(final @Nullable String rawArgument) {
+    public @NotNull TranslatableComponent addArgument(final @Nullable String rawArgument) {
         if (rawArgument != null) this.arguments.add(Component.fromRaw(rawArgument));
+        return this;
     }
 
     /**
      * Add argument.
      *
      * @param component the text component
+     * @return this component
      */
-    public void addArgument(final @Nullable Component component) {
+    public @NotNull TranslatableComponent addArgument(final @Nullable Component component) {
         if (component != null) this.arguments.add(component);
+        return this;
     }
 
     /**
      * Remove argument.
      *
      * @param component the text component
+     * @return this component
      */
-    public void removeArgument(final @Nullable Component component) {
+    public @NotNull TranslatableComponent removeArgument(final @Nullable Component component) {
         if (component != null) this.arguments.removeIf(t -> t.equals(component));
+        return this;
     }
 
     /**
      * Sets arguments.
      *
      * @param rawArguments the raw arguments
+     * @return this component
      */
-    public void setArguments(final String @Nullable ... rawArguments) {
+    public @NotNull TranslatableComponent setArguments(final String @Nullable ... rawArguments) {
         List<Component> arguments = null;
         if (rawArguments != null) {
             arguments = new ArrayList<>();
@@ -103,17 +110,19 @@ public final class TranslatableComponent extends ContainerComponent<Translatable
                 arguments.add(Component.fromRaw(arg));
             }
         }
-        setArguments(arguments);
+        return setArguments(arguments);
     }
 
     /**
      * Sets arguments.
      *
      * @param arguments the arguments
+     * @return this component
      */
-    public void setArguments(final @Nullable List<Component> arguments) {
+    public @NotNull TranslatableComponent setArguments(final @Nullable List<Component> arguments) {
         this.arguments.clear();
         if (arguments != null) this.arguments.addAll(arguments);
+        return this;
     }
 
 }

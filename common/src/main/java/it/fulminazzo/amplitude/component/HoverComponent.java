@@ -35,13 +35,15 @@ public final class HoverComponent extends ContainerComponent<HoverComponent> imp
      *
      * @param action    the action
      * @param component the component
+     * @return this component
      */
-    public void setHoverAction(final @NotNull HoverAction action, final @NotNull Component component) {
+    public @NotNull HoverComponent setHoverAction(final @NotNull HoverAction action, final @NotNull Component component) {
         setTagOption("action", action.name());
         final Map<String, OptionValidator> requiredOptions = action.getRequiredOptions();
         for (String key : requiredOptions.keySet())
             setTagOption(key, component.serialize());
         checkOptions();
+        return this;
     }
 
     @Override
