@@ -50,7 +50,7 @@ public final class HoverComponent extends ContainerComponent implements IEventCo
     }
 
     @Override
-    public @NotNull Class<? extends IAction> getActionClass() {
+    public @NotNull Class<HoverAction> getActionClass() {
         return HoverAction.class;
     }
 

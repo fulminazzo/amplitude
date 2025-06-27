@@ -36,7 +36,7 @@ public final class ClickComponent extends ContainerComponent implements IEventCo
     }
 
     @Override
-    public @NotNull Class<? extends IAction> getActionClass() {
+    public @NotNull Class<ClickAction> getActionClass() {
         return ClickAction.class;
     }
 
