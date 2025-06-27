@@ -275,6 +275,17 @@ String serialized = "<hover action=\"SHOW_ITEM\" Count=1b id=\"minecraft:diamond
 Component deserialized = Component.fromRaw(serialized);
 ```
 
+### ClickComponent
+
+[ClickComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/ClickComponent.java)
+is a special Minecraft component that will execute an action upon clicking on the wrapped text.
+It requires a
+[ClickAction](../main/common/src/main/java/it/fulminazzo/amplitude/component/ClickAction.java)
+to be specified with its required arguments.
+
+The following are examples with all actions:
+
+
 ### InsertionComponent
 
 [InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
