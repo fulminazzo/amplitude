@@ -9,3 +9,46 @@ It is a **facade** for all the available **Minecraft server plugins** messaging 
 
 Thanks to this project, it is possible to write player messages only once and see it work on all
 the platforms described above.
+
+| **Table of Contents**               |
+|-------------------------------------|
+| [How to import](#import)            |
+| [Available components](#components) |
+
+## Import
+
+**Amplitude** can be imported using one of the three common methods:
+
+- **Gradle** (preferred):
+
+  ```groovy
+  repositories {
+      maven { url = 'https://repo.fulminazzo.it/releases' }
+  }
+
+  dependencies {
+      implementation 'it.fulminazzo:amplitude:latest'
+  }
+  ```
+
+- **Maven** (alternative):
+
+  ```xml
+  <repository>
+      <id>fulminazzo</id>
+      <url>https://repo.fulminazzo.it/releases</url>
+  </repository>
+  ```
+
+  ```xml
+  <dependency>
+      <groupId>it.fulminazzo</groupId>
+      <artifact>amplitude</artifact>
+      <version>LATEST</version>
+  </dependency>
+  ```
+
+- **Manual** (discouraged): download the JAR file from the [latest release](../../releases/latest) and import it using
+  your IDE.
+
+## Components
