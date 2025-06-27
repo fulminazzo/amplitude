@@ -147,3 +147,16 @@ It provides support for basic text, as well as coloring and text style.
   ```
 
   Among the styles there is also the special one `RESET`, that will remove any coloring, style or font applied.
+
+### HexComponent
+
+As the name implies,
+[HexComponent](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/HexComponent.java)
+provides support for **HEX colors** (only available in **Minecraft 1.16+**).
+
+```java
+Component component = new HexComponent("<hex color=#FF00AA>I'm colorful!");
+// or
+String serialized = "<hex color=#FF00AA>I'm colorful!";
+Component deserialized = Component.fromRaw(serialized);
+```
