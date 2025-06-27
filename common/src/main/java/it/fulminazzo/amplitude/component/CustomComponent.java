@@ -10,8 +10,10 @@ import java.lang.reflect.InvocationTargetException;
  * Represents a custom {@link OptionComponent} with associated tag.
  * <br>
  * WARNING: before serializing and deserializing, at least one instance must be created.
+ *
+ * @param <C> the type of this component (for method chaining)
  */
-public abstract class CustomComponent extends OptionComponent {
+public abstract class CustomComponent<C> extends OptionComponent<C extends CustomComponent> {
 
     /**
      * Instantiates a new Custom component.
