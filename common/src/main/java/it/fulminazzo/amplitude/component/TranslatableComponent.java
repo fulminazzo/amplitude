@@ -16,7 +16,7 @@ import java.util.List;
  * These are translated using Minecraft default translations (so they will not work for general phrases).
  * To pass any argument, you can specify the non-mandatory option "arguments" separated with '&amp;'.
  * <p>
- * Example: \"&#60;translatable arguments="Diamond Sword&amp;1&amp;\"Alex &amp; friends\""&#62;commands.give.success.single&#60;/translate&#62;\"
+ * Example: "&#60;translatable arguments=\"Diamond Sword&amp;1&amp;\\\"Alex &amp; friends\\\"\"&#62;commands.give.success.single&#60;/translatable&#62;"
  * will create:
  * <ul>
  *     <li><i>Diamond Sword</i> as first argument</li>
