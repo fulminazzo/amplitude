@@ -1,11 +1,9 @@
 package it.angrybear.exceptions;
 
-import it.angrybear.components.ContainerComponent;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * An exception thrown when a given option results invalid.
- * Check {@link ContainerComponent} for more.
  */
 public class InvalidOptionException extends RuntimeException {
 
@@ -31,4 +29,5 @@ public class InvalidOptionException extends RuntimeException {
         super(String.format("Could not validate option \"%s\": expected \"%s\", but got \"%s\"",
                 optionName, expected, option));
     }
+
 }

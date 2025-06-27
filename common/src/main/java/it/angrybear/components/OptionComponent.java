@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * </ul>
  */
 @Getter
-public abstract class OptionComponent extends TextComponent {
+abstract class OptionComponent extends TextComponent {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final @NotNull String tagName;
     protected final @NotNull Map<String, String> tagOptions;
@@ -208,4 +208,5 @@ public abstract class OptionComponent extends TextComponent {
     public boolean isEmpty() {
         return super.isEmpty() && tagOptions.isEmpty();
     }
+    
 }

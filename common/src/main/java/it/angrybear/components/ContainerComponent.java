@@ -16,8 +16,7 @@ import java.util.regex.Pattern;
  * Example: "&#60;component&#62;This is contained&#60;/component&#62;" is a valid container component.
  */
 @Getter
-public abstract class ContainerComponent extends OptionComponent {
-    public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
+abstract class ContainerComponent extends OptionComponent {
     protected @Nullable TextComponent child;
 
     /**
@@ -136,4 +135,5 @@ public abstract class ContainerComponent extends OptionComponent {
     public boolean isEmpty() {
         return super.isEmpty() && (child == null || child.isEmpty());
     }
+
 }
