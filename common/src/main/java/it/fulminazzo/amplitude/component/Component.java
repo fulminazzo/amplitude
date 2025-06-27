@@ -898,7 +898,7 @@ public class Component {
 
     @Override
     public @NotNull String toString() {
-        String output = getClass().getSimpleName() + "{";
+        String output = "{";
         output += "next: " + next + ", ";
         for (Field field : getOptionFields())
             try {
