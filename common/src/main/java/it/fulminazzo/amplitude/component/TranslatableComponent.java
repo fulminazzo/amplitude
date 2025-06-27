@@ -27,7 +27,7 @@ import java.util.List;
  * The result in chat will be: "Gave Diamond Sword 1 to Alex &amp; friends".
  */
 @Getter
-public final class TranslatableComponent extends ContainerComponent {
+public final class TranslatableComponent extends ContainerComponent<TranslatableComponent> {
     private List<Component> arguments;
 
     /**

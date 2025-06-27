@@ -12,7 +12,7 @@ import java.util.Map;
  * <p>
  * Example: &#60;hover action="SHOW_TEXT" text="Secret message!"&#62;Hover event!&#60;/hover&#62;
  */
-public final class HoverComponent extends ContainerComponent implements IEventComponent {
+public final class HoverComponent extends ContainerComponent<HoverComponent> implements IEventComponent {
 
     /**
      * Instantiates a new Hover component.

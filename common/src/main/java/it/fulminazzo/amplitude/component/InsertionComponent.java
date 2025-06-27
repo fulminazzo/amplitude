@@ -14,7 +14,7 @@ import java.util.Map;
  * <p>
  * Example: "&#60;insertion text="Amazing!"&#62;Hello world&#60;/insertion&#62;"
  */
-public final class InsertionComponent extends ContainerComponent {
+public final class InsertionComponent extends ContainerComponent<InsertionComponent> {
 
     public InsertionComponent() {
         this(null);

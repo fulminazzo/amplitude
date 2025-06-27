@@ -18,7 +18,7 @@ import java.util.Map;
  *     <li>text: Hello world!</li>
  * </ul>
  */
-public final class FontComponent extends OptionComponent {
+public final class FontComponent extends OptionComponent<FontComponent> {
 
     public FontComponent() {
         this(null);

@@ -12,7 +12,7 @@ import java.util.Map;
  * <p>
  * Example: &#60;click action="OPEN_URL" url="https://fulminazzo.it"&#62;Click event!&#60;/click&#62;
  */
-public final class ClickComponent extends ContainerComponent implements IEventComponent {
+public final class ClickComponent extends ContainerComponent<ClickComponent> implements IEventComponent {
 
     /**
      * Instantiates a new Click component.

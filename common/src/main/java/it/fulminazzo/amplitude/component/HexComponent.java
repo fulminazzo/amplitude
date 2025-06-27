@@ -18,7 +18,7 @@ import java.util.Map;
  *     <li>text: Hello world!</li>
  * </ul>
  */
-public final class HexComponent extends OptionComponent {
+public final class HexComponent extends OptionComponent<HexComponent> {
 
     /**
      * Instantiates a new Hex component.
