@@ -33,7 +33,7 @@ allprojects {
         }
         maven {
             name = "fulminazzo"
-            url = "https://repo.fulminazzo.it/releases"
+            url = 'https://repo.fulminazzo.it/releases'
         }
     }
 
@@ -84,10 +84,10 @@ allprojects {
 
         repositories {
             maven {
-                url "https://repo.fulminazzo.it/releases"
+                url 'https://repo.fulminazzo.it/releases'
                 credentials {
-                    username = System.getenv("REPO_USERNAME")
-                    password = System.getenv("REPO_PASSWORD")
+                    username = System.getenv('REPO_USERNAME')
+                    password = System.getenv('REPO_PASSWORD')
                 }
                 authentication {
                     basic(BasicAuthentication)
