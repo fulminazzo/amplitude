@@ -52,3 +52,33 @@ the platforms described above.
   your IDE.
 
 ## Components
+
+**Amplitude** provides several components to mimic the supported ones from Minecraft.
+This section will describe each one in its **serialized** and **Java** form.
+
+Note that every component can be **serialized** and **deserialized** using provided functions:
+
+- to **deserialize**, it is possible to use
+  [TextComponent#fromRaw(String)](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/TextComponent.java):
+
+  ```java
+  String serialized;
+  TextComponent component = TextComponent.fromRaw(serialized);
+  ```
+  
+- to **serialize**, every **Amplitude component** provides a `serialize` method:
+  
+  ```java
+  TextComponent component;
+  String serialized = component.serialize();
+  ```
+  
+| **Components**                                  |
+|-------------------------------------------------|
+| [TextComponent](#textcomponent)                 |
+| [HexComponent](#hexcomponent)                   |
+| [FontComponent](#fontcomponent)                 |
+| [HoverComponent](#hovercomponent)               |
+| [ClickComponent](#clickcomponent)               |
+| [InsertionComponent](#insertioncomponent)       |
+| [TranslatableComponent](#translatablecomponent) |
