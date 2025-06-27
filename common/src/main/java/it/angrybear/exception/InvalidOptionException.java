@@ -1,11 +1,11 @@
-package it.angrybear.exceptions;
+package it.angrybear.exception;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * An exception thrown when a given option results invalid.
  */
-public class InvalidOptionException extends RuntimeException {
+public final class InvalidOptionException extends RuntimeException {
 
     /**
      * Instantiates a new Invalid option exception.
@@ -14,7 +14,9 @@ public class InvalidOptionException extends RuntimeException {
      * @param expected   the expected
      * @param option     the option
      */
-    public InvalidOptionException(String optionName, @NotNull Class<?> expected, String option) {
+    public InvalidOptionException(final @NotNull String optionName,
+                                  final @NotNull Class<?> expected,
+                                  final @NotNull String option) {
         this(optionName, expected.getSimpleName(), option);
     }
 
@@ -25,7 +27,9 @@ public class InvalidOptionException extends RuntimeException {
      * @param expected   the expected
      * @param option     the option
      */
-    public InvalidOptionException(String optionName, String expected, String option) {
+    public InvalidOptionException(final @NotNull String optionName,
+                                  final @NotNull String expected,
+                                  final @NotNull String option) {
         super(String.format("Could not validate option \"%s\": expected \"%s\", but got \"%s\"",
                 optionName, expected, option));
     }

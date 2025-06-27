@@ -1,6 +1,6 @@
 package it.angrybear.components;
 
-import it.angrybear.exceptions.MissingRequiredOptionException;
+import it.angrybear.exception.MissingRequiredOptionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

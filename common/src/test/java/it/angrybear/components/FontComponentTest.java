@@ -1,6 +1,6 @@
 package it.angrybear.components;
 
-import it.angrybear.exceptions.InvalidOptionException;
+import it.angrybear.exception.InvalidOptionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

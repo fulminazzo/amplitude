@@ -1,7 +1,8 @@
-package it.angrybear.exceptions;
+package it.angrybear.exception;
 
 import it.angrybear.components.ClickAction;
 import it.angrybear.components.HoverAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import java.util.Map;
  * An exception thrown when a required option is not given.
  * Check {@link ClickAction} and {@link HoverAction} for more.
  */
-public class MissingRequiredOptionException extends RuntimeException {
+public final class MissingRequiredOptionException extends RuntimeException {
 
     /**
      * Instantiates a new Missing required option exception.
@@ -17,7 +18,9 @@ public class MissingRequiredOptionException extends RuntimeException {
      * @param optionName the option name
      * @param options    the options
      */
-    public MissingRequiredOptionException(String optionName, Map<String, String> options) {
+    public MissingRequiredOptionException(final @NotNull String optionName,
+                                          final @NotNull Map<String, String> options) {
         super(String.format("Could not find option \"%s\" in: %s", optionName, options));
     }
+
 }

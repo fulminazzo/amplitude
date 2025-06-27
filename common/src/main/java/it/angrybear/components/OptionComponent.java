@@ -1,7 +1,7 @@
 package it.angrybear.components;
 
 import com.google.gson.Gson;
-import it.angrybear.exceptions.MissingRequiredOptionException;
+import it.angrybear.exception.MissingRequiredOptionException;
 import it.angrybear.components.validator.OptionValidator;
 import it.angrybear.utils.StringUtils;
 import lombok.Getter;

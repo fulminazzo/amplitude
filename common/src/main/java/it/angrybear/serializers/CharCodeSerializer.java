@@ -4,7 +4,7 @@ import it.angrybear.components.*;
 import it.angrybear.components.Color;
 import it.angrybear.components.Font;
 import it.angrybear.components.Style;
-import it.angrybear.exceptions.InvalidOptionException;
+import it.angrybear.exception.InvalidOptionException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

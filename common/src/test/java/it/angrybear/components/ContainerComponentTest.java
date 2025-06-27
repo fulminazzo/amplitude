@@ -1,8 +1,8 @@
 package it.angrybear.components;
 
-import it.angrybear.exceptions.InvalidComponentException;
-import it.angrybear.exceptions.InvalidOptionException;
-import it.angrybear.exceptions.MissingRequiredOptionException;
+import it.angrybear.exception.InvalidComponentException;
+import it.angrybear.exception.InvalidOptionException;
+import it.angrybear.exception.MissingRequiredOptionException;
 import it.angrybear.components.validator.OptionValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;

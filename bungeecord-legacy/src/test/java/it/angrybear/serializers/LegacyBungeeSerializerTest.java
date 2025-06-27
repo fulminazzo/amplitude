@@ -3,7 +3,7 @@ package it.angrybear.serializers;
 import it.angrybear.components.*;
 import it.angrybear.components.ClickAction;
 import it.angrybear.components.HoverAction;
-import it.angrybear.exceptions.InvalidOptionException;
+import it.angrybear.exception.InvalidOptionException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;

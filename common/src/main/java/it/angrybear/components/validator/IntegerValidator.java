@@ -1,6 +1,6 @@
 package it.angrybear.components.validator;
 
-import it.angrybear.exceptions.InvalidOptionException;
+import it.angrybear.exception.InvalidOptionException;
 
 /**
  * A validator for {@link Integer} objects.
