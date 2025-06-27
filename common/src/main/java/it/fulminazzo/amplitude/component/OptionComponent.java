@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
  *
  * @param <C> the type of this component
  */
+@SuppressWarnings("unchecked")
 @Getter
 abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
@@ -56,8 +57,8 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
     }
 
     @Override
-    public void setContent(@Nullable String rawText) {
-        if (rawText == null) return;
+    public @NotNull C setContent(@Nullable String rawText) {
+        if (rawText == null) return (C) this;
         final Matcher matcher = TAG_REGEX.matcher(rawText);
         if (matcher.find()) {
             final String tag = matcher.group(1).split(" ")[0];
@@ -65,6 +66,7 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
             else setNext(rawText);
         } else setNext(rawText);
         setOptions(rawText);
+        return (C) this;
     }
 
     /**
@@ -149,8 +151,9 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
      * @param key   the key
      * @param value the value
      */
-    public void setTagOption(String key, String value)  {
+    public @NotNull C setTagOption(String key, String value) {
         this.tagOptions.put(key, value);
+        return (C) this;
     }
 
     /**
@@ -208,6 +211,131 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
     @Override
     public boolean isEmpty() {
         return super.isEmpty() && tagOptions.isEmpty();
+    }
+
+    @Override
+    public @NotNull C setText(@Nullable String text) {
+        return (C) super.setText(text);
+    }
+
+    @Override
+    public @NotNull C addNext(@Nullable String rawText) {
+        return (C) super.addNext(rawText);
+    }
+
+    @Override
+    public @NotNull C addNext(@Nullable Component next) {
+        return (C) super.addNext(next);
+    }
+
+    @Override
+    public @NotNull C setNext(@Nullable String rawText) {
+        return (C) super.setNext(rawText);
+    }
+
+    @Override
+    public @NotNull C setNext(Component next) {
+        return (C) super.setNext(next);
+    }
+
+    @Override
+    @NotNull C setSameOptions(@Nullable Component component) {
+        return (C) super.setSameOptions(component);
+    }
+
+    @Override
+    public @NotNull C setColor(Color color) {
+        return (C) super.setColor(color);
+    }
+
+    @Override
+    public @NotNull C setColor(Color color, boolean propagate) {
+        return (C) super.setColor(color, propagate);
+    }
+
+    @Override
+    public @NotNull C setFont(Font font) {
+        return (C) super.setFont(font);
+    }
+
+    @Override
+    public @NotNull C setFont(Font font, boolean propagate) {
+        return (C) super.setFont(font, propagate);
+    }
+
+    @Override
+    public @NotNull C setObfuscated(Boolean obfuscated) {
+        return (C) super.setObfuscated(obfuscated);
+    }
+
+    @Override
+    public @NotNull C setObfuscated(Boolean obfuscated, boolean propagate) {
+        return (C) super.setObfuscated(obfuscated, propagate);
+    }
+
+    @Override
+    public @NotNull C setBold(Boolean bold) {
+        return (C) super.setBold(bold);
+    }
+
+    @Override
+    public @NotNull C setBold(Boolean bold, boolean propagate) {
+        return (C) super.setBold(bold, propagate);
+    }
+
+    @Override
+    public @NotNull C setStrikethrough(Boolean strikethrough) {
+        return (C) super.setStrikethrough(strikethrough);
+    }
+
+    @Override
+    public @NotNull C setStrikethrough(Boolean strikethrough, boolean propagate) {
+        return (C) super.setStrikethrough(strikethrough, propagate);
+    }
+
+    @Override
+    public @NotNull C setUnderlined(Boolean underlined) {
+        return (C) super.setUnderlined(underlined);
+    }
+
+    @Override
+    public @NotNull C setUnderlined(Boolean underlined, boolean propagate) {
+        return (C) super.setUnderlined(underlined, propagate);
+    }
+
+    @Override
+    public @NotNull C setItalic(Boolean italic) {
+        return (C) super.setItalic(italic);
+    }
+
+    @Override
+    public @NotNull C setItalic(Boolean italic, boolean propagate) {
+        return (C) super.setItalic(italic, propagate);
+    }
+
+    @Override
+    public @NotNull C reset(@NotNull Boolean reset) {
+        return (C) super.reset(reset);
+    }
+
+    @Override
+    public @NotNull C reset(@NotNull Boolean reset, boolean propagate) {
+        return (C) super.reset(reset, propagate);
+    }
+
+    @Override
+    public @NotNull C setStyle(@Nullable Style style) {
+        return (C) super.setStyle(style);
+    }
+
+    @Override
+    public @NotNull C setStyle(@Nullable Style style, Boolean value) {
+        return (C) super.setStyle(style, value);
+    }
+
+    @Override
+    public @NotNull C setStyle(@Nullable Style style, Boolean value, boolean propagate) {
+        return (C) super.setStyle(style, value, propagate);
     }
 
 }
