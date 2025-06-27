@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  * =&#62; "&amp;cHello &amp;6friend!"
  */
 @SuppressWarnings("unchecked")
-public class CharCodeSerializer extends ComponentSerializer {
+class CharCodeSerializer extends ComponentSerializer {
     private final String charCode;
 
     /**
@@ -122,4 +122,5 @@ public class CharCodeSerializer extends ComponentSerializer {
     public <T, P> void send(P player, T component) {
         throw new RuntimeException("Not implemented.");
     }
+
 }
