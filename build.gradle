@@ -98,5 +98,5 @@ allprojects {
 }
 
 dependencies {
-    subprojects.each {implementation project(it.path)}
+    subprojects.each {api project(it.path)}
 }
