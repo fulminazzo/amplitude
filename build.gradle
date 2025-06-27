@@ -32,7 +32,7 @@ allprojects {
             url = 'https://oss.sonatype.org/content/repositories/snapshots'
         }
         maven {
-            name = "fulminazzo"
+            name = 'fulminazzo'
             url = 'https://repo.fulminazzo.it/releases'
         }
     }
