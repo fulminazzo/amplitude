@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @param <C> the type of this component (for method chaining)
  */
-public abstract class CustomComponent<C> extends OptionComponent<C extends CustomComponent> {
+public abstract class CustomComponent<C extends CustomComponent<C>> extends OptionComponent<C> {
 
     /**
      * Instantiates a new Custom component.

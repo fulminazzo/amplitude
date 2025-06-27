@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("unchecked")
 @Getter
-abstract class ContainerComponent<C> extends OptionComponent<C> {
+abstract class ContainerComponent<C extends OptionComponent<C>> extends OptionComponent<C> {
     protected @Nullable Component child;
 
     /**
