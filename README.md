@@ -321,6 +321,24 @@ The following are examples with all actions:
   Component deserialized = Component.fromRaw(serialized);
   ```
 
+- `SUGGEST_COMMAND`: suggests in the player chat box the specified command.
+  It requires the command to suggest.
+
+  ```java
+  Component component = new ClickComponent(
+          "<click " +
+              "action=\"SUGGEST_COMMAND\" " +
+              // arguments
+              "command=\"say Hello, world!\"" +
+          ">" +
+              "How to say hello?" +
+          "</click>"
+  );
+  // or
+  String serialized = "<click action=\"SUGGEST_COMMAND\" command=\"say Hello, world!\">How to say hello?</click>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
 ### InsertionComponent
 
 [InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
