@@ -1,4 +1,4 @@
-package it.angrybear.validator;
+package it.angrybear.components.validator;
 
 import it.angrybear.exceptions.InvalidOptionException;
 
@@ -15,4 +15,5 @@ public class URLValidator implements OptionValidator {
         if (!Pattern.compile(URL_REGEX).matcher(option).find())
             throw new InvalidOptionException(optionName, "URL", option);
     }
+
 }

@@ -1,4 +1,4 @@
-package it.angrybear.validator;
+package it.angrybear.components.validator;
 
 import it.angrybear.exceptions.InvalidOptionException;
 
@@ -15,4 +15,5 @@ public class IntegerValidator implements OptionValidator {
             throw new InvalidOptionException(optionName, Integer.class, option);
         }
     }
+
 }

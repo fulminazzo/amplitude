@@ -1,4 +1,4 @@
-package it.angrybear.validator;
+package it.angrybear.components.validator;
 
 import it.angrybear.exceptions.InvalidOptionException;
 

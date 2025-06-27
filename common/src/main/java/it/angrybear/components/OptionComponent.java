@@ -2,7 +2,7 @@ package it.angrybear.components;
 
 import com.google.gson.Gson;
 import it.angrybear.exceptions.MissingRequiredOptionException;
-import it.angrybear.validator.OptionValidator;
+import it.angrybear.components.validator.OptionValidator;
 import it.angrybear.utils.StringUtils;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -208,5 +208,5 @@ abstract class OptionComponent extends TextComponent {
     public boolean isEmpty() {
         return super.isEmpty() && tagOptions.isEmpty();
     }
-    
+
 }

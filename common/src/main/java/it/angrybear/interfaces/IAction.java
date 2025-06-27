@@ -2,7 +2,7 @@ package it.angrybear.interfaces;
 
 import it.angrybear.components.ClickAction;
 import it.angrybear.components.HoverAction;
-import it.angrybear.validator.OptionValidator;
+import it.angrybear.components.validator.OptionValidator;
 
 import java.util.Map;
 

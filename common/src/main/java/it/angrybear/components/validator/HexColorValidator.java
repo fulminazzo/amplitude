@@ -1,4 +1,4 @@
-package it.angrybear.validator;
+package it.angrybear.components.validator;
 
 import it.angrybear.exceptions.InvalidOptionException;
 
@@ -19,4 +19,5 @@ public class HexColorValidator implements OptionValidator {
             throw new InvalidOptionException(optionName, "#{A-F0-9}x6", option);
         }
     }
+
 }

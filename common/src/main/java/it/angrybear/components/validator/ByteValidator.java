@@ -1,4 +1,4 @@
-package it.angrybear.validator;
+package it.angrybear.components.validator;
 
 import it.angrybear.exceptions.InvalidOptionException;
 
@@ -16,4 +16,5 @@ public class ByteValidator extends IntegerValidator {
             throw new InvalidOptionException(optionName, Byte.class, option);
         }
     }
+
 }

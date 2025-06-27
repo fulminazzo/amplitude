@@ -1,4 +1,4 @@
-package it.angrybear.validator;
+package it.angrybear.components.validator;
 
 import it.angrybear.exceptions.InvalidOptionException;
 
@@ -17,4 +17,5 @@ public class UUIDValidator implements OptionValidator {
             throw new InvalidOptionException(optionName, UUIDValidator.class, option);
         }
     }
+
 }

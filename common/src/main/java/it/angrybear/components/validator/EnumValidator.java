@@ -1,4 +1,4 @@
-package it.angrybear.validator;
+package it.angrybear.components.validator;
 
 import it.angrybear.exceptions.InvalidOptionException;
 
@@ -27,4 +27,5 @@ public class EnumValidator<T extends Enum<T>> implements OptionValidator {
             throw new InvalidOptionException(optionName, enumClass, option);
         }
     }
+
 }

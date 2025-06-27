@@ -1,9 +1,9 @@
 package it.angrybear.components;
 
 import it.angrybear.interfaces.IAction;
-import it.angrybear.validator.ByteValidator;
-import it.angrybear.validator.OptionValidator;
-import it.angrybear.validator.UUIDValidator;
+import it.angrybear.components.validator.ByteValidator;
+import it.angrybear.components.validator.OptionValidator;
+import it.angrybear.components.validator.UUIDValidator;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

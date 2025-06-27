@@ -1,7 +1,7 @@
 package it.angrybear.components;
 
-import it.angrybear.validator.HexColorValidator;
-import it.angrybear.validator.OptionValidator;
+import it.angrybear.components.validator.HexColorValidator;
+import it.angrybear.components.validator.OptionValidator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
