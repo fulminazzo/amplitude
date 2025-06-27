@@ -65,14 +65,14 @@ Note that every component can be **serialized** and **deserialized** using provi
   String serialized;
   Component component = Component.fromRaw(serialized);
   ```
-  
+
 - to **serialize**, every **Amplitude component** provides a `serialize` method:
-  
+
   ```java
   Component component;
   String serialized = component.serialize();
   ```
-  
+
 | **Components**                                  |
 |-------------------------------------------------|
 | [Component](#component)                         |
@@ -160,6 +160,7 @@ Component component = new HexComponent("<hex color=#FF00AA>I'm colorful!");
 String serialized = "<hex color=#FF00AA>I'm colorful!";
 Component deserialized = Component.fromRaw(serialized);
 ```
+
 ### FontComponent
 
 As the name implies,
@@ -205,7 +206,7 @@ The following are examples with all actions:
   String serialized = "<hover action=\"SHOW_ACHIEVEMENT\" id=\"achievement.mineWood\">Show my achievement!</hover>";
   Component deserialized = Component.fromRaw(serialized);
   ```
-  
+
 - `SHOW_ENTITY`: displays an entity with its name and type.
   It requires the name, the type and its unique identifier in the world.
 
@@ -225,6 +226,26 @@ The following are examples with all actions:
   Component deserialized = Component.fromRaw(serialized);
   ```
 
+- `SHOW_TEXT` displays the specified text when hovering.
+  It requires the text to show to be passed.
+
+  ```java
+  HoverComponent component = new HoverComponent(
+          "<hover " +
+              "action=\"SHOW_TEXT\" " +
+              // arguments
+              "text=\"Secret message!\"" +
+          ">" +
+              "Show my secret!" +
+          "</hover>"
+  );
+  // to edit
+  component.setHoverAction(HoverAction.SHOW_TEXT, new Component("Secret message!"));
+  // or
+  String serialized = "<hover action=\"SHOW_TEXT\" id=\"Secret message!\">Show my secret!</hover>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
 ### InsertionComponent
 
 [InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
@@ -237,8 +258,8 @@ will insert <i>"Whoops! You found me"</i> in the player chat box.
 ```java
 Component component = new InsertionComponent(
         "<insertion text=\"Whoops! You found me\">" +
-            "Let's play hide and seek, I start!" +
-        "</insertion>"
+                "Let's play hide and seek, I start!" +
+                "</insertion>"
 );
 // or
 String serialized = "<insertion text=\"Whoops! You found me\">Let's play hide and seek, I start!</insertion>";
@@ -260,9 +281,9 @@ Component component = new TranslatableComponent(
                 "Diamond Sword&" +
                 "1&" +
                 "\\\"Alex & friends\\\"" +
-        "\">" +
-                "commands.give.success.single" + 
-        "</translatable>"
+                "\">" +
+                "commands.give.success.single" +
+                "</translatable>"
 );
 // or
 String serialized = "<translatable arguments=\"Diamond Sword&1&\\\"Alex & friends\\\"\">commands.give.success.single</translatable>";
