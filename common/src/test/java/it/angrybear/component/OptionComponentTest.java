@@ -1,7 +1,6 @@
 package it.angrybear.component;
 
 import it.angrybear.exception.InvalidOptionException;
-import it.angrybear.exception.MissingRequiredOptionException;
 import it.angrybear.component.validator.OptionValidator;
 import org.junit.jupiter.api.Test;
 

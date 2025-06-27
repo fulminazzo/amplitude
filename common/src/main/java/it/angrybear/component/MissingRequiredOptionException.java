@@ -1,7 +1,5 @@
-package it.angrybear.exception;
+package it.angrybear.component;
 
-import it.angrybear.component.ClickAction;
-import it.angrybear.component.HoverAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -10,7 +8,7 @@ import java.util.Map;
  * An exception thrown when a required option is not given.
  * Check {@link ClickAction} and {@link HoverAction} for more.
  */
-public final class MissingRequiredOptionException extends RuntimeException {
+final class MissingRequiredOptionException extends RuntimeException {
 
     /**
      * Instantiates a new Missing required option exception.

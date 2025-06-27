@@ -1,6 +1,5 @@
 package it.angrybear.component;
 
-import it.angrybear.exception.InvalidComponentException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,11 +1,11 @@
-package it.angrybear.exception;
+package it.angrybear.component;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * An exception thrown when a component results invalid.
  */
-public final class InvalidComponentException extends RuntimeException {
+final class InvalidComponentException extends RuntimeException {
 
     /**
      * Instantiates a new Invalid component exception.
