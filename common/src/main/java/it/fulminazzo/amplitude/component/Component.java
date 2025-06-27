@@ -2,7 +2,6 @@ package it.fulminazzo.amplitude.component;
 
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +43,6 @@ public class Component {
     protected Boolean italic;
     protected Boolean reset;
     @Getter
-    @Setter
     protected @Nullable String text;
 
     static {
@@ -92,17 +90,18 @@ public class Component {
      * Sets content.
      *
      * @param rawText the raw text
+     * @return this component
      */
-    public void setContent(@Nullable String rawText) {
+    public @NotNull Component setContent(@Nullable String rawText) {
         this.text = "";
-        if (rawText == null || rawText.isEmpty()) return;
+        if (rawText == null || rawText.isEmpty()) return this;
         final Matcher matcher = TAG_REGEX.matcher(rawText);
 
         if (matcher.find()) {
             if (matcher.start() != 0) {
                 this.text = rawText.substring(0, matcher.start());
                 setNext(rawText.substring(matcher.start()));
-                return;
+                return this;
             } else this.text = "";
 
             final String tag = matcher.group(1).split(" ")[0];
@@ -112,7 +111,7 @@ public class Component {
                 for (String key : CONTAINER_COMPONENTS.keySet())
                     if (tag.equals(key)) {
                         setNext(CONTAINER_COMPONENTS.get(key).apply(rawText));
-                        return;
+                        return this;
                     }
 
             rawText = rawText.substring(fullTag.length());
@@ -145,28 +144,31 @@ public class Component {
             rawText = "";
         }
 
-        if (rawText.trim().isEmpty()) return;
-        setNext(rawText);
+        if (rawText.trim().isEmpty()) return this;
+        else return setNext(rawText);
     }
 
     /**
      * Add next.
      *
      * @param rawText the raw text
+     * @return this component
      */
-    public void addNext(@Nullable String rawText) {
-        addNext(rawText == null ? null : new Component(rawText));
+    public @NotNull Component addNext(@Nullable String rawText) {
+        return addNext(rawText == null ? null : new Component(rawText));
     }
 
     /**
      * Add next.
      *
      * @param next the next
+     * @return this component
      */
-    public void addNext(@Nullable Component next) {
-        if (next == null) return;
+    public @NotNull Component addNext(@Nullable Component next) {
+        if (next == null) return this;
         if (this.next != null) this.next.addNext(next);
         else setNext(next);
+        return this;
     }
 
     /**
@@ -174,9 +176,10 @@ public class Component {
      * Then, apply {@link #setSameOptions(Component)} method.
      *
      * @param rawText the raw text
+     * @return this component
      */
-    public void setNext(@Nullable String rawText) {
-        setNext(rawText == null ? null : new Component(rawText));
+    public @NotNull Component setNext(@Nullable String rawText) {
+        return setNext(rawText == null ? null : new Component(rawText));
     }
 
     /**
@@ -184,8 +187,9 @@ public class Component {
      * Then, apply {@link #setSameOptions(Component)} method.
      *
      * @param next the next
+     * @return this component
      */
-    public void setNext(Component next) {
+    public @NotNull Component setNext(Component next) {
         this.next = next;
 
         setSameOptions(this.next);
@@ -195,6 +199,7 @@ public class Component {
             if (nextText != null && !nextText.trim().isEmpty()) this.text += nextText;
             this.next = this.next.next;
         }
+        return this;
     }
 
     /**
@@ -202,11 +207,12 @@ public class Component {
      * For any field not given (null) set it to the value of this component.
      *
      * @param component the text component
+     * @return this component
      */
-    void setSameOptions(@Nullable Component component) {
-        if (component == null) return;
+    @NotNull Component setSameOptions(@Nullable Component component) {
+        if (component == null) return this;
 
-        if (isReset() || component.isReset()) return;
+        if (isReset() || component.isReset()) return this;
 
         try {
             for (Field field : getOptionFields()) {
@@ -219,13 +225,14 @@ public class Component {
             }
 
             if (component instanceof ContainerComponent)
-                component.setSameOptions(((ContainerComponent) component).child);
+                component.setSameOptions(((ContainerComponent<?>) component).child);
 
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 
         component.setSameOptions(component.getNext());
+        return this;
     }
 
     /**
@@ -287,12 +294,24 @@ public class Component {
     }
 
     /**
+     * Sets text.
+     *
+     * @param text the text
+     * @return this component
+     */
+    public @NotNull Component setText(@Nullable String text) {
+        this.text = text;
+        return this;
+    }
+
+    /**
      * Sets color.
      *
      * @param color the color
+     * @return this component
      */
-    public void setColor(Color color) {
-        setColor(color, true);
+    public @NotNull Component setColor(Color color) {
+        return setColor(color, true);
     }
 
     /**
@@ -300,19 +319,22 @@ public class Component {
      *
      * @param color     the color
      * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void setColor(Color color, boolean propagate) {
+    public @NotNull Component setColor(Color color, boolean propagate) {
         this.color = color;
         if (propagate) setSameOptions(next);
+        return this;
     }
 
     /**
      * Sets font.
      *
      * @param font the font
+     * @return this component
      */
-    public void setFont(Font font) {
-        setFont(font, true);
+    public @NotNull Component setFont(Font font) {
+        return setFont(font, true);
     }
 
     /**
@@ -320,10 +342,12 @@ public class Component {
      *
      * @param font      the font
      * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void setFont(Font font, boolean propagate) {
+    public @NotNull Component setFont(Font font, boolean propagate) {
         this.font = font;
         if (propagate) setSameOptions(next);
+        return this;
     }
 
     /**
@@ -339,9 +363,10 @@ public class Component {
      * Sets obfuscated.
      *
      * @param obfuscated the obfuscated
+     * @return this component
      */
-    public void setObfuscated(Boolean obfuscated) {
-        setObfuscated(obfuscated, true);
+    public @NotNull Component setObfuscated(Boolean obfuscated) {
+        return setObfuscated(obfuscated, true);
     }
 
     /**
@@ -349,10 +374,12 @@ public class Component {
      *
      * @param obfuscated the obfuscated
      * @param propagate  if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void setObfuscated(Boolean obfuscated, boolean propagate) {
+    public @NotNull Component setObfuscated(Boolean obfuscated, boolean propagate) {
         this.obfuscated = obfuscated;
         if (propagate) setSameOptions(next);
+        return this;
     }
 
     /**
@@ -368,9 +395,10 @@ public class Component {
      * Sets bold.
      *
      * @param bold the bold
+     * @return this component
      */
-    public void setBold(Boolean bold) {
-        setBold(bold, true);
+    public @NotNull Component setBold(Boolean bold) {
+        return setBold(bold, true);
     }
 
     /**
@@ -378,10 +406,12 @@ public class Component {
      *
      * @param bold      the bold
      * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void setBold(Boolean bold, boolean propagate) {
+    public @NotNull Component setBold(Boolean bold, boolean propagate) {
         this.bold = bold;
         if (propagate) setSameOptions(next);
+        return this;
     }
 
     /**
@@ -397,9 +427,10 @@ public class Component {
      * Sets strikethrough.
      *
      * @param strikethrough the strikethrough
+     * @return this component
      */
-    public void setStrikethrough(Boolean strikethrough) {
-        setStrikethrough(strikethrough, true);
+    public @NotNull Component setStrikethrough(Boolean strikethrough) {
+        return setStrikethrough(strikethrough, true);
     }
 
     /**
@@ -407,10 +438,12 @@ public class Component {
      *
      * @param strikethrough the strikethrough
      * @param propagate     if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void setStrikethrough(Boolean strikethrough, boolean propagate) {
+    public @NotNull Component setStrikethrough(Boolean strikethrough, boolean propagate) {
         this.strikethrough = strikethrough;
         if (propagate) setSameOptions(next);
+        return this;
     }
 
     /**
@@ -426,9 +459,10 @@ public class Component {
      * Sets underlined.
      *
      * @param underlined the underlined
+     * @return this component
      */
-    public void setUnderlined(Boolean underlined) {
-        setUnderlined(underlined, true);
+    public @NotNull Component setUnderlined(Boolean underlined) {
+        return setUnderlined(underlined, true);
     }
 
     /**
@@ -436,10 +470,12 @@ public class Component {
      *
      * @param underlined the underlined
      * @param propagate  if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void setUnderlined(Boolean underlined, boolean propagate) {
+    public @NotNull Component setUnderlined(Boolean underlined, boolean propagate) {
         this.underlined = underlined;
         if (propagate) setSameOptions(next);
+        return this;
     }
 
     /**
@@ -455,9 +491,10 @@ public class Component {
      * Sets italic.
      *
      * @param italic the italic
+     * @return this component
      */
-    public void setItalic(Boolean italic) {
-        setItalic(italic, true);
+    public @NotNull Component setItalic(Boolean italic) {
+        return setItalic(italic, true);
     }
 
     /**
@@ -465,10 +502,12 @@ public class Component {
      *
      * @param italic    the italic
      * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void setItalic(Boolean italic, boolean propagate) {
+    public @NotNull Component setItalic(Boolean italic, boolean propagate) {
         this.italic = italic;
         if (propagate) setSameOptions(next);
+        return this;
     }
 
     /**
@@ -484,9 +523,10 @@ public class Component {
      * Sets reset.
      *
      * @param reset the reset
+     * @return this component
      */
-    public void reset(@NotNull Boolean reset) {
-        reset(reset, true);
+    public @NotNull Component reset(@NotNull Boolean reset) {
+        return reset(reset, true);
     }
 
     /**
@@ -494,8 +534,9 @@ public class Component {
      *
      * @param reset     the reset
      * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void reset(@NotNull Boolean reset, boolean propagate) {
+    public @NotNull Component reset(@NotNull Boolean reset, boolean propagate) {
         this.reset = reset;
         if (reset) {
             setColor(Color.WHITE, false);
@@ -505,6 +546,7 @@ public class Component {
             setFont(Font.DEFAULT, false);
             if (propagate) setSameOptions(next);
         }
+        return this;
     }
 
     /**
@@ -528,9 +570,10 @@ public class Component {
      * Sets style.
      *
      * @param style the style
+     * @return this component
      */
-    public void setStyle(@Nullable Style style) {
-        setStyle(style, true);
+    public @NotNull Component setStyle(@Nullable Style style) {
+        return setStyle(style, true);
     }
 
     /**
@@ -538,9 +581,10 @@ public class Component {
      *
      * @param style the style
      * @param value the value
+     * @return this component
      */
-    public void setStyle(@Nullable Style style, Boolean value) {
-        setStyle(style, value, true);
+    public @NotNull Component setStyle(@Nullable Style style, Boolean value) {
+        return setStyle(style, value, true);
     }
 
     /**
@@ -549,9 +593,10 @@ public class Component {
      * @param style     the style
      * @param value     the value
      * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
+     * @return this component
      */
-    public void setStyle(@Nullable Style style, Boolean value, boolean propagate) {
-        if (style == null) return;
+    public @NotNull Component setStyle(@Nullable Style style, Boolean value, boolean propagate) {
+        if (style == null) return this;
         String methodName = style.name();
         methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
         if (style != Style.RESET) methodName = "set" + methodName;
@@ -563,6 +608,7 @@ public class Component {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return this;
     }
 
     /**
