@@ -167,7 +167,7 @@ public abstract class ComponentConverter {
      * @param component the component
      * @return the t
      */
-    public <T> @Nullable T convertCustomComponent(CustomComponent component) {
+    public <T> @Nullable T convertCustomComponent(CustomComponent<?> component) {
         return convertComponent(component.toMinecraft());
     }
 
