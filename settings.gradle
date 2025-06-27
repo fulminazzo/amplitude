@@ -1,4 +1,5 @@
-rootProject.name = 'BearMessages'
+rootProject.name = 'amplitude'
+
 include 'common'
 include 'bungeecord'
 include 'bungeecord-legacy'
