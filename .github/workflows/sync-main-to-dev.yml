@@ -1,13 +1,13 @@
-# Synchronizes the master branch with dev by pushing any commits on the former.
-name: Sync master to dev
+# Synchronizes the main branch with dev by pushing any commits on the former.
+name: Sync main to dev
 
 on:
   push:
     branches:
-      - master
+      - main
 
 concurrency:
-  group: sync-master-dev
+  group: sync-main-dev
   cancel-in-progress: true
 
 jobs:
@@ -16,10 +16,10 @@ jobs:
     permissions: write-all
 
     steps:
-      - name: Checkout master branch
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: main
           fetch-depth: 0
 
       - name: Update branches
@@ -27,7 +27,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout dev
-          git merge origin/master --no-edit
+          git merge origin/main --no-edit
           git push origin dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
