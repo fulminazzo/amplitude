@@ -1,12 +1,24 @@
 package it.fulminazzo.amplitude.serializer;
 
+import it.fulminazzo.amplitude.RoseFluoComponent;
 import it.fulminazzo.amplitude.component.Component;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CharCodeSerializerTest {
+
+    @Test
+    void testSerializeCustomComponent() {
+        // Load CustomComponent
+        new RoseFluoComponent();
+        Component component = Component.fromRaw("<blue>Hello<rose>world<red>!");
+
+        String serialized = ComponentSerializer.ampersand().serializeComponent(component);
+        assertEquals("&9Hello&9world&c!", serialized);
+    }
 
     @ParameterizedTest
     @CsvSource({
