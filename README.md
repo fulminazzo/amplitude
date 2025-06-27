@@ -175,6 +175,17 @@ String serialized = "<font id=ALT>I'm alternative!";
 Component deserialized = Component.fromRaw(serialized);
 ```
 
+### HoverComponent
+
+[HoverComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/HoverComponent.java)
+is a special Minecraft component that will display text upon hovering on the wrapped text.
+It requires a
+[HoverAction](../main/common/src/main/java/it/fulminazzo/amplitude/component/HoverAction.java)
+to be specified with its required arguments.
+
+The following are examples with all actions:
+
+
 ### InsertionComponent
 
 [InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
