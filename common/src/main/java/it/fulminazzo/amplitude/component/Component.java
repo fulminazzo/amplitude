@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
  *     <li>&#60;hex&#62; which creates a new {@link HexComponent}</li>
  *     <li>&#60;click&#62; which creates a new {@link ClickComponent}</li>
  *     <li>&#60;hover&#62; which creates a new {@link HoverComponent}</li>
+ *     <li>&#60;insertion&#62; which creates a new {@link InsertionComponent}</li>
+ *     <li>&#60;translatable&#62; which creates a new {@link TranslatableComponent}</li>
  * </ul>
  */
 public class Component {
