@@ -1,19 +1,15 @@
 package it.angrybear.serializer;
 
 import it.angrybear.component.*;
-import it.angrybear.component.Color;
-import it.angrybear.component.Font;
-import it.angrybear.component.Style;
-import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -31,15 +27,10 @@ public abstract class ComponentSerializer {
      */
     @SuppressWarnings("unchecked")
     public static @NotNull ComponentSerializer serializer() {
-        @NotNull Set<Class<?>> classes = ClassUtils.findClassesInPackage(ComponentSerializer.class.getPackage().getName());
-        for (Class<?> clazz : classes) {
-            if (!ComponentSerializer.class.isAssignableFrom(clazz)) continue;
-            if (Modifier.isAbstract(clazz.getModifiers())) continue;
-            // Using getCanonicalName() to support Spigot reload.
-            if (clazz.getCanonicalName().equals(CharCodeSerializer.class.getCanonicalName())) continue;
-            if (clazz.getCanonicalName().equals(AmpersandSerializer.class.getCanonicalName())) continue;
-            if (clazz.getCanonicalName().equals(SectionSignSerializer.class.getCanonicalName())) continue;
+        Set<String> classes = getClassesInPackage();
+        for (String className : classes) {
             try {
+                Class<?> clazz = Class.forName(className);
                 Constructor<? extends ComponentSerializer> constructor = (Constructor<? extends ComponentSerializer>) clazz.getConstructor();
                 return constructor.newInstance();
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
@@ -48,6 +39,17 @@ public abstract class ComponentSerializer {
             }
         }
         return new SectionSignSerializer();
+    }
+
+    /**
+     * Gets all the available serializers of the library.
+     *
+     * @return the serializers names to prevent load errors
+     */
+    static @NotNull Set<String> getClassesInPackage() {
+        return Stream.of("Adventure", "Bungee", "LegacyBungee")
+                .map(c -> ComponentSerializer.class.getPackage().getName() + "." + c + "Serializer")
+                .collect(Collectors.toSet());
     }
 
     /**
