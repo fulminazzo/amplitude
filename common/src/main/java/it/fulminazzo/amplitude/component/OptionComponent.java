@@ -25,9 +25,11 @@ import java.util.stream.Collectors;
  *     <li>option1: Hello</li>
  *     <li>option2: world</li>
  * </ul>
+ *
+ * @param <C> the type of this component
  */
 @Getter
-abstract class OptionComponent extends Component {
+abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final @NotNull String tagName;
     protected final @NotNull Map<String, String> tagOptions;
@@ -184,7 +186,7 @@ abstract class OptionComponent extends Component {
     public boolean contains(final @NotNull Component component) {
         if (this.getClass().equals(component.getClass())) {
             if (!super.contains(component)) return false;
-            return this.getTagOptions().equals(((OptionComponent) component).getTagOptions());
+            return this.getTagOptions().equals(((OptionComponent<?>) component).getTagOptions());
         } else return next != null && next.contains(component);
     }
 
