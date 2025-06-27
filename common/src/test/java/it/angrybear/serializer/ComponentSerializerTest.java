@@ -1,4 +1,4 @@
-package it.angrybear.serializers;
+package it.angrybear.serializer;
 
 import org.junit.jupiter.api.Test;
 

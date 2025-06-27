@@ -1,4 +1,4 @@
-package it.angrybear.serializers;
+package it.angrybear.serializer;
 
 import it.angrybear.component.HexComponent;
 import it.angrybear.component.HoverComponent;

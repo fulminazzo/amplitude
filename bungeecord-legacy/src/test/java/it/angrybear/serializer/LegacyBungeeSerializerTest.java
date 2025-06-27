@@ -1,20 +1,16 @@
-package it.angrybear.serializers;
+package it.angrybear.serializer;
 
-import it.angrybear.component.HexComponent;
-import it.angrybear.component.HoverComponent;
-import it.angrybear.component.TextComponent;
+import it.angrybear.component.*;
 import it.angrybear.component.ClickAction;
 import it.angrybear.component.HoverAction;
+import it.angrybear.exception.InvalidOptionException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.ItemTag;
-import net.md_5.bungee.api.chat.hover.content.Content;
-import net.md_5.bungee.api.chat.hover.content.Entity;
-import net.md_5.bungee.api.chat.hover.content.Item;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -22,11 +18,11 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("deprecation")
-class BungeeSerializerTest {
-    private static final BungeeSerializer serializer = new BungeeSerializer();
+class LegacyBungeeSerializerTest {
+    private static final LegacyBungeeSerializer serializer = new LegacyBungeeSerializer();
 
     private static Object[][] getClickTests() {
         return new Object[][]{
@@ -42,18 +38,17 @@ class BungeeSerializerTest {
     private static Object[][] getHoverTests() {
         return new Object[][]{
                 new Object[]{HoverAction.SHOW_ACHIEVEMENT,
-                        null, "id=achievement.mineWood"
+                        new net.md_5.bungee.api.chat.TextComponent("achievement.mineWood"), "id=achievement.mineWood"
                 },
-                new Object[]{HoverAction.SHOW_TEXT, new Text("Hello friend!"),
+                new Object[]{HoverAction.SHOW_TEXT, new net.md_5.bungee.api.chat.TextComponent("Hello friend!"),
                         "text=\"Hello friend!\""
                 },
                 new Object[]{HoverAction.SHOW_ENTITY,
-                        new Entity("zombie", "3f8164bf-1ed-4bcb-96be-7033beed028c",
-                                new net.md_5.bungee.api.chat.TextComponent("Zombie")),
+                        new net.md_5.bungee.api.chat.TextComponent("{type:zombie,id:\"3f8164bf-1ed-4bcb-96be-7033beed028c\",name:Zombie}"),
                         "id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\" type=\"zombie\" name=\"Zombie\""
                 },
                 new Object[]{HoverAction.SHOW_ITEM,
-                        new Item("minecraft:stone_sword", 1, ItemTag.ofNbt("{Damage: 0, Enchantments:[{id:\"minecraft:sharpness\",lvl:5s}]}")),
+                        new net.md_5.bungee.api.chat.TextComponent("{Count:1b,id:\"minecraft:stone_sword\",tag:{Damage: 0, Enchantments:[{id:\"minecraft:sharpness\",lvl:5s}]}}"),
                         "id=minecraft:stone_sword Count=1b Tag=\"{Damage: 0, Enchantments:[{id:\\\"minecraft:sharpness\\\",lvl:5s}]}\""
                 }
         };
@@ -73,9 +68,9 @@ class BungeeSerializerTest {
 
         BaseComponent c2 = createComponent(ChatColor.RED.toString());
         addExtra(c2, createComponent(ChatColor.BOLD + "Hello world, "));
-        addExtra(c2, createComponent(ChatColor.of("#FF00AA") + "are you ready? "));
-        addExtra(c2, createComponent(ChatColor.of("#FF00AA") + ChatColor.BOLD.toString() + "Hope you are... "));
-        addExtra(c2, createComponent(ChatColor.BOLD + "or else... ", c -> c.setFont("illageralt")));
+        addExtra(c2, createComponent("are you ready? "));
+        addExtra(c2, createComponent(ChatColor.BOLD + "Hope you are... "));
+        addExtra(c2, createComponent(ChatColor.BOLD + "or else... "));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
         addExtra(c2, createComponent(ChatColor.WHITE.toString()));
         addExtra(c2, createComponent("Insert DEMO ", c -> c.setInsertion("Hello there!")));
@@ -102,7 +97,7 @@ class BungeeSerializerTest {
             component.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(action.name()), option));
             c.addExtra(component);
 
-            BaseComponent cc = createComponent(ChatColor.WHITE + " ");
+            BaseComponent cc = createComponent(" ");
             if (!action.equals(ClickAction.COPY_TO_CLIPBOARD)) {
                 c.addExtra(cc);
                 addExtra(temp, c);
@@ -115,13 +110,13 @@ class BungeeSerializerTest {
             rawText += String.format("<click action=%s %s=\"%s\">%s</click> ", action, required, option, text);
         }
 
-        BaseComponent cd = createComponent(ChatColor.WHITE + " ");
+        BaseComponent cd = createComponent(" ");
         temp.addExtra(cd);
         temp = cd;
 
         for (Object[] objects : getHoverTests()) {
             HoverAction action = (HoverAction) objects[0];
-            final Content content = (Content) objects[1];
+            final BaseComponent content = (BaseComponent) objects[1];
             final String option = (String) objects[2];
 
             if (action.equals(HoverAction.SHOW_ACHIEVEMENT)) continue;
@@ -131,10 +126,10 @@ class BungeeSerializerTest {
             BaseComponent c = createComponent("");
 
             BaseComponent component = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(text)[0];
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), new BaseComponent[]{content}));
             c.addExtra(component);
 
-            BaseComponent cc = createComponent(ChatColor.WHITE + " ");
+            BaseComponent cc = createComponent(" ");
             if (!action.equals(HoverAction.SHOW_ITEM)) c.addExtra(cc);
 
             addExtra(temp, c);
@@ -149,13 +144,39 @@ class BungeeSerializerTest {
         assertEquals(c2.toString(), c.toString(), rawText);
     }
 
+    @Test
+    void testSimpleComponent() {
+        String rawText = "Hello world";
+        TextComponent c1 = new TextComponent("<red>" + rawText);
+        BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent(rawText);
+        c2.setColor(ChatColor.RED);
+        assertEquals(c2, serializer.serializeSimpleTextComponent(c1));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getClickTests")
+    void testClickComponent(ClickAction action, String option) throws Throwable {
+        Executable executable = () -> {
+            ClickComponent c1 = new ClickComponent("<click action=" + action + " " +
+                    new ArrayList<>(action.getRequiredOptions().keySet()).get(0) +
+                    "=\"" + option + "\">Test</click>");
+            BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent("Test");
+            c2.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(action.name()), option));
+            BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
+            tmp.addExtra(c2);
+            assertEquals(tmp, serializer.serializeClickComponent(c1));
+        };
+        if (action.equals(ClickAction.OPEN_FILE))
+            assertThrows(InvalidOptionException.class, executable);
+        else executable.execute();
+    }
+
     @ParameterizedTest
     @MethodSource("getHoverTests")
-    void testHoverComponent(HoverAction action, Content content, String options) {
+    void testHoverComponent(HoverAction action, BaseComponent content, String options) {
         HoverComponent c1 = new HoverComponent("<hover action=" + action + " " + options + ">Test</hover>");
-        assumeFalse(action.equals(HoverAction.SHOW_ACHIEVEMENT), "SHOW_ACHIEVEMENT not available in Minecraft 1.12+");
         BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent("Test");
-        c2.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
+        c2.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), new BaseComponent[]{content}));
         BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
         tmp.addExtra(c2);
         assertEquals(tmp.toString(), serializer.serializeHoverComponent(c1).toString());
@@ -166,15 +187,36 @@ class BungeeSerializerTest {
         String color = "#FF00AA";
         String rawText = "Hello world";
         HexComponent c1 = new HexComponent("<hex color=" + color + ">" + rawText);
-        BaseComponent[] c = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(ChatColor.of(color) + rawText);
+        BaseComponent[] c = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(rawText);
         BaseComponent c2 = c[0];
         for (int i = 1; i < c.length; i++) c2.addExtra(c[i]);
         assertEquals(c2, serializer.serializeHexComponent(c1));
     }
 
     @Test
+    void testHexComponentShowingHex() {
+        String color = "#FF00AA";
+        String rawText = "Hello world";
+        HexComponent c1 = new HexComponent("<hex color=" + color + ">" + rawText);
+        BaseComponent[] c = net.md_5.bungee.api.chat.TextComponent.fromLegacyText(color + rawText);
+        BaseComponent c2 = c[0];
+        for (int i = 1; i < c.length; i++) c2.addExtra(c[i]);
+        serializer.setShowingHex(true);
+        assertEquals(c2, serializer.serializeHexComponent(c1));
+        serializer.setShowingHex(false);
+    }
+
+    @Test
+    void testSend() {
+        TextComponent component = new TextComponent("This is an example");
+        ProxiedPlayer player = mock(ProxiedPlayer.class);
+        serializer.send(player, component);
+        verify(player, atLeastOnce()).sendMessage((BaseComponent) serializer.serializeComponent(component));
+    }
+
+    @Test
     void testSerializerMethod() {
-        assertEquals(BungeeSerializer.class, ComponentSerializer.serializer().getClass());
+        assertEquals(LegacyBungeeSerializer.class, ComponentSerializer.serializer().getClass());
     }
 
     private void addExtra(BaseComponent c1, BaseComponent c2) {
@@ -189,7 +231,6 @@ class BungeeSerializerTest {
         c.setItalic(false);
         c.setObfuscated(false);
         c.setUnderlined(false);
-        c.setFont("default");
     }
 
     private BaseComponent createComponent(String text) {

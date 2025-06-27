@@ -1,4 +1,4 @@
-package it.angrybear.serializers;
+package it.angrybear.serializer;
 
 /**
  * An implementation of {@link CharCodeSerializer} that uses <i>§</i> as charCode.
