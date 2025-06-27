@@ -185,8 +185,36 @@ In this example, interacting with the text <i>"Let's play hide and seek, I start
 will insert <i>"Whoops! You found me"</i> in the player chat box.
 
 ```java
-Component component = new InsertionComponent("<insertion text=\"Whoops! You found me\">Let's play hide and seek, I start!</insertion>");
+Component component = new InsertionComponent(
+        "<insertion text=\"Whoops! You found me\">" +
+            "Let's play hide and seek, I start!" +
+        "</insertion>"
+);
 // or
 String serialized = "<insertion text=\"Whoops! You found me\">Let's play hide and seek, I start!</insertion>";
+Component deserialized = Component.fromRaw(serialized);
+```
+
+### TranslatableComponent
+
+[TranslatableComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/TranslatableComponent.java)
+is a special component that will convert its contents using **Minecraft default translations**.
+
+In this example, the translated text is <i>"Gave {0} {1} to {2}"</i>,
+where `{0}`, `{1}` and `{2}` are arguments.
+Arguments can be passed using the `arguments` keyword, and separated with an ampersand (`&`):
+
+```java
+Component component = new TranslatableComponent(
+        "<translatable arguments=\"" +
+                "Diamond Sword&" +
+                "1&" +
+                "\\\"Alex & friends\\\"" +
+        "\">" +
+                "commands.give.success.single" + 
+        "</translatable>"
+);
+// or
+String serialized = "<translatable arguments=\"Diamond Sword&1&\\\"Alex & friends\\\"\">commands.give.success.single</translatable>";
 Component deserialized = Component.fromRaw(serialized);
 ```
