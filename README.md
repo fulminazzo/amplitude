@@ -339,6 +339,25 @@ The following are examples with all actions:
   Component deserialized = Component.fromRaw(serialized);
   ```
 
+- `CHANGE_PAGE`: changes the page in an open book.
+  Only works if the component is inside a book.
+  It requires the page to open.
+
+  ```java
+  Component component = new ClickComponent(
+          "<click " +
+              "action=\"CHANGE_PAGE\" " +
+              // arguments
+              "page=1" +
+          ">" +
+              "First page" +
+          "</click>"
+  );
+  // or
+  String serialized = "<click action=\"CHANGE_PAGE\" page=1>First page</click>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
 ### InsertionComponent
 
 [InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
