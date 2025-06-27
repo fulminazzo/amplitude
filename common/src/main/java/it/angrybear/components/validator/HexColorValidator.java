@@ -1,6 +1,7 @@
 package it.angrybear.components.validator;
 
 import it.angrybear.exception.InvalidOptionException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +12,7 @@ import java.util.regex.Pattern;
 public class HexColorValidator implements OptionValidator {
 
     @Override
-    public void test(String optionName, String option) throws InvalidOptionException {
+    public void test(@NotNull String optionName, @NotNull String option) throws InvalidOptionException {
         try {
             Matcher matcher = Pattern.compile("#[A-Fa-f0-9]{6}").matcher(option);
             if (!matcher.matches()) throw new Exception();

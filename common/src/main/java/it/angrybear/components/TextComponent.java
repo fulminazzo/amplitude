@@ -605,7 +605,7 @@ public class TextComponent {
      * @param maintainColor if true, colors preceding the replacement will be put next to it.
      * @return the text component
      */
-    public TextComponent replace(final @NotNull String from, final @NotNull String to, final boolean maintainColor) {
+    public @NotNull TextComponent replace(final @NotNull String from, final @NotNull String to, final boolean maintainColor) {
         final HashSet<ChatFormatter> colors = new LinkedHashSet<>();
         final String serialized = serialize();
         String finalSerialized = "";

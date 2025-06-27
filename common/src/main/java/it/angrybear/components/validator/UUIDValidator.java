@@ -1,6 +1,7 @@
 package it.angrybear.components.validator;
 
 import it.angrybear.exception.InvalidOptionException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 public class UUIDValidator implements OptionValidator {
 
     @Override
-    public void test(String optionName, String option) throws InvalidOptionException {
+    public void test(@NotNull String optionName, @NotNull String option) throws InvalidOptionException {
         try {
             UUID.fromString(option);
         } catch (Exception e) {

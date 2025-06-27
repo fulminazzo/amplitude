@@ -36,7 +36,7 @@ public final class HoverComponent extends ContainerComponent implements IEventCo
      * @param action    the action
      * @param component the component
      */
-    public void setHoverAction(final HoverAction action, final TextComponent component) {
+    public void setHoverAction(final @NotNull HoverAction action, final @NotNull TextComponent component) {
         setTagOption("action", action.name());
         final Map<String, OptionValidator> requiredOptions = action.getRequiredOptions();
         for (String key : requiredOptions.keySet())

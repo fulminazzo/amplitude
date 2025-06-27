@@ -1,6 +1,7 @@
 package it.angrybear.components.validator;
 
 import it.angrybear.exception.InvalidOptionException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A validator for {@link Integer} objects.
@@ -8,7 +9,7 @@ import it.angrybear.exception.InvalidOptionException;
 public class IntegerValidator implements OptionValidator {
 
     @Override
-    public void test(String optionName, String option) throws InvalidOptionException {
+    public void test(@NotNull String optionName, @NotNull String option) throws InvalidOptionException {
         try {
             Integer.valueOf(option);
         } catch (NumberFormatException ex) {

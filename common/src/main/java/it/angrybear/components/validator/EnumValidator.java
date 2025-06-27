@@ -1,6 +1,7 @@
 package it.angrybear.components.validator;
 
 import it.angrybear.exception.InvalidOptionException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A validator for a given enum class
@@ -20,7 +21,7 @@ public class EnumValidator<T extends Enum<T>> implements OptionValidator {
     }
 
     @Override
-    public void test(String optionName, String option) throws InvalidOptionException {
+    public void test(@NotNull String optionName, @NotNull String option) throws InvalidOptionException {
         try {
             Enum.valueOf(enumClass, option.toUpperCase());
         } catch (IllegalArgumentException e) {

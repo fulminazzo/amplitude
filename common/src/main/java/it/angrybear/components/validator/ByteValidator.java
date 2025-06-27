@@ -1,6 +1,7 @@
 package it.angrybear.components.validator;
 
 import it.angrybear.exception.InvalidOptionException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A validator for {@link Byte} objects.
@@ -8,7 +9,7 @@ import it.angrybear.exception.InvalidOptionException;
 public class ByteValidator extends IntegerValidator {
 
     @Override
-    public void test(String optionName, String option) throws InvalidOptionException {
+    public void test(@NotNull String optionName, @NotNull String option) throws InvalidOptionException {
         try {
             if (!option.endsWith("b")) throw new Exception();
             super.test(optionName, option.substring(0, option.length() - 1));

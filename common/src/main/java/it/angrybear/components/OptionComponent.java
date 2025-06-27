@@ -157,7 +157,7 @@ abstract class OptionComponent extends TextComponent {
      *
      * @return the tag options
      */
-    public Map<String, String> getTagOptions() {
+    public @NotNull Map<String, String> getTagOptions() {
         return new LinkedHashMap<>(this.tagOptions);
     }
 
