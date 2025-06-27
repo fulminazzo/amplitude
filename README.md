@@ -266,6 +266,15 @@ The following are examples with all actions:
   Component deserialized = Component.fromRaw(serialized);
   ```
 
+Note that each one of these actions support **JSON**, so it is also possible to serialize expressions like this:
+
+```java
+String serialized = "<hover action=\"SHOW_ITEM\" json=\"{\\\"Count\\\": 1b, \\\"id\\\": \\\"minecraft:diamond_sword\\\"}\">Show my super sword!</hover>";
+// Same as
+String serialized = "<hover action=\"SHOW_ITEM\" Count=1b id=\"minecraft:diamond_sword\">Show my super sword!</hover>";
+Component deserialized = Component.fromRaw(serialized);
+```
+
 ### InsertionComponent
 
 [InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
