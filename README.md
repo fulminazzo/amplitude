@@ -220,13 +220,33 @@ The following are examples with all actions:
               "id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\"" +
           ">" +
               "Show my pet!" +
-          "</hover>");
+          "</hover>"
+  );
   //or
   String serialized = "<hover action=\"SHOW_ENTITY\" name=\"Doggie\" type=\"wolf\" id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\">Show my pet!</hover>";
   Component deserialized = Component.fromRaw(serialized);
   ```
 
-- `SHOW_TEXT` displays the specified text when hovering.
+- `SHOW_ITEM`: displays the specified item as if it was in the player inventory.
+  It requires the amount and the material of the item to be passed.
+
+  ```java
+  Component component = new HoverComponent(
+          "<hover " +
+              "action=\"SHOW_ITEM\" " +
+              // arguments
+              "Count=1b " +
+              "id=\"minecraft:diamond_sword\"" +
+          ">" +
+              "Show my super sword!"  +
+          "</hover>"
+  );
+  //or
+  String serialized = "<hover action=\"SHOW_ITEM\" Count=1b id=\"minecraft:diamond_sword\">Show my super sword!</hover>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
+- `SHOW_TEXT`: displays the specified text when hovering.
   It requires the text to show to be passed.
 
   ```java
