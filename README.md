@@ -82,3 +82,68 @@ Note that every component can be **serialized** and **deserialized** using provi
 | [ClickComponent](#clickcomponent)               |
 | [InsertionComponent](#insertioncomponent)       |
 | [TranslatableComponent](#translatablecomponent) |
+
+### Component
+
+[Component](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/Component.java)
+is the most basic component of **Amplitude**.
+It provides support for basic text, as well as coloring and text style.
+
+- **Basic text**: simply input your message:
+
+  ```java
+  Component component = new Component("This is my basic text");
+  // or
+  String serialized = "This is my basic text";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
+- **Coloring**: allows to change the color of the text using Minecraft default colors.
+  [Here](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/Color.java)
+  it is possible to find all the available ones.
+
+  ```java
+  Component component = new Component("Colored text");
+  component.setColor(
+    Color.LIGHT_PURPLE, 
+    // If false, only the current component will be updated.
+    // Meaning, that any subcomponent (a.k.a. follow up components)
+    // will NOT be colored.
+    true
+  );
+  // or
+  String serialized = "<light_purple>Colored text";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
+- **Style**: allows to change the style of the text using Minecraft styles (bold, italic, etc...).
+  [Here](../blob/main/common/src/main/java/it/fulminazzo/amplitude/component/Style.java)
+  it is possible to find all the available ones.
+
+  ```java
+  Component component = new Component("Bold text");
+  component.setStyle(
+    Style.BOLD, 
+    // false to "unbold"
+    true,
+    // If false, only the current component will be updated.
+    // Meaning, that any subcomponent (a.k.a. follow up components)
+    // will NOT be styled. 
+    true
+  );
+  // or
+  Component component = new Component("Bold text");
+  component.setBold(
+    // false to "unbold"
+    true,
+    // If false, only the current component will be updated.
+    // Meaning, that any subcomponent (a.k.a. follow up components)
+    // will NOT be styled. 
+    true
+  );
+  // or
+  String serialized = "<bold>Bold text";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
+  Among the styles there is also the special one `RESET`, that will remove any coloring, style or font applied.
