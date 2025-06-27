@@ -1,5 +1,7 @@
 package it.angrybear.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -8,7 +10,8 @@ import java.util.List;
 /**
  * String utilities.
  */
-public class StringUtils {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class StringUtils {
 
     /**
      * Split a string using the given separator, ignoring it if it is contained inside quotes.
