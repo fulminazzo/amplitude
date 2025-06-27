@@ -18,18 +18,18 @@ import java.util.Map;
  *     <li>text: Hello world!</li>
  * </ul>
  */
-public class FontComponent extends OptionComponent {
+public final class FontComponent extends OptionComponent {
 
     public FontComponent() {
         this(null);
     }
 
-    public FontComponent(String rawText) {
+    public FontComponent(final String rawText) {
         super(rawText, "font");
     }
 
     @Override
-    public void setOptions(@Nullable String rawText) {
+    public void setOptions(final @Nullable String rawText) {
         super.setOptions(rawText);
         setFont(Font.valueOf(getFontID()));
     }
@@ -44,4 +44,5 @@ public class FontComponent extends OptionComponent {
             put("id", new FontValidator());
         }};
     }
+
 }

@@ -14,7 +14,7 @@ import java.util.List;
  * An enum that represents all Minecraft colors.
  */
 @Getter
-public class Color implements ChatFormatter {
+public final class Color implements ChatFormatter {
     /**
      * Black color (corresponds to &amp;0).
      * <p>
@@ -120,7 +120,7 @@ public class Color implements ChatFormatter {
      *
      * @param identifierChar the identifier char
      */
-    Color(char identifierChar) {
+    Color(final char identifierChar) {
         this.identifierChar = identifierChar;
     }
 
@@ -129,7 +129,7 @@ public class Color implements ChatFormatter {
      *
      * @param code the identifier code
      */
-    public Color(@NotNull String code) {
+    public Color(final @NotNull String code) {
         this.identifierChar = '?';
         this.code = code;
     }
@@ -154,8 +154,10 @@ public class Color implements ChatFormatter {
      * @param name the name
      * @return the color
      */
-    public static @Nullable Color valueOf(String name) {
-        return Arrays.stream(values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+    public static @Nullable Color valueOf(final String name) {
+        return Arrays.stream(values())
+                .filter(v -> v.name().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
     }
 
     /**
@@ -164,8 +166,10 @@ public class Color implements ChatFormatter {
      * @param identifierChar the identifier char
      * @return the color
      */
-    public static @Nullable Color valueOf(char identifierChar) {
-        return Arrays.stream(values()).filter(v -> v.getIdentifierChar() == Character.toLowerCase(identifierChar)).findFirst().orElse(null);
+    public static @Nullable Color valueOf(final char identifierChar) {
+        return Arrays.stream(values())
+                .filter(v -> v.getIdentifierChar() == Character.toLowerCase(identifierChar))
+                .findFirst().orElse(null);
     }
 
     /**
@@ -187,9 +191,9 @@ public class Color implements ChatFormatter {
     }
 
     /**
-     * Is custom.
+     * Checks if the current color is not among the default values.
      *
-     * @return the boolean
+     * @return true if it is
      */
     public boolean isCustom() {
         return identifierChar == '?';
@@ -201,7 +205,7 @@ public class Color implements ChatFormatter {
      * @param color the color
      * @return the boolean
      */
-    public boolean equals(@Nullable Color color) {
+    public boolean equals(final @Nullable Color color) {
         if (color == null) return false;
         if (identifierChar != '?') return identifierChar == color.identifierChar;
         else return code.equals(color.code);
@@ -217,4 +221,5 @@ public class Color implements ChatFormatter {
     public String toString() {
         return name();
     }
+
 }

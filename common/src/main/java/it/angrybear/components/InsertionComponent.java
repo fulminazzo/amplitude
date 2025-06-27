@@ -14,13 +14,13 @@ import java.util.Map;
  * <p>
  * Example: "&#60;insertion text="Amazing!"&#62;Hello world&#60;/insertion&#62;"
  */
-public class InsertionComponent extends ContainerComponent {
+public final class InsertionComponent extends ContainerComponent {
 
     public InsertionComponent() {
         this(null);
     }
 
-    public InsertionComponent(@Nullable String rawText) {
+    public InsertionComponent(final @Nullable String rawText) {
         super(rawText, "insertion");
     }
 
@@ -34,4 +34,5 @@ public class InsertionComponent extends ContainerComponent {
             put("text", null);
         }};
     }
+
 }

@@ -18,7 +18,7 @@ import java.util.Map;
  *     <li>text: Hello world!</li>
  * </ul>
  */
-public class HexComponent extends OptionComponent {
+public final class HexComponent extends OptionComponent {
 
     /**
      * Instantiates a new Hex component.
@@ -32,12 +32,12 @@ public class HexComponent extends OptionComponent {
      *
      * @param rawText the raw text
      */
-    public HexComponent(String rawText) {
+    public HexComponent(final String rawText) {
         super(rawText, "hex");
     }
 
     @Override
-    public void setOptions(@Nullable String rawText) {
+    public void setOptions(final @Nullable String rawText) {
         super.setOptions(rawText);
         setColor(new Color(getHexColor()));
     }
@@ -57,4 +57,5 @@ public class HexComponent extends OptionComponent {
             put("color", new HexColorValidator());
         }};
     }
+
 }

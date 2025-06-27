@@ -12,7 +12,7 @@ import java.util.Map;
  * <p>
  * Example: &#60;click action="OPEN_URL" url="https://fulminazzo.it"&#62;Click event!&#60;/click&#62;
  */
-public class ClickComponent extends ContainerComponent implements IEventComponent {
+public final class ClickComponent extends ContainerComponent implements IEventComponent {
 
     /**
      * Instantiates a new Click component.
@@ -26,7 +26,7 @@ public class ClickComponent extends ContainerComponent implements IEventComponen
      *
      * @param rawText the raw text
      */
-    public ClickComponent(@Nullable String rawText) {
+    public ClickComponent(final @Nullable String rawText) {
         super(rawText, "click");
     }
 
@@ -39,4 +39,5 @@ public class ClickComponent extends ContainerComponent implements IEventComponen
     public @NotNull Class<? extends IAction> getActionClass() {
         return ClickAction.class;
     }
+
 }

@@ -12,7 +12,7 @@ import java.util.Map;
  * <p>
  * Example: &#60;hover action="SHOW_TEXT" text="Secret message!"&#62;Hover event!&#60;/hover&#62;
  */
-public class HoverComponent extends ContainerComponent implements IEventComponent {
+public final class HoverComponent extends ContainerComponent implements IEventComponent {
 
     /**
      * Instantiates a new Hover component.
@@ -26,7 +26,7 @@ public class HoverComponent extends ContainerComponent implements IEventComponen
      *
      * @param rawText the raw text
      */
-    public HoverComponent(@Nullable String rawText) {
+    public HoverComponent(final @Nullable String rawText) {
         super(rawText, "hover");
     }
 
@@ -36,7 +36,7 @@ public class HoverComponent extends ContainerComponent implements IEventComponen
      * @param action    the action
      * @param component the component
      */
-    public void setHoverAction(HoverAction action, TextComponent component) {
+    public void setHoverAction(final HoverAction action, final TextComponent component) {
         setTagOption("action", action.name());
         final Map<String, OptionValidator> requiredOptions = action.getRequiredOptions();
         for (String key : requiredOptions.keySet())
@@ -53,4 +53,5 @@ public class HoverComponent extends ContainerComponent implements IEventComponen
     public @NotNull Class<? extends IAction> getActionClass() {
         return HoverAction.class;
     }
+
 }
