@@ -1,4 +1,4 @@
-package it.angrybear.utils;
+package it.angrybear.util;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -53,4 +53,5 @@ public class StringUtils {
             return string.substring(1, string.length() - 1);
         return string;
     }
+
 }

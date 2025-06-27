@@ -1,4 +1,4 @@
-package it.angrybear.utils;
+package it.angrybear.util;
 
 import org.junit.jupiter.api.Test;
 
