@@ -185,6 +185,26 @@ to be specified with its required arguments.
 
 The following are examples with all actions:
 
+- `SHOW_ACHIEVEMENT` (**WARNING:** this action has been removed since **Minecraft 1.12**):
+  displays an achievement with its text when hovering.
+  It requires the id of the achievement to be passed.
+
+  ```java
+  HoverComponent component = new HoverComponent(
+          "<hover " +
+              "action=\"SHOW_ACHIEVEMENT\" " +
+              // arguments
+              "id=\"achievement.mineWood\"" +
+          ">" +
+              "Show my achievement!" +
+          "</hover>"
+  );
+  // to edit
+  component.setHoverAction(HoverAction.SHOW_ACHIEVEMENT, new Component("achievement.mineWood"));
+  // or
+  String serialized = "<hover action=\"SHOW_ACHIEVEMENT\" id=\"achievement.mineWood\">Show my achievement!</hover>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
 
 ### InsertionComponent
 
