@@ -32,19 +32,7 @@ public abstract class CustomComponent<C extends CustomComponent<C>> extends Opti
      */
     public CustomComponent(final @Nullable String rawText, final @NotNull String tagName) {
         super(rawText, tagName);
-        Component.CONTAINER_COMPONENTS.put(tagName, s -> {
-            try {
-                Constructor<?> constructor = getClass().getDeclaredConstructor(String.class);
-                return (Component) constructor.newInstance(s);
-            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(
-                        String.format("Could not find constructor %s(String). A constructor with String as parameter is required",
-                                getClass().getSimpleName())
-                );
-            }
-        });
+        loadComponent(getClass(), tagName);
     }
 
     /**
@@ -53,5 +41,27 @@ public abstract class CustomComponent<C extends CustomComponent<C>> extends Opti
      * @return the component
      */
     public abstract Component toMinecraft();
+
+    /**
+     * Loads this component in the {@link Component#CONTAINER_COMPONENTS} map.
+     *
+     * @param clazz   the class of the component
+     * @param tagName the tag name
+     */
+    static void loadComponent(@NotNull Class<?> clazz, @NotNull String tagName) {
+        Component.CONTAINER_COMPONENTS.put(tagName, s -> {
+            try {
+                Constructor<?> constructor = clazz.getDeclaredConstructor(String.class);
+                return (Component) constructor.newInstance(s);
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(
+                        String.format("Could not find constructor %s(String). A constructor with String as parameter is required",
+                                clazz.getSimpleName())
+                );
+            }
+        });
+    }
 
 }
