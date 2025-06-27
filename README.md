@@ -205,6 +205,25 @@ The following are examples with all actions:
   String serialized = "<hover action=\"SHOW_ACHIEVEMENT\" id=\"achievement.mineWood\">Show my achievement!</hover>";
   Component deserialized = Component.fromRaw(serialized);
   ```
+  
+- `SHOW_ENTITY`: displays an entity with its name and type.
+  It requires the name, the type and its unique identifier in the world.
+
+  ```java
+  Component component = new HoverComponent(
+          "<hover " +
+              "action=\"SHOW_ENTITY\" " +
+              // arguments
+              "name=\"Doggie\" " +
+              "type=\"wolf\" " +
+              "id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\"" +
+          ">" +
+              "Show my pet!" +
+          "</hover>");
+  //or
+  String serialized = "<hover action=\"SHOW_ENTITY\" name=\"Doggie\" type=\"wolf\" id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\">Show my pet!</hover>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
 
 ### InsertionComponent
 
