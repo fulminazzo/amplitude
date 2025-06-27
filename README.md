@@ -303,6 +303,24 @@ The following are examples with all actions:
   Component deserialized = Component.fromRaw(serialized);
   ```
 
+- `RUN_COMMAND`: forces the player to execute the specified command.
+  It requires the command to run.
+
+  ```java
+  Component component = new ClickComponent(
+          "<click " +
+              "action=\"RUN_COMMAND\" " +
+              // arguments
+              "command=\"say Hello, world!\"" +
+          ">" +
+              "Say hello!" +
+          "</click>"
+  );
+  // or
+  String serialized = "<click action=\"RUN_COMMAND\" command=\"say Hello, world!\">Say hello!</click>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
 ### InsertionComponent
 
 [InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
