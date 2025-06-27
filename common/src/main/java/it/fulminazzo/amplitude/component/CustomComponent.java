@@ -1,0 +1,53 @@
+package it.fulminazzo.amplitude.component;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+/**
+ * Represents a custom {@link OptionComponent} with associated tag.
+ */
+public abstract class CustomComponent extends OptionComponent {
+
+    /**
+     * Instantiates a new Custom component.
+     *
+     * @param tagName the tag name
+     */
+    public CustomComponent(@NotNull String tagName) {
+        this(null, tagName);
+    }
+
+    /**
+     * Instantiates a new Custom component.
+     *
+     * @param rawText the raw text
+     * @param tagName the tag name
+     */
+    public CustomComponent(final @Nullable String rawText, final @NotNull String tagName) {
+        super(rawText, tagName);
+        Component.CONTAINER_COMPONENTS.put(tagName, s -> {
+            try {
+                Constructor<?> constructor = getClass().getDeclaredConstructor(String.class);
+                return (Component) constructor.newInstance(s);
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(
+                        String.format("Could not find constructor %s(String). A constructor with String as parameter is required",
+                                getClass().getSimpleName())
+                );
+            }
+        });
+    }
+
+    /**
+     * Converts the current component to one of the known components in Minecraft.
+     *
+     * @return the component
+     */
+    public abstract Component toMinecraft();
+
+}
