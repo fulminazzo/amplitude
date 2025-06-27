@@ -3,7 +3,7 @@ package it.angrybear.serializer;
 /**
  * An implementation of {@link CharCodeSerializer} that uses <i>&amp;</i> as charCode.
  */
-public class AmpersandSerializer extends CharCodeSerializer {
+public final class AmpersandSerializer extends CharCodeSerializer {
 
     /**
      * Instantiates a new Ampersand serializer.
@@ -11,4 +11,5 @@ public class AmpersandSerializer extends CharCodeSerializer {
     public AmpersandSerializer() {
         super("&");
     }
+
 }

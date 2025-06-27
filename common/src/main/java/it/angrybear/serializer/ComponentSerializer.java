@@ -260,4 +260,5 @@ public abstract class ComponentSerializer {
             throw new RuntimeException(e);
         }
     }
+
 }

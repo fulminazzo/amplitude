@@ -3,7 +3,7 @@ package it.angrybear.serializer;
 /**
  * An implementation of {@link CharCodeSerializer} that uses <i>§</i> as charCode.
  */
-public class SectionSignSerializer extends CharCodeSerializer {
+public final class SectionSignSerializer extends CharCodeSerializer {
 
     /**
      * Instantiates a new Section sign serializer.
@@ -11,4 +11,5 @@ public class SectionSignSerializer extends CharCodeSerializer {
     public SectionSignSerializer() {
         super("§");
     }
+
 }

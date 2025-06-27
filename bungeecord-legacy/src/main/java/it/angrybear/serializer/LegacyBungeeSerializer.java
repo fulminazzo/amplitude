@@ -287,4 +287,5 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         if (!Objects.equals(c2.getColor(), c1.getColor())) return;
         c2.setColor(component.getColor());
     }
+
 }

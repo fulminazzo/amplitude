@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * that it can be used in every version of <a href="https://papermc.io/software/paper">PaperMC</a> from 1.16 and in <a href="https://papermc.io/software/velocity">Velocity</a>.
  */
 @SuppressWarnings("unchecked")
-public class AdventureSerializer extends ComponentSerializer {
+public final class AdventureSerializer extends ComponentSerializer {
 
     @Override
     public @Nullable Component serializeSimpleTextComponent(@Nullable TextComponent component) {
@@ -217,4 +217,5 @@ public class AdventureSerializer extends ComponentSerializer {
             }
         return TextColor.fromHexString(color.getCode());
     }
+
 }

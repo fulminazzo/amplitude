@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  *     <li>removes {@link #correctComponents(TextComponent)} function to allow for Hex colors</li>
  * </ul>
  */
-public class BungeeSerializer extends LegacyBungeeSerializer {
+public final class BungeeSerializer extends LegacyBungeeSerializer {
 
     @Override
     public BaseComponent serializeHoverComponent(@Nullable HoverComponent component) {
@@ -102,4 +102,5 @@ public class BungeeSerializer extends LegacyBungeeSerializer {
     protected void correctComponents(TextComponent component) {
 
     }
+
 }
