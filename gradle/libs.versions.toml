@@ -1,16 +1,16 @@
 [versions]
-lombok = "1.18.20"
-annotations = "24.1.0"
+lombok = "1.18.38"
+annotations = "26.0.2"
 
-json = "2.10.1"
+json = "2.13.1"
 fulmicollection = "1.8.1"
 
-adventure = "4.14.0"
+adventure = "4.23.0"
 
 bungeecord = "1.16-R0.5-SNAPSHOT"
 bungeecord_legacy = "1.15-SNAPSHOT"
 
-junit = "5.9.1"
+junit = "5.11.4"
 # Required for Java 1.8 compatibility
 mockito = "4.11.0"
 
