@@ -174,3 +174,19 @@ Component component = new FontComponent("<font id=ALT>I'm alternative!");
 String serialized = "<font id=ALT>I'm alternative!";
 Component deserialized = Component.fromRaw(serialized);
 ```
+
+### InsertionComponent
+
+[InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
+is a special Minecraft component that is not directly visible,
+but rather it will suggest to the player chat box its content when using shift + left-click.
+
+In this example, interacting with the text <i>"Let's play hide and seek, I start!"</i>
+will insert <i>"Whoops! You found me"</i> in the player chat box.
+
+```java
+Component component = new InsertionComponent("<insertion text=\"Whoops! You found me\">Let's play hide and seek, I start!</insertion>");
+// or
+String serialized = "<insertion text=\"Whoops! You found me\">Let's play hide and seek, I start!</insertion>";
+Component deserialized = Component.fromRaw(serialized);
+```
