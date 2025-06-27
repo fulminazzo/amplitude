@@ -1,6 +1,6 @@
 dependencies {
     api(project(":common"))
 
-    compileOnly(libraries.bungeecord_legacy)
-    testImplementation(libraries.bungeecord_legacy)
+    compileOnly(libs.bungeecord.legacy)
+    testImplementation(libs.bungeecord.legacy)
 }

@@ -1,0 +1,30 @@
+[versions]
+lombok = "1.18.20"
+annotations = "24.1.0"
+
+json = "2.10.1"
+fulmicollection = "1.8.1"
+
+adventure = "4.14.0"
+
+bungeecord = "1.16-R0.5-SNAPSHOT"
+bungeecord_legacy = "1.15-SNAPSHOT"
+
+junit = "5.9.1"
+# Required for Java 1.8 compatibility
+mockito = "4.11.0"
+
+[libraries]
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+
+json = { module = "com.google.code.gson:gson", version.ref = "json" }
+fulmicollection = { module = "it.fulminazzo:FulmiCollection", version.ref = "fulmicollection" }
+
+adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+
+bungeecord = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord" }
+bungeecord_legacy = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord_legacy" }
+
+junit-platform = { module = "org.junit:junit-bom", version.ref = "junit" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
