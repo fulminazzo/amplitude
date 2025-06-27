@@ -2,7 +2,7 @@ package it.angrybear.components;
 
 import com.google.gson.Gson;
 import it.angrybear.exceptions.MissingRequiredOptionException;
-import it.angrybear.interfaces.validators.OptionValidator;
+import it.angrybear.validator.OptionValidator;
 import it.angrybear.utils.StringUtils;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

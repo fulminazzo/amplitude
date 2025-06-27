@@ -1,7 +1,7 @@
 package it.angrybear.interfaces;
 
-import it.angrybear.interfaces.validators.EnumValidator;
-import it.angrybear.interfaces.validators.OptionValidator;
+import it.angrybear.validator.EnumValidator;
+import it.angrybear.validator.OptionValidator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

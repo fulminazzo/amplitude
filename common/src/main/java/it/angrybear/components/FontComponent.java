@@ -1,7 +1,7 @@
 package it.angrybear.components;
 
-import it.angrybear.interfaces.validators.FontValidator;
-import it.angrybear.interfaces.validators.OptionValidator;
+import it.angrybear.validator.FontValidator;
+import it.angrybear.validator.OptionValidator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

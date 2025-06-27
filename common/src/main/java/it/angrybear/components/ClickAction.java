@@ -2,9 +2,9 @@ package it.angrybear.components;
 
 import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.interfaces.IAction;
-import it.angrybear.interfaces.validators.IntegerValidator;
-import it.angrybear.interfaces.validators.OptionValidator;
-import it.angrybear.interfaces.validators.URLValidator;
+import it.angrybear.validator.IntegerValidator;
+import it.angrybear.validator.OptionValidator;
+import it.angrybear.validator.URLValidator;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

@@ -2,7 +2,7 @@ package it.angrybear.components;
 
 import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.exceptions.MissingRequiredOptionException;
-import it.angrybear.interfaces.validators.OptionValidator;
+import it.angrybear.validator.OptionValidator;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
