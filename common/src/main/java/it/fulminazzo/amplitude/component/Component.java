@@ -1,5 +1,6 @@
 package it.fulminazzo.amplitude.component;
 
+import it.fulminazzo.amplitude.converter.ComponentConverter;
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +85,16 @@ public class Component {
      */
     public Component(String rawText) {
         setContent(rawText);
+    }
+
+    /**
+     * Sends the current component to the player.
+     *
+     * @param <P>    the player type
+     * @param player the player
+     */
+    public <P> void send(final @NotNull P player) {
+        ComponentConverter.converter().send(player, this);
     }
 
     /**
