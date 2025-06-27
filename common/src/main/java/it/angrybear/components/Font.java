@@ -1,4 +1,4 @@
-package it.angrybear.enums;
+package it.angrybear.components;
 
 public enum Font {
     DEFAULT,

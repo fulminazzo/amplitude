@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.Color;
 import it.angrybear.interfaces.validators.HexColorValidator;
 import it.angrybear.interfaces.validators.OptionValidator;
 import org.jetbrains.annotations.NotNull;

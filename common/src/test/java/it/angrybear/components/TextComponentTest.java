@@ -1,8 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.Color;
-import it.angrybear.enums.Font;
-import it.angrybear.enums.Style;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

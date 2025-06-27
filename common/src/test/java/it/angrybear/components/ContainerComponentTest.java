@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.Color;
 import it.angrybear.exceptions.InvalidComponentException;
 import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.exceptions.MissingRequiredOptionException;

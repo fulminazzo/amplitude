@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.Font;
 import it.angrybear.exceptions.InvalidOptionException;
 import org.junit.jupiter.api.Test;
 

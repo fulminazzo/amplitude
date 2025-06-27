@@ -1,9 +1,9 @@
 package it.angrybear.serializers;
 
 import it.angrybear.components.*;
-import it.angrybear.enums.Color;
-import it.angrybear.enums.Font;
-import it.angrybear.enums.Style;
+import it.angrybear.components.Color;
+import it.angrybear.components.Font;
+import it.angrybear.components.Style;
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

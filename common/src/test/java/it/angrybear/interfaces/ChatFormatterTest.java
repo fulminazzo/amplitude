@@ -1,6 +1,6 @@
 package it.angrybear.interfaces;
 
-import it.angrybear.enums.Style;
+import it.angrybear.components.Style;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

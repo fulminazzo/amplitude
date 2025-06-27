@@ -1,4 +1,4 @@
-package it.angrybear.enums;
+package it.angrybear.components;
 
 import it.angrybear.interfaces.ChatFormatter;
 import lombok.Getter;

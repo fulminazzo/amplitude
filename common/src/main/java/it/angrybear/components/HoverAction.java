@@ -1,4 +1,4 @@
-package it.angrybear.enums;
+package it.angrybear.components;
 
 import it.angrybear.interfaces.IAction;
 import it.angrybear.interfaces.validators.ByteValidator;

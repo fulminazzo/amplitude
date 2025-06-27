@@ -1,6 +1,6 @@
 package it.angrybear.interfaces.validators;
 
-import it.angrybear.enums.Font;
+import it.angrybear.components.Font;
 import it.angrybear.exceptions.InvalidOptionException;
 
 public class FontValidator implements OptionValidator {

@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.Color;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

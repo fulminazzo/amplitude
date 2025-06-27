@@ -1,4 +1,4 @@
-package it.angrybear.enums;
+package it.angrybear.components;
 
 import it.angrybear.exceptions.InvalidOptionException;
 import it.angrybear.interfaces.IAction;

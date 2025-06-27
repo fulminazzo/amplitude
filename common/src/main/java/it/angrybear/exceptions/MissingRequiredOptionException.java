@@ -1,10 +1,13 @@
 package it.angrybear.exceptions;
 
+import it.angrybear.components.ClickAction;
+import it.angrybear.components.HoverAction;
+
 import java.util.Map;
 
 /**
  * An exception thrown when a required option is not given.
- * Check {@link it.angrybear.enums.ClickAction} and {@link it.angrybear.enums.HoverAction} for more.
+ * Check {@link ClickAction} and {@link HoverAction} for more.
  */
 public class MissingRequiredOptionException extends RuntimeException {
 

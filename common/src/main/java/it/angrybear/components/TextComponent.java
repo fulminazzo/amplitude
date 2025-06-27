@@ -1,8 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.Color;
-import it.angrybear.enums.Font;
-import it.angrybear.enums.Style;
 import it.angrybear.interfaces.ChatFormatter;
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import lombok.Getter;

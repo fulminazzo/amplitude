@@ -1,6 +1,5 @@
 package it.angrybear.components;
 
-import it.angrybear.enums.Font;
 import it.angrybear.interfaces.validators.FontValidator;
 import it.angrybear.interfaces.validators.OptionValidator;
 import org.jetbrains.annotations.NotNull;

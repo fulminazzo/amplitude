@@ -1,12 +1,14 @@
 package it.angrybear.interfaces;
 
+import it.angrybear.components.ClickAction;
+import it.angrybear.components.HoverAction;
 import it.angrybear.interfaces.validators.OptionValidator;
 
 import java.util.Map;
 
 /**
  * An interface used for identifying Minecraft events actions.
- * See {@link it.angrybear.enums.ClickAction} and {@link it.angrybear.enums.HoverAction} for the implementations.
+ * See {@link ClickAction} and {@link HoverAction} for the implementations.
  */
 public interface IAction {
 

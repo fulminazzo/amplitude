@@ -1,7 +1,7 @@
 package it.angrybear.interfaces;
 
-import it.angrybear.enums.Color;
-import it.angrybear.enums.Style;
+import it.angrybear.components.Color;
+import it.angrybear.components.Style;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
