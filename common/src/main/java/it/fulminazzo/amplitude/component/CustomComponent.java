@@ -8,6 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * Represents a custom {@link OptionComponent} with associated tag.
+ * <br>
+ * WARNING: before serializing and deserializing, at least one instance must be created.
  */
 public abstract class CustomComponent extends OptionComponent {
 
