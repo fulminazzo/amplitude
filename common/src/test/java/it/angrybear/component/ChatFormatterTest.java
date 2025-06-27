@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ChatFormatterTest {
 
     @ParameterizedTest
-    @MethodSource("it.angrybear.enums.Color#values")
+    @MethodSource("it.angrybear.component.Color#values")
     void testGetFormatterFromName(ChatFormatter formatter) {
         assertEquals(formatter, ChatFormatter.getChatFormatter(formatter.getName()));
     }
