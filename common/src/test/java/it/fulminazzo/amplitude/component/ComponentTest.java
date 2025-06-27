@@ -14,6 +14,20 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class ComponentTest {
 
+    @Test
+    void testFromRawSupportsAmpersandAndSectionSign() {
+        String raw = "&dHello, §cworld!";
+
+        Component component = Component.fromRaw(raw);
+        Component expected = new Component("Hello, ");
+        expected.setColor(Color.LIGHT_PURPLE);
+        Component expected2 = new Component("world!");
+        expected2.setColor(Color.RED);
+        expected.addNext(expected2);
+
+        assertEquals(expected, component);
+    }
+
     static Object[][] getTestFromRawParameters() {
         return new Object[][]{
                 new Object[]{Component.class, "<red>Hello world"},
