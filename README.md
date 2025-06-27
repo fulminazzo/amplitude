@@ -8,7 +8,7 @@ It is a **facade** for all the available **Minecraft server plugins** messaging 
   for [Velocity](https://papermc.io/software/velocity) (and [Kyori Adventure](https://docs.advntr.dev/) in general).
 
 Thanks to this project, it is possible to write player messages only once and see it work on all
-the platforms described above. Check out the [wiki](./wiki) for more.
+the platforms described above. Check out the [wiki](../../wiki) for more.
 
 **Amplitude** can be imported using one of the three common methods:
 
