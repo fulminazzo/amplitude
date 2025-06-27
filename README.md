@@ -358,6 +358,24 @@ The following are examples with all actions:
   Component deserialized = Component.fromRaw(serialized);
   ```
 
+- `COPY_TO_CLIPBOARD`: copies the specified text in the user clipboard.
+  It requires the text to copy.
+
+  ```java
+  Component component = new ClickComponent(
+          "<click " +
+              "action=\"COPY_TO_CLIPBOARD\" " +
+              // arguments
+              "text=\"No, you haven't\"" +
+          ">" +
+              "Have I been hacked?" +
+          "</click>"
+  );
+  // or
+  String serialized = "<click action=\"COPY_TO_CLIPBOARD\" text=\"No, you haven't\">Have I been hacked?</click>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
+
 ### InsertionComponent
 
 [InsertionComponent](../main/common/src/main/java/it/fulminazzo/amplitude/component/InsertionComponent.java)
