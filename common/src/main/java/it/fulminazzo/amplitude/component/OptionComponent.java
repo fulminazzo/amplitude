@@ -73,7 +73,7 @@ abstract class OptionComponent extends Component {
      *
      * @param rawText the raw text
      */
-    public void setOptions(@Nullable String rawText) {
+    protected void setOptions(@Nullable String rawText) {
         this.tagOptions.clear();
 
         String rawOptions = rawText;
@@ -175,13 +175,13 @@ abstract class OptionComponent extends Component {
      * @param tagName the tag name
      * @return the tag regex
      */
-    public static @NotNull Pattern getTagRegex(String tagName) {
+    public static @NotNull Pattern getTagRegex(final @NotNull String tagName) {
         String regex = "<" + tagName + " ?((?:(?!<" + tagName + ")(?!</" + tagName + ">).)*)";
         return Pattern.compile(regex);
     }
 
     @Override
-    public boolean contains(@NotNull Component component) {
+    public boolean contains(final @NotNull Component component) {
         if (this.getClass().equals(component.getClass())) {
             if (!super.contains(component)) return false;
             return this.getTagOptions().equals(((OptionComponent) component).getTagOptions());

@@ -203,7 +203,7 @@ public class Component {
      *
      * @param component the text component
      */
-    public void setSameOptions(@Nullable Component component) {
+    void setSameOptions(@Nullable Component component) {
         if (component == null) return;
 
         if (isReset() || component.isReset()) return;
@@ -233,7 +233,7 @@ public class Component {
      *
      * @return the objects
      */
-    public Object @NotNull [] getOptions() {
+    Object @NotNull [] getOptions() {
         List<Object> objects = new ArrayList<>();
         for (Field field : getOptionFields()) {
             try {
@@ -251,7 +251,7 @@ public class Component {
      *
      * @return the fields
      */
-    public Field @NotNull [] getOptionFields() {
+    Field @NotNull [] getOptionFields() {
         List<Field> fields = new ArrayList<>();
         Class<?> clazz = this.getClass();
         while (Component.class.isAssignableFrom(clazz)) {
@@ -529,7 +529,7 @@ public class Component {
      *
      * @param style the style
      */
-    public void setStyle(Style style) {
+    public void setStyle(@Nullable Style style) {
         setStyle(style, true);
     }
 
@@ -572,7 +572,7 @@ public class Component {
      * @param to   the replacement
      * @return the text component
      */
-    public Component replace(final @NotNull Component from, final @NotNull Component to) {
+    public @NotNull Component replace(final @NotNull Component from, final @NotNull Component to) {
         return replace(from, to, false);
     }
 
@@ -583,7 +583,7 @@ public class Component {
      * @param to   the replacement
      * @return the text component
      */
-    public Component replace(final @NotNull String from, final @NotNull String to) {
+    public @NotNull Component replace(final @NotNull String from, final @NotNull String to) {
         return replace(from, to, false);
     }
 
@@ -595,7 +595,7 @@ public class Component {
      * @param maintainColor if true, colors preceding the replacement will be put next to it.
      * @return the text component
      */
-    public Component replace(final @NotNull Component from, final @NotNull Component to, final boolean maintainColor) {
+    public @NotNull Component replace(final @NotNull Component from, final @NotNull Component to, final boolean maintainColor) {
         return replace(from.serialize(), to.serialize(), maintainColor);
     }
 
@@ -711,7 +711,7 @@ public class Component {
      * @param component the text component
      * @return true only if all the styles, font and color applied to this component are also applied to the given one
      */
-    public boolean compareOptions(@NotNull Component component) {
+    boolean compareOptions(@NotNull Component component) {
         if (color != null && !color.equals(component.color)) return false;
         if (font != null && !font.equals(component.font)) return false;
         if (obfuscated != null && !obfuscated.equals(component.obfuscated)) return false;
@@ -795,14 +795,16 @@ public class Component {
             Constructor<T> constructor = clazz.getConstructor(String.class);
             constructor.setAccessible(true);
             return constructor.newInstance(serialize);
-        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException |
+                 InvocationTargetException e) {
             try {
                 Constructor<T> constructor = clazz.getConstructor();
                 constructor.setAccessible(true);
                 T t = constructor.newInstance();
                 t.setContent(serialize);
                 return t;
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException ex) {
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException |
+                     InvocationTargetException ex) {
                 throw new RuntimeException(e);
             }
         }
@@ -886,4 +888,5 @@ public class Component {
         if (component == null) return null;
         else return component.serialize();
     }
+
 }

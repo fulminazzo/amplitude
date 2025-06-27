@@ -6,6 +6,7 @@ import it.fulminazzo.amplitude.component.validator.OptionValidator;
 import it.fulminazzo.amplitude.component.validator.URLValidator;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.HashMap;
@@ -70,8 +71,9 @@ public enum ClickAction implements IAction {
 
     private final @NotNull Map<String, OptionValidator> requiredOptions;
 
-    ClickAction(String requiredOption, OptionValidator validator) {
+    ClickAction(final @NotNull String requiredOption, final @Nullable OptionValidator validator) {
         this.requiredOptions = new HashMap<>();
         this.requiredOptions.put(requiredOption, validator);
     }
+
 }

@@ -37,7 +37,7 @@ public final class HexComponent extends OptionComponent {
     }
 
     @Override
-    public void setOptions(final @Nullable String rawText) {
+    protected void setOptions(final @Nullable String rawText) {
         super.setOptions(rawText);
         setColor(new Color(getHexColor()));
     }

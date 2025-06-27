@@ -47,7 +47,7 @@ public final class TranslatableComponent extends ContainerComponent {
     }
 
     @Override
-    public void setOptions(final @Nullable String rawText) {
+    protected void setOptions(final @Nullable String rawText) {
         super.setOptions(rawText);
 
         final String rawArguments = getTagOption("arguments");
@@ -57,7 +57,7 @@ public final class TranslatableComponent extends ContainerComponent {
     }
 
     @Override
-    public Field @NotNull [] getOptionFields() {
+    protected Field @NotNull [] getOptionFields() {
         return Arrays.stream(super.getOptionFields()).filter(f -> !f.getName().equals("arguments")).toArray(Field[]::new);
     }
 

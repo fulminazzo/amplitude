@@ -68,4 +68,5 @@ public enum HoverAction implements IAction {
         for (int i = 0; i < requiredOptions.length; i += 2)
             this.requiredOptions.put((String) requiredOptions[i], (OptionValidator) requiredOptions[i + 1]);
     }
+
 }

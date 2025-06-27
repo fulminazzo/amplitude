@@ -29,7 +29,7 @@ public final class FontComponent extends OptionComponent {
     }
 
     @Override
-    public void setOptions(final @Nullable String rawText) {
+    protected void setOptions(final @Nullable String rawText) {
         super.setOptions(rawText);
         setFont(Font.valueOf(getFontID()));
     }
