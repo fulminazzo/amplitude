@@ -2,14 +2,24 @@ package it.angrybear.components;
 
 import it.angrybear.components.validator.EnumValidator;
 import it.angrybear.components.validator.OptionValidator;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface IEventComponent {
+/**
+ * Represents a component bound to an event.
+ */
+interface IEventComponent {
 
+    /**
+     * Gets the required options of the component.
+     *
+     * @param <T> the type of the {@link #getActionClass()}
+     * @return the required options
+     */
     @SuppressWarnings("unchecked")
     default <T extends Enum<T>> Map<String, OptionValidator> getRequiredOptions() {
         HashMap<String, OptionValidator> requiredOptions = new HashMap<>();
@@ -32,8 +42,18 @@ public interface IEventComponent {
         return requiredOptions;
     }
 
-    Class<? extends IAction> getActionClass();
+    /**
+     * Gets the associated action class.
+     *
+     * @return the action class
+     */
+    @NotNull Class<? extends IAction> getActionClass();
 
-    Map<String, String> getTagOptions();
+    /**
+     * Gets tag options.
+     *
+     * @return the tag options
+     */
+    @NotNull Map<String, String> getTagOptions();
 
 }

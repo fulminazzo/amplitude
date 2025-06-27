@@ -10,7 +10,7 @@ import java.util.stream.Stream;
  * An interface used for identifying Minecraft chat formatters.
  * See {@link Color} and {@link Style} for the implementations.
  */
-public interface ChatFormatter {
+interface ChatFormatter {
 
     /**
      * Gets the lowercase name.

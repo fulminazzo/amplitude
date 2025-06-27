@@ -9,7 +9,7 @@ import java.util.Map;
  * An interface used for identifying Minecraft events actions.
  * See {@link ClickAction} and {@link HoverAction} for the implementations.
  */
-public interface IAction {
+interface IAction {
 
     /**
      * Gets a map containing the required options.
