@@ -285,6 +285,23 @@ to be specified with its required arguments.
 
 The following are examples with all actions:
 
+- `OPEN_URL`: opens a link in the user browser.
+  It requires the url to open.
+
+  ```java
+  Component component = new ClickComponent(
+          "<click " +
+              "action=\"OPEN_URL\" " +
+              // arguments
+              "url=\"https://fulminazzo.it\"" +
+          ">" +
+              "Open the server website!" +
+          "</click>"
+  );
+  // or
+  String serialized = "<click action=\"OPEN_URL\" url=\"https://fulminazzo.it\">Open the server website!</click>";
+  Component deserialized = Component.fromRaw(serialized);
+  ```
 
 ### InsertionComponent
 
