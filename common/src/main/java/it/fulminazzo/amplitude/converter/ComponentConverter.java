@@ -257,7 +257,7 @@ public abstract class ComponentConverter {
         Class<?> tmp = this.getClass();
         while (tmp != null) {
             Method method = Stream.concat(Arrays.stream(tmp.getDeclaredMethods()), Arrays.stream(tmp.getMethods()))
-                    .filter(m -> m.getName().startsWith("serialize"))
+                    .filter(m -> m.getName().startsWith("convert"))
                     .filter(m -> m.getParameterCount() == 1)
                     .filter(m -> m.getParameterTypes()[0].equals(component.getClass()))
                     .findFirst().orElse(null);
