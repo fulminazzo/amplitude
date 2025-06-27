@@ -73,7 +73,7 @@ public abstract class ComponentSerializer {
     /**
      * Serialize a general {@link Component} and its siblings.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
@@ -100,7 +100,7 @@ public abstract class ComponentSerializer {
     /**
      * Serialize a {@link Component}.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
@@ -109,7 +109,7 @@ public abstract class ComponentSerializer {
     /**
      * Serialize a {@link HoverComponent}.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
@@ -118,7 +118,7 @@ public abstract class ComponentSerializer {
     /**
      * Serialize a {@link ClickComponent}.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
@@ -127,7 +127,7 @@ public abstract class ComponentSerializer {
     /**
      * Serialize a {@link HexComponent}.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
@@ -136,7 +136,7 @@ public abstract class ComponentSerializer {
     /**
      * Serialize a {@link InsertionComponent}.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
@@ -145,7 +145,7 @@ public abstract class ComponentSerializer {
     /**
      * Serialize a {@link FontComponent}.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
@@ -154,16 +154,27 @@ public abstract class ComponentSerializer {
     /**
      * Serialize a {@link TranslatableComponent}.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the output
      */
     public abstract <T> @Nullable T serializeTranslateComponent(TranslatableComponent component);
 
     /**
+     * Serialize a {@link CustomComponent}.
+     *
+     * @param <T>       the type of the component
+     * @param component the component
+     * @return the t
+     */
+    public <T> @Nullable T serializeCustomComponent(CustomComponent component) {
+        return serializeComponent(component.toMinecraft());
+    }
+
+    /**
      * Sum two serialized components.
      *
-     * @param <T>        the type parameter
+     * @param <T>        the type of the component
      * @param component1 the first component
      * @param component2 the second component
      * @return the result component
@@ -173,7 +184,7 @@ public abstract class ComponentSerializer {
     /**
      * Apply the specified color to the component.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @param color     the color
      * @return the result component
@@ -183,7 +194,7 @@ public abstract class ComponentSerializer {
     /**
      * According to the value, apply or remove the specified style to the component.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @param style     the style
      * @param value     the value
@@ -194,7 +205,7 @@ public abstract class ComponentSerializer {
     /**
      * Apply the specified font to the component.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @param font      the font
      * @return the result component
@@ -204,7 +215,7 @@ public abstract class ComponentSerializer {
     /**
      * Reset the component style and colors.
      *
-     * @param <T>       the type parameter
+     * @param <T>       the type of the component
      * @param component the component
      * @return the result component
      */
@@ -221,7 +232,7 @@ public abstract class ComponentSerializer {
     /**
      * Send to player.
      *
-     * @param <P>       the type parameter
+     * @param <P>       the type of the component
      * @param player    the player
      * @param component the component
      */
@@ -235,8 +246,8 @@ public abstract class ComponentSerializer {
     /**
      * Send to player.
      *
-     * @param <T>       the type parameter
-     * @param <P>       the type parameter
+     * @param <T>       the type of the component
+     * @param <P>       the type of the component
      * @param player    the player
      * @param component the component
      */
