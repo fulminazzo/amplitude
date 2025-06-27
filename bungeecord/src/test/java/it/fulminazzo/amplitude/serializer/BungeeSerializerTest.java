@@ -2,7 +2,7 @@ package it.fulminazzo.amplitude.serializer;
 
 import it.fulminazzo.amplitude.component.HexComponent;
 import it.fulminazzo.amplitude.component.HoverComponent;
-import it.fulminazzo.amplitude.component.TextComponent;
+import it.fulminazzo.amplitude.component.Component;
 import it.fulminazzo.amplitude.component.ClickAction;
 import it.fulminazzo.amplitude.component.HoverAction;
 import net.md_5.bungee.api.ChatColor;
@@ -143,7 +143,7 @@ class BungeeSerializerTest {
             rawText += String.format("<hover action=%s %s>%s</hover> ", action, option, text);
         }
 
-        TextComponent c1 = new TextComponent(rawText);
+        Component c1 = new Component(rawText);
         BaseComponent c = serializer.serializeComponent(c1);
         assertNotNull(c);
         assertEquals(c2.toString(), c.toString(), rawText);

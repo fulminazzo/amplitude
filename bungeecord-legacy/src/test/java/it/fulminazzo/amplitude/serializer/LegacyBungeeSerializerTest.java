@@ -136,7 +136,7 @@ class LegacyBungeeSerializerTest {
             rawText += String.format("<hover action=%s %s>%s</hover> ", action, option, text);
         }
 
-        TextComponent c1 = new TextComponent(rawText);
+        Component c1 = new Component(rawText);
         BaseComponent c = serializer.serializeComponent(c1);
         assertNotNull(c);
         assertEquals(c2.toString(), c.toString(), rawText);
@@ -145,10 +145,10 @@ class LegacyBungeeSerializerTest {
     @Test
     void testSimpleComponent() {
         String rawText = "Hello world";
-        TextComponent c1 = new TextComponent("<red>" + rawText);
+        Component c1 = new Component("<red>" + rawText);
         BaseComponent c2 = new net.md_5.bungee.api.chat.TextComponent(rawText);
         c2.setColor(ChatColor.RED);
-        assertEquals(c2, serializer.serializeSimpleTextComponent(c1));
+        assertEquals(c2, serializer.serializeSimpleComponent(c1));
     }
 
     @ParameterizedTest
@@ -206,7 +206,7 @@ class LegacyBungeeSerializerTest {
 
     @Test
     void testSend() {
-        TextComponent component = new TextComponent("This is an example");
+        Component component = new Component("This is an example");
         ProxiedPlayer player = mock(ProxiedPlayer.class);
         serializer.send(player, component);
         verify(player, atLeastOnce()).sendMessage((BaseComponent) serializer.serializeComponent(component));

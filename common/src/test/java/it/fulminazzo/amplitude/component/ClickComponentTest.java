@@ -52,9 +52,9 @@ class ClickComponentTest {
     @Test
     void testSameOptions() {
         String rawText = "<red><click action=RUN_COMMAND command=\"say Hello\">Inner text</click>";
-        TextComponent textComponent = new TextComponent(rawText);
-        ClickComponent component = (ClickComponent) textComponent.getNext();
+        Component component = new Component(rawText);
+        ClickComponent clickComponent = (ClickComponent) component.getNext();
         assertEquals(Color.RED, component.getColor());
-        assertEquals(Color.RED, component.getChild().getColor());
+        assertEquals(Color.RED, clickComponent.getChild().getColor());
     }
 }

@@ -3,14 +3,13 @@ package it.fulminazzo.amplitude.serializer;
 import it.fulminazzo.amplitude.component.ClickComponent;
 import it.fulminazzo.amplitude.component.HexComponent;
 import it.fulminazzo.amplitude.component.HoverComponent;
-import it.fulminazzo.amplitude.component.TextComponent;
+import it.fulminazzo.amplitude.component.Component;
 import it.fulminazzo.amplitude.component.ClickAction;
 import it.fulminazzo.amplitude.component.HoverAction;
 import it.fulminazzo.amplitude.exception.InvalidOptionException;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -48,13 +47,13 @@ class AdventureSerializerTest {
                         HoverEvent.showAchievement("achievement.mineWood"), "id=achievement.mineWood"
                 },
                 new Object[]{HoverAction.SHOW_TEXT,
-                        HoverEvent.showText(Component.text("Hello friend!")),
+                        HoverEvent.showText(net.kyori.adventure.text.Component.text("Hello friend!")),
                         "text=\"Hello friend!\""
                 },
                 new Object[]{HoverAction.SHOW_ENTITY,
                         HoverEvent.showEntity(Key.key("zombie"),
                                 UUID.fromString("3f8164bf-1ed-4bcb-96be-7033beed028c"),
-                                Component.text("Zombie")),
+                                net.kyori.adventure.text.Component.text("Zombie")),
                         "id=\"3f8164bf-1ed-4bcb-96be-7033beed028c\" type=\"zombie\" name=\"Zombie\""
                 },
                 new Object[]{HoverAction.SHOW_ITEM,
@@ -77,22 +76,22 @@ class AdventureSerializerTest {
                 + "<translatable arguments=\"Diamond Sword&1&\\\"Alex & Friends\\\"\">commands.give.successful.single</translatable>"
                 ;
 
-        Component c2 = Component.text("").color(NamedTextColor.RED);
-        c2 = addExtra(c2, Component.text("Hello world, ")
+        net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text("").color(NamedTextColor.RED);
+        c2 = addExtra(c2, net.kyori.adventure.text.Component.text("Hello world, ")
                 .color(NamedTextColor.RED)
                 .decorate(TextDecoration.BOLD));
-        c2 = addExtra(c2, Component.text("are you ready? ")
+        c2 = addExtra(c2, net.kyori.adventure.text.Component.text("are you ready? ")
                 .color(TextColor.fromHexString("#FF00AA"))
                 .decorate(TextDecoration.BOLD));
-        c2 = addExtra(c2, Component.text("Hope you are... ")
+        c2 = addExtra(c2, net.kyori.adventure.text.Component.text("Hope you are... ")
                 .color(TextColor.fromHexString("#FF00AA"))
                 .decorate(TextDecoration.BOLD));
-        c2 = addExtra(c2, Component.text("or else... ")
+        c2 = addExtra(c2, net.kyori.adventure.text.Component.text("or else... ")
                 .color(TextColor.fromHexString("#FF00AA"))
                 .decorate(TextDecoration.BOLD)
                 .font(Key.key("illageralt"))
         );
-        c2 = addExtra(c2, Component.text("This should be reset. ")
+        c2 = addExtra(c2, net.kyori.adventure.text.Component.text("This should be reset. ")
                 .color(NamedTextColor.WHITE)
                 .decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
@@ -101,11 +100,11 @@ class AdventureSerializerTest {
                 .decoration(TextDecoration.UNDERLINED, TextDecoration.State.FALSE)
                 .font(Key.key("default"))
         );
-        c2 = addExtra(c2, Component.text("Insert DEMO ")
+        c2 = addExtra(c2, net.kyori.adventure.text.Component.text("Insert DEMO ")
                 .insertion("Hello there!")
         );
-        c2 = addExtra(c2, Component.translatable("commands.give.successful.single").args(
-                Component.text("Diamond Sword"), Component.text("1"), Component.text("Alex & Friends")
+        c2 = addExtra(c2, net.kyori.adventure.text.Component.translatable("commands.give.successful.single").args(
+                net.kyori.adventure.text.Component.text("Diamond Sword"), net.kyori.adventure.text.Component.text("1"), net.kyori.adventure.text.Component.text("Alex & Friends")
         ));
 
         for (Object[] objects : getClickTests()) {
@@ -117,17 +116,17 @@ class AdventureSerializerTest {
             final String text = String.format("Click %s Demo", action.name());
             final String required = new ArrayList<>(action.getRequiredOptions().keySet()).get(0);
 
-            Component c = Component.text(text)
+            net.kyori.adventure.text.Component c = net.kyori.adventure.text.Component.text(text)
                     .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.valueOf(action.name()), option));
             c2 = addExtra(c2, c);
 
             if (!action.equals(ClickAction.COPY_TO_CLIPBOARD))
-                c2 = addExtra(c2, Component.text(" "));
+                c2 = addExtra(c2, net.kyori.adventure.text.Component.text(" "));
 
             rawText += String.format("<click action=%s %s=\"%s\">%s</click> ", action, required, option, text);
         }
 
-        c2 = addExtra(c2, Component.text(" "));
+        c2 = addExtra(c2, net.kyori.adventure.text.Component.text(" "));
 
         for (Object[] objects : getHoverTests()) {
             HoverAction action = (HoverAction) objects[0];
@@ -136,17 +135,17 @@ class AdventureSerializerTest {
 
             final String text = String.format("Hover %s Demo", action.name());
 
-            Component component = Component.text(text).hoverEvent(hoverEvent);
+            net.kyori.adventure.text.Component component = net.kyori.adventure.text.Component.text(text).hoverEvent(hoverEvent);
             c2 = addExtra(c2, component);
 
             if (!action.equals(HoverAction.SHOW_ITEM))
-                c2 = addExtra(c2, Component.text(" "));
+                c2 = addExtra(c2, net.kyori.adventure.text.Component.text(" "));
 
             rawText += String.format("<hover action=%s %s>%s</hover> ", action, option, text);
         }
 
-        TextComponent c1 = new TextComponent(rawText);
-        Component c = serializer.serializeComponent(c1);
+        Component c1 = new Component(rawText);
+        net.kyori.adventure.text.Component c = serializer.serializeComponent(c1);
         assertNotNull(c);
         assertEquals(c2, c, rawText);
     }
@@ -154,10 +153,10 @@ class AdventureSerializerTest {
     @Test
     void testSimpleComponent() {
         String rawText = "Hello world";
-        TextComponent c1 = new TextComponent("<red>" + rawText);
-        Component c2 = Component.text(rawText);
+        Component c1 = new Component("<red>" + rawText);
+        net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text(rawText);
         c2 = c2.color(NamedTextColor.RED);
-        assertEquals(c2, serializer.serializeSimpleTextComponent(c1));
+        assertEquals(c2, serializer.serializeSimpleComponent(c1));
     }
 
     @ParameterizedTest
@@ -167,7 +166,7 @@ class AdventureSerializerTest {
             ClickComponent c1 = new ClickComponent("<click action=" + action + " " +
                     new ArrayList<>(action.getRequiredOptions().keySet()).get(0) +
                     "=\"" + option + "\">Test</click>");
-            Component c2 = Component.text("Test");
+            net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text("Test");
             c2 = c2.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.valueOf(action.name()), option));
             assertEquals(c2, serializer.serializeClickComponent(c1));
         };
@@ -180,7 +179,7 @@ class AdventureSerializerTest {
     @MethodSource("getHoverTests")
     void testHoverComponent(HoverAction action, HoverEvent<?> hoverEvent, String options) {
         HoverComponent c1 = new HoverComponent("<hover action=" + action + " " + options + ">Test</hover>");
-        Component c2 = Component.text("Test");
+        net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text("Test");
         c2 = c2.hoverEvent(hoverEvent);
         assertEquals(c2, serializer.serializeHoverComponent(c1));
     }
@@ -190,14 +189,14 @@ class AdventureSerializerTest {
         String color = "#FF00AA";
         String rawText = "Hello world";
         HexComponent c1 = new HexComponent("<hex color=" + color + ">" + rawText);
-        Component c2 = Component.text(rawText)
+        net.kyori.adventure.text.Component c2 = net.kyori.adventure.text.Component.text(rawText)
                         .color(TextColor.fromHexString(color));
         assertEquals(c2, serializer.serializeHexComponent(c1));
     }
 
     @Test
     void testSend() {
-        TextComponent component = new TextComponent("This is an example");
+        Component component = new Component("This is an example");
         Audience player = mock(Audience.class);
         serializer.send(player, component);
         verify(player, atLeastOnce()).sendMessage(serializer.serializeComponent(component));
@@ -208,8 +207,8 @@ class AdventureSerializerTest {
         assertEquals(AdventureSerializer.class, ComponentSerializer.serializer().getClass());
     }
 
-    private Component addExtra(Component c1, Component c2) {
-        List<Component> children = new ArrayList<>(c1.children());
+    private net.kyori.adventure.text.Component addExtra(net.kyori.adventure.text.Component c1, net.kyori.adventure.text.Component c2) {
+        List<net.kyori.adventure.text.Component> children = new ArrayList<>(c1.children());
         if (children.isEmpty()) return c1.append(c2);
         else {
             children.set(children.size() - 1, addExtra(children.get(children.size() - 1), c2));

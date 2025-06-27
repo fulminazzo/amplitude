@@ -31,16 +31,16 @@ public class ContainTest {
     @ParameterizedTest
     @MethodSource("getContainsTests")
     void testTextContains(String raw) {
-        TextComponent t1 = TextComponent.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
-        TextComponent t2 = TextComponent.fromRaw(raw);
+        Component t1 = Component.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
+        Component t2 = Component.fromRaw(raw);
         assertTrue(t1.contains(t2));
     }
 
     @ParameterizedTest
     @MethodSource("getDoesNotContainTests")
     void testTextDoesNotContain(String raw) {
-        TextComponent t1 = TextComponent.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
-        TextComponent t2 = TextComponent.fromRaw(raw);
+        Component t1 = Component.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
+        Component t2 = Component.fromRaw(raw);
         assertFalse(t1.contains(t2));
     }
 
@@ -54,9 +54,9 @@ public class ContainTest {
                 + "<reset>This should be reset,"
                 + "<insertion text=\"Hello there!\">Insert DEMO </insertion>,"
                 + "<translatable arguments=\"Diamond Sword&1&\\\"Alex & Friends\\\"\">commands.give.successful.single</translatable>";
-        TextComponent t1 = TextComponent.fromRaw(rawText);
+        Component t1 = Component.fromRaw(rawText);
         for (String t : rawText.split(","))
-            assertTrue(t1.contains(TextComponent.fromRaw(t)),
+            assertTrue(t1.contains(Component.fromRaw(t)),
                     String.format("Raw text did not contain \"%s\"", t));
     }
 }

@@ -26,11 +26,11 @@ import java.util.regex.Pattern;
  *     <li>&#60;hover&#62; which creates a new {@link HoverComponent}</li>
  * </ul>
  */
-public class TextComponent {
-    public static final Map<String, Function<String, TextComponent>> CONTAINER_COMPONENTS = new HashMap<>();
+public class Component {
+    public static final Map<String, Function<String, Component>> CONTAINER_COMPONENTS = new HashMap<>();
     public static final Pattern TAG_REGEX = Pattern.compile("<((?:\"[^<>]*<|>[^<>]*\"|'[^<>]*<|>[^<>]*'|[^>])+(?:>\\\\\")?)>");
     @Getter
-    protected TextComponent next;
+    protected Component next;
     @Getter
     protected Color color;
     @Getter
@@ -46,11 +46,11 @@ public class TextComponent {
     protected @Nullable String text;
 
     static {
-        Set<Class<?>> classes = ClassUtils.findClassesInPackage(TextComponent.class.getPackage().getName(), TextComponent.class);
+        Set<Class<?>> classes = ClassUtils.findClassesInPackage(Component.class.getPackage().getName(), Component.class);
         for (Class<?> clazz : classes) {
-            if (!TextComponent.class.isAssignableFrom(clazz)) continue;
+            if (!Component.class.isAssignableFrom(clazz)) continue;
             if (Modifier.isAbstract(clazz.getModifiers())) continue;
-            if (clazz.equals(TextComponent.class)) continue;
+            if (clazz.equals(Component.class)) continue;
             try {
                 Constructor<?> constructor = clazz.getConstructor(String.class);
                 String className = clazz.getSimpleName().toLowerCase();
@@ -58,7 +58,7 @@ public class TextComponent {
                     className = className.substring(0, className.length() - "component".length());
                 CONTAINER_COMPONENTS.put(className, s -> {
                     try {
-                        return (TextComponent) constructor.newInstance(s);
+                        return (Component) constructor.newInstance(s);
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                         Throwable cause = e.getCause();
                         if (cause instanceof RuntimeException) throw (RuntimeException) cause;
@@ -73,7 +73,7 @@ public class TextComponent {
     /**
      * Instantiates a new Text component.
      */
-    public TextComponent() {
+    public Component() {
         this(null);
     }
 
@@ -82,7 +82,7 @@ public class TextComponent {
      *
      * @param rawText the raw text
      */
-    public TextComponent(String rawText) {
+    public Component(String rawText) {
         setContent(rawText);
     }
 
@@ -106,7 +106,7 @@ public class TextComponent {
             final String tag = matcher.group(1).split(" ")[0];
             final String fullTag = matcher.group();
 
-            if (this.getClass().equals(TextComponent.class))
+            if (this.getClass().equals(Component.class))
                 for (String key : CONTAINER_COMPONENTS.keySet())
                     if (tag.equals(key)) {
                         setNext(CONTAINER_COMPONENTS.get(key).apply(rawText));
@@ -127,7 +127,7 @@ public class TextComponent {
                 else if (formatter.equals(Style.RESET)) reset(true);
                 else {
                     try {
-                        Field field = TextComponent.class.getDeclaredField(formatter.getName());
+                        Field field = Component.class.getDeclaredField(formatter.getName());
                         field.setAccessible(true);
                         field.set(this, !tag.startsWith("!"));
                     } catch (IllegalAccessException | NoSuchFieldException e) {
@@ -153,7 +153,7 @@ public class TextComponent {
      * @param rawText the raw text
      */
     public void addNext(@Nullable String rawText) {
-        addNext(rawText == null ? null : new TextComponent(rawText));
+        addNext(rawText == null ? null : new Component(rawText));
     }
 
     /**
@@ -161,29 +161,29 @@ public class TextComponent {
      *
      * @param next the next
      */
-    public void addNext(@Nullable TextComponent next) {
+    public void addNext(@Nullable Component next) {
         if (next == null) return;
         if (this.next != null) this.next.addNext(next);
         else setNext(next);
     }
 
     /**
-     * Set the next component (if {@link #isSimilar(TextComponent)} merge it with the current component).
-     * Then, apply {@link #setSameOptions(TextComponent)} method.
+     * Set the next component (if {@link #isSimilar(Component)} merge it with the current component).
+     * Then, apply {@link #setSameOptions(Component)} method.
      *
      * @param rawText the raw text
      */
     public void setNext(@Nullable String rawText) {
-        setNext(rawText == null ? null : new TextComponent(rawText));
+        setNext(rawText == null ? null : new Component(rawText));
     }
 
     /**
-     * Set the next component (if {@link #isSimilar(TextComponent)} merge it with the current component).
-     * Then, apply {@link #setSameOptions(TextComponent)} method.
+     * Set the next component (if {@link #isSimilar(Component)} merge it with the current component).
+     * Then, apply {@link #setSameOptions(Component)} method.
      *
      * @param next the next
      */
-    public void setNext(TextComponent next) {
+    public void setNext(Component next) {
         this.next = next;
 
         setSameOptions(this.next);
@@ -199,31 +199,31 @@ public class TextComponent {
      * Checks the given component fields.
      * For any field not given (null) set it to the value of this component.
      *
-     * @param textComponent the text component
+     * @param component the text component
      */
-    public void setSameOptions(@Nullable TextComponent textComponent) {
-        if (textComponent == null) return;
+    public void setSameOptions(@Nullable Component component) {
+        if (component == null) return;
 
-        if (isReset() || textComponent.isReset()) return;
+        if (isReset() || component.isReset()) return;
 
         try {
             for (Field field : getOptionFields()) {
-                if (TextComponent.class.isAssignableFrom(field.getType())) continue;
+                if (Component.class.isAssignableFrom(field.getType())) continue;
                 if (Modifier.isFinal(field.getModifiers())) continue;
                 if (field.getName().equals("reset")) continue;
-                Object nextObject = field.get(textComponent);
+                Object nextObject = field.get(component);
                 if (nextObject != null) continue;
-                field.set(textComponent, field.get(this));
+                field.set(component, field.get(this));
             }
 
-            if (textComponent instanceof ContainerComponent)
-                textComponent.setSameOptions(((ContainerComponent) textComponent).child);
+            if (component instanceof ContainerComponent)
+                component.setSameOptions(((ContainerComponent) component).child);
 
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 
-        textComponent.setSameOptions(textComponent.getNext());
+        component.setSameOptions(component.getNext());
     }
 
     /**
@@ -252,7 +252,7 @@ public class TextComponent {
     public Field @NotNull [] getOptionFields() {
         List<Field> fields = new ArrayList<>();
         Class<?> clazz = this.getClass();
-        while (TextComponent.class.isAssignableFrom(clazz)) {
+        while (Component.class.isAssignableFrom(clazz)) {
             Arrays.stream(clazz.getDeclaredFields())
                     .filter(f -> !Modifier.isStatic(f.getModifiers()))
                     .filter(f -> !Modifier.isFinal(f.getModifiers()))
@@ -275,7 +275,7 @@ public class TextComponent {
         return Arrays.stream(Style.values())
                 .filter(v -> {
                     try {
-                        Field field = TextComponent.class.getDeclaredField(v.name().toLowerCase());
+                        Field field = Component.class.getDeclaredField(v.name().toLowerCase());
                         field.setAccessible(true);
                         return field.get(this) != null;
                     } catch (Exception e) {
@@ -297,7 +297,7 @@ public class TextComponent {
      * Sets color.
      *
      * @param color     the color
-     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void setColor(Color color, boolean propagate) {
         this.color = color;
@@ -317,7 +317,7 @@ public class TextComponent {
      * Sets font.
      *
      * @param font      the font
-     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void setFont(Font font, boolean propagate) {
         this.font = font;
@@ -346,7 +346,7 @@ public class TextComponent {
      * Sets obfuscated.
      *
      * @param obfuscated the obfuscated
-     * @param propagate  if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate  if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void setObfuscated(Boolean obfuscated, boolean propagate) {
         this.obfuscated = obfuscated;
@@ -375,7 +375,7 @@ public class TextComponent {
      * Sets bold.
      *
      * @param bold      the bold
-     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void setBold(Boolean bold, boolean propagate) {
         this.bold = bold;
@@ -404,7 +404,7 @@ public class TextComponent {
      * Sets strikethrough.
      *
      * @param strikethrough the strikethrough
-     * @param propagate     if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate     if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void setStrikethrough(Boolean strikethrough, boolean propagate) {
         this.strikethrough = strikethrough;
@@ -433,7 +433,7 @@ public class TextComponent {
      * Sets underlined.
      *
      * @param underlined the underlined
-     * @param propagate  if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate  if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void setUnderlined(Boolean underlined, boolean propagate) {
         this.underlined = underlined;
@@ -462,7 +462,7 @@ public class TextComponent {
      * Sets italic.
      *
      * @param italic    the italic
-     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void setItalic(Boolean italic, boolean propagate) {
         this.italic = italic;
@@ -491,7 +491,7 @@ public class TextComponent {
      * Sets reset.
      *
      * @param reset     the reset
-     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void reset(@NotNull Boolean reset, boolean propagate) {
         this.reset = reset;
@@ -514,7 +514,7 @@ public class TextComponent {
     public Boolean getStyle(@Nullable Style style) {
         if (style == null) return false;
         try {
-            Field field = TextComponent.class.getDeclaredField(style.name().toLowerCase());
+            Field field = Component.class.getDeclaredField(style.name().toLowerCase());
             field.setAccessible(true);
             return (Boolean) field.get(this);
         } catch (IllegalAccessException | NoSuchFieldException e) {
@@ -546,7 +546,7 @@ public class TextComponent {
      *
      * @param style     the style
      * @param value     the value
-     * @param propagate if true, use {@link #setSameOptions(TextComponent)} to update the next component
+     * @param propagate if true, use {@link #setSameOptions(Component)} to update the next component
      */
     public void setStyle(@Nullable Style style, Boolean value, boolean propagate) {
         if (style == null) return;
@@ -556,7 +556,7 @@ public class TextComponent {
         else methodName = methodName.toLowerCase();
 
         try {
-            Method setMethod = TextComponent.class.getDeclaredMethod(methodName, Boolean.class, boolean.class);
+            Method setMethod = Component.class.getDeclaredMethod(methodName, Boolean.class, boolean.class);
             setMethod.invoke(this, value, propagate);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -570,7 +570,7 @@ public class TextComponent {
      * @param to   the replacement
      * @return the text component
      */
-    public TextComponent replace(final @NotNull TextComponent from, final @NotNull TextComponent to) {
+    public Component replace(final @NotNull Component from, final @NotNull Component to) {
         return replace(from, to, false);
     }
 
@@ -581,7 +581,7 @@ public class TextComponent {
      * @param to   the replacement
      * @return the text component
      */
-    public TextComponent replace(final @NotNull String from, final @NotNull String to) {
+    public Component replace(final @NotNull String from, final @NotNull String to) {
         return replace(from, to, false);
     }
 
@@ -593,7 +593,7 @@ public class TextComponent {
      * @param maintainColor if true, colors preceding the replacement will be put next to it.
      * @return the text component
      */
-    public TextComponent replace(final @NotNull TextComponent from, final @NotNull TextComponent to, final boolean maintainColor) {
+    public Component replace(final @NotNull Component from, final @NotNull Component to, final boolean maintainColor) {
         return replace(from.serialize(), to.serialize(), maintainColor);
     }
 
@@ -605,7 +605,7 @@ public class TextComponent {
      * @param maintainColor if true, colors preceding the replacement will be put next to it.
      * @return the text component
      */
-    public @NotNull TextComponent replace(final @NotNull String from, final @NotNull String to, final boolean maintainColor) {
+    public @NotNull Component replace(final @NotNull String from, final @NotNull String to, final boolean maintainColor) {
         final HashSet<ChatFormatter> colors = new LinkedHashSet<>();
         final String serialized = serialize();
         String finalSerialized = "";
@@ -631,22 +631,22 @@ public class TextComponent {
                 tmp = "";
             }
         }
-        TextComponent textComponent = new TextComponent(finalSerialized + tmp);
-        return copyFrom(textComponent);
+        Component component = new Component(finalSerialized + tmp);
+        return copyFrom(component);
     }
 
     /**
      * Copy all the fields from the given text component to the current one.
      *
-     * @param textComponent the text component
+     * @param component the text component
      * @return this component modified
      */
-    public @NotNull TextComponent copyFrom(final @NotNull TextComponent textComponent) {
-        for (Field field : TextComponent.class.getDeclaredFields())
+    public @NotNull Component copyFrom(final @NotNull Component component) {
+        for (Field field : Component.class.getDeclaredFields())
             try {
                 if (Modifier.isStatic(field.getModifiers())) continue;
                 field.setAccessible(true);
-                field.set(this, field.get(textComponent));
+                field.set(this, field.get(component));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -656,30 +656,30 @@ public class TextComponent {
     /**
      * Recursively check if the given component is contained in the current one.
      *
-     * @param textComponent the text component
+     * @param component the text component
      * @return true only if one or more components match the criteria
      */
-    public boolean contains(final @NotNull TextComponent textComponent) {
-        if (strictlyContains(textComponent)) return true;
-        else return next != null && next.contains(textComponent);
+    public boolean contains(final @NotNull Component component) {
+        if (strictlyContains(component)) return true;
+        else return next != null && next.contains(component);
     }
 
     /**
      * Check if the given component is contained in the current one.
      * If not, return false instead of checking the next component.
      *
-     * @param textComponent the text component
+     * @param component the text component
      * @return true only if one or more components match the criteria
      */
-    public boolean strictlyContains(final @NotNull TextComponent textComponent) {
-        TextComponent next = this.getNext();
-        TextComponent cNext = textComponent.getNext();
+    public boolean strictlyContains(final @NotNull Component component) {
+        Component next = this.getNext();
+        Component cNext = component.getNext();
         final String text = this.getText();
-        final String cText = textComponent.getText();
+        final String cText = component.getText();
         // Check classes
-        if (!this.getClass().equals(textComponent.getClass())) return false;
+        if (!this.getClass().equals(component.getClass())) return false;
         // Check options
-        if (!textComponent.compareOptions(this)) return false;
+        if (!component.compareOptions(this)) return false;
         // Check text
         if (text != null) {
             if (cText == null) return false;
@@ -687,7 +687,7 @@ public class TextComponent {
             else if (!text.endsWith(cText)) return false;
         } else if (cText != null) return false;
         // Check next
-        TextComponent n1, n2;
+        Component n1, n2;
         for (n1 = next, n2 = cNext; n1 != null && n2 != null; n1 = n1.getNext(), n2 = n2.getNext())
             if (!n1.strictlyContains(n2)) return false;
         return n2 == null;
@@ -696,28 +696,28 @@ public class TextComponent {
     /**
      * Compares this component with the given one.
      *
-     * @param textComponent the text component
+     * @param component the text component
      * @return true only if all the styles, font and color applied to this component are also applied to the given one and vice versa.
      */
-    public boolean allOptionsMatch(@NotNull TextComponent textComponent) {
-        return compareOptions(textComponent) && textComponent.compareOptions(this);
+    public boolean allOptionsMatch(@NotNull Component component) {
+        return compareOptions(component) && component.compareOptions(this);
     }
 
     /**
      * Compares this component with the given one.
      *
-     * @param textComponent the text component
+     * @param component the text component
      * @return true only if all the styles, font and color applied to this component are also applied to the given one
      */
-    public boolean compareOptions(@NotNull TextComponent textComponent) {
-        if (color != null && !color.equals(textComponent.color)) return false;
-        if (font != null && !font.equals(textComponent.font)) return false;
-        if (obfuscated != null && !obfuscated.equals(textComponent.obfuscated)) return false;
-        if (bold != null && !bold.equals(textComponent.bold)) return false;
-        if (strikethrough != null && !strikethrough.equals(textComponent.strikethrough)) return false;
-        if (underlined != null && !underlined.equals(textComponent.underlined)) return false;
-        if (italic != null && !italic.equals(textComponent.italic)) return false;
-        return reset == null || reset.equals(textComponent.reset);
+    public boolean compareOptions(@NotNull Component component) {
+        if (color != null && !color.equals(component.color)) return false;
+        if (font != null && !font.equals(component.font)) return false;
+        if (obfuscated != null && !obfuscated.equals(component.obfuscated)) return false;
+        if (bold != null && !bold.equals(component.bold)) return false;
+        if (strikethrough != null && !strikethrough.equals(component.strikethrough)) return false;
+        if (underlined != null && !underlined.equals(component.underlined)) return false;
+        if (italic != null && !italic.equals(component.italic)) return false;
+        return reset == null || reset.equals(component.reset);
     }
 
     /**
@@ -786,7 +786,7 @@ public class TextComponent {
      * @return the clone
      */
     @SuppressWarnings("unchecked")
-    public <T extends TextComponent> @NotNull T copy() {
+    public <T extends Component> @NotNull T copy() {
         final String serialize = this.serialize();
         Class<T> clazz = (Class<T>) this.getClass();
         try {
@@ -810,17 +810,17 @@ public class TextComponent {
      * Check if two text components are similar.
      * "Similar" means if all their options (from {@link #getOptionFields()}) except {@link #text} are equal.
      *
-     * @param textComponent the text component
+     * @param component the text component
      * @return true if they are similar
      */
-    public boolean isSimilar(@Nullable TextComponent textComponent) {
-        if (textComponent == null) return false;
-        if (!this.getClass().equals(textComponent.getClass())) return false;
+    public boolean isSimilar(@Nullable Component component) {
+        if (component == null) return false;
+        if (!this.getClass().equals(component.getClass())) return false;
         for (Field option : getOptionFields()) {
             if (option.getName().equals("text")) continue;
             try {
                 Object opt1 = option.get(this);
-                Object opt2 = option.get(textComponent);
+                Object opt2 = option.get(component);
                 if (!Objects.equals(opt1, opt2)) return false;
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -831,18 +831,18 @@ public class TextComponent {
 
     /**
      * Check if two text components are equal.
-     * Uses {@link #isSimilar(TextComponent)} and compares the raw texts.
+     * Uses {@link #isSimilar(Component)} and compares the raw texts.
      *
-     * @param textComponent the text component
+     * @param component the text component
      * @return true if they are equal
      */
-    public boolean equals(@NotNull TextComponent textComponent) {
-        return isSimilar(textComponent) && Objects.equals(this.text, textComponent.text);
+    public boolean equals(@NotNull Component component) {
+        return isSimilar(component) && Objects.equals(this.text, component.text);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof TextComponent) return equals((TextComponent) o);
+        if (o instanceof Component) return equals((Component) o);
         return super.equals(o);
     }
 
@@ -867,21 +867,21 @@ public class TextComponent {
      * @param rawText the raw text
      * @return the text component
      */
-    public static TextComponent fromRaw(@Nullable String rawText) {
+    public static Component fromRaw(@Nullable String rawText) {
         if (rawText == null) return null;
-        TextComponent textComponent = new TextComponent(rawText);
-        while (textComponent.isEmpty()) textComponent = textComponent.getNext();
-        return textComponent;
+        Component component = new Component(rawText);
+        while (component.isEmpty()) component = component.getNext();
+        return component;
     }
 
     /**
      * Converts a component to its raw text.
      *
-     * @param textComponent the text component
+     * @param component the text component
      * @return the string
      */
-    public static String toRaw(@Nullable TextComponent textComponent) {
-        if (textComponent == null) return null;
-        else return textComponent.serialize();
+    public static String toRaw(@Nullable Component component) {
+        if (component == null) return null;
+        else return component.serialize();
     }
 }

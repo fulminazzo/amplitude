@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * </ul>
  */
 @Getter
-abstract class OptionComponent extends TextComponent {
+abstract class OptionComponent extends Component {
     public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
     protected final @NotNull String tagName;
     protected final @NotNull Map<String, String> tagOptions;
@@ -181,11 +181,11 @@ abstract class OptionComponent extends TextComponent {
     }
 
     @Override
-    public boolean contains(@NotNull TextComponent textComponent) {
-        if (this.getClass().equals(textComponent.getClass())) {
-            if (!super.contains(textComponent)) return false;
-            return this.getTagOptions().equals(((OptionComponent) textComponent).getTagOptions());
-        } else return next != null && next.contains(textComponent);
+    public boolean contains(@NotNull Component component) {
+        if (this.getClass().equals(component.getClass())) {
+            if (!super.contains(component)) return false;
+            return this.getTagOptions().equals(((OptionComponent) component).getTagOptions());
+        } else return next != null && next.contains(component);
     }
 
     @Override
@@ -199,7 +199,7 @@ abstract class OptionComponent extends TextComponent {
     }
 
     /**
-     * Check if the current component is empty using {@link TextComponent#isEmpty()} and {@link #tagOptions}.
+     * Check if the current component is empty using {@link Component#isEmpty()} and {@link #tagOptions}.
      *
      * @return true if both are empty.
      */

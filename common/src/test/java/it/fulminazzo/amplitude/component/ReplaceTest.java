@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReplaceTest {
-    private static final TextComponent t3 = new TextComponent("<dark_purple>Amazing!");
+    private static final Component t3 = new Component("<dark_purple>Amazing!");
 
     private static Object[][] getReplaceTests() {
         return new Object[][]{
@@ -41,24 +41,24 @@ public class ReplaceTest {
     @ParameterizedTest
     @MethodSource("getReplaceTests")
     void testReplace(String raw, String replaced) {
-        TextComponent t1 = TextComponent.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
-        TextComponent t2 = TextComponent.fromRaw(raw);
+        Component t1 = Component.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
+        Component t2 = Component.fromRaw(raw);
         assertEquals(replaced, t1.replace(t2, t3).serialize());
     }
 
     @ParameterizedTest
     @MethodSource("getReplaceColorTests")
     void testReplaceColor(String raw, String replaced) {
-        TextComponent t1 = TextComponent.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
-        TextComponent t2 = TextComponent.fromRaw(raw);
+        Component t1 = Component.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
+        Component t2 = Component.fromRaw(raw);
         assertEquals(replaced, t1.replace(t2, t3, true).serialize());
     }
 
     @ParameterizedTest
     @MethodSource("getDoesNotContainTests")
     void testNotReplace(String raw) {
-        TextComponent t1 = TextComponent.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
-        TextComponent t2 = TextComponent.fromRaw(raw);
+        Component t1 = Component.fromRaw("<red>This should<blue>be or not be contained<bold>can't you agree?");
+        Component t2 = Component.fromRaw(raw);
         assertEquals(t1.serialize(), t1.replace(t2, t3).serialize());
     }
 }

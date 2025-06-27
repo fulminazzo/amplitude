@@ -71,14 +71,14 @@ public abstract class ComponentSerializer {
     }
 
     /**
-     * Serialize a general {@link TextComponent} and its siblings.
+     * Serialize a general {@link Component} and its siblings.
      *
      * @param <T>       the type parameter
      * @param component the component
      * @return the output
      */
     @SuppressWarnings("unchecked")
-    public <T> @Nullable T serializeComponent(@Nullable TextComponent component) {
+    public <T> @Nullable T serializeComponent(@Nullable Component component) {
         if (component == null) return null;
 
         Method method = findSerializeMethod(component);
@@ -98,13 +98,13 @@ public abstract class ComponentSerializer {
     }
 
     /**
-     * Serialize a {@link TextComponent}.
+     * Serialize a {@link Component}.
      *
      * @param <T>       the type parameter
      * @param component the component
      * @return the output
      */
-    public abstract <T> @Nullable T serializeSimpleTextComponent(TextComponent component);
+    public abstract <T> @Nullable T serializeSimpleComponent(Component component);
 
     /**
      * Serialize a {@link HoverComponent}.
@@ -225,7 +225,7 @@ public abstract class ComponentSerializer {
      * @param player    the player
      * @param component the component
      */
-    public <P> void send(@Nullable P player, @Nullable TextComponent component) {
+    public <P> void send(@Nullable P player, @Nullable Component component) {
         if (player == null) return;
         if (component == null) return;
         Object object = serializeComponent(component);
@@ -242,7 +242,7 @@ public abstract class ComponentSerializer {
      */
     public abstract <T, P> void send(P player, T component);
 
-    private @NotNull Method findSerializeMethod(@NotNull TextComponent component) {
+    private @NotNull Method findSerializeMethod(@NotNull Component component) {
         Class<?> tmp = this.getClass();
         while (tmp != null) {
             Method method = Stream.concat(Arrays.stream(tmp.getDeclaredMethods()), Arrays.stream(tmp.getMethods()))
@@ -257,7 +257,7 @@ public abstract class ComponentSerializer {
             tmp = tmp.getSuperclass();
         }
         try {
-            return ComponentSerializer.class.getMethod("serializeSimpleTextComponent", TextComponent.class);
+            return ComponentSerializer.class.getMethod("serializeSimpleComponent", Component.class);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

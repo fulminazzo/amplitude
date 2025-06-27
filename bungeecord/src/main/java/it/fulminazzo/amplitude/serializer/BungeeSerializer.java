@@ -2,7 +2,7 @@ package it.fulminazzo.amplitude.serializer;
 
 import it.fulminazzo.amplitude.component.HexComponent;
 import it.fulminazzo.amplitude.component.HoverComponent;
-import it.fulminazzo.amplitude.component.TextComponent;
+import it.fulminazzo.amplitude.component.Component;
 import it.fulminazzo.amplitude.component.Color;
 import it.fulminazzo.amplitude.component.Font;
 import it.fulminazzo.amplitude.component.HoverAction;
@@ -10,6 +10,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.ItemTag;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * <ul>
  *     <li>implements Hex colors in {@link #serializeHexComponent(HexComponent)}</li>
  *     <li>uses new {@link Content} objects to create {@link HoverEvent}</li>
- *     <li>removes {@link #correctComponents(TextComponent)} function to allow for Hex colors</li>
+ *     <li>removes {@link #correctComponents(Component)} function to allow for Hex colors</li>
  * </ul>
  */
 public final class BungeeSerializer extends LegacyBungeeSerializer {
@@ -54,7 +55,7 @@ public final class BungeeSerializer extends LegacyBungeeSerializer {
                 String type = component.getTagOption("type");
                 String id = component.getTagOption("id");
                 String name = component.getTagOption("name");
-                content = new Entity(type, id, new net.md_5.bungee.api.chat.TextComponent(name));
+                content = new Entity(type, id, new TextComponent(name));
                 break;
             }
             case SHOW_ACHIEVEMENT: {
@@ -69,7 +70,7 @@ public final class BungeeSerializer extends LegacyBungeeSerializer {
         }
         applyForAllComponents(comp, c -> c.setHoverEvent(new HoverEvent(action, content)));
 
-        BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
+        BaseComponent tmp = new TextComponent();
         tmp.addExtra(comp);
         return tmp;
     }
@@ -77,7 +78,7 @@ public final class BungeeSerializer extends LegacyBungeeSerializer {
     @Override
     public BaseComponent serializeHexComponent(@Nullable HexComponent component) {
         if (component == null) return null;
-        BaseComponent comp = new net.md_5.bungee.api.chat.TextComponent(component.getText());
+        BaseComponent comp = new TextComponent(component.getText());
         return applyColor(comp, component.getColor());
     }
 
@@ -99,7 +100,7 @@ public final class BungeeSerializer extends LegacyBungeeSerializer {
     }
 
     @Override
-    protected void correctComponents(TextComponent component) {
+    protected void correctComponents(Component component) {
 
     }
 

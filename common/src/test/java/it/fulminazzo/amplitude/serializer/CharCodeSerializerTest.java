@@ -1,6 +1,6 @@
 package it.fulminazzo.amplitude.serializer;
 
-import it.fulminazzo.amplitude.component.TextComponent;
+import it.fulminazzo.amplitude.component.Component;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -29,8 +29,8 @@ class CharCodeSerializerTest {
             "&c&c&l&c&l&oHello &rworld,<red><bold><italic>Hello <reset>world"
     })
     void testVariousMessagesAmpersand(String expected, String rawText) {
-        TextComponent textComponent = new TextComponent(rawText);
-        assertEquals(expected, ComponentSerializer.ampersand().serializeComponent(textComponent));
+        Component component = new Component(rawText);
+        assertEquals(expected, ComponentSerializer.ampersand().serializeComponent(component));
     }
 
     @ParameterizedTest
@@ -49,8 +49,8 @@ class CharCodeSerializerTest {
             "§c§c§l§c§l§oHello §rworld,<red><bold><italic>Hello <reset>world"
     })
     void testVariousMessagesSectionSign(String expected, String rawText) {
-        TextComponent textComponent = new TextComponent(rawText);
-        assertEquals(expected, ComponentSerializer.sectionSign().serializeComponent(textComponent));
+        Component component = new Component(rawText);
+        assertEquals(expected, ComponentSerializer.sectionSign().serializeComponent(component));
     }
 
     @ParameterizedTest
@@ -69,7 +69,7 @@ class CharCodeSerializerTest {
             "<COLOR>c<COLOR>c<COLOR>l<COLOR>c<COLOR>l<COLOR>oHello <COLOR>rworld,<red><bold><italic>Hello <reset>world"
     })
     void testVariousMessagesAbstract(String expected, String rawText) {
-        TextComponent textComponent = new TextComponent(rawText);
-        assertEquals(expected, new CharCodeSerializer("<COLOR>").serializeComponent(textComponent));
+        Component component = new Component(rawText);
+        assertEquals(expected, new CharCodeSerializer("<COLOR>").serializeComponent(component));
     }
 }

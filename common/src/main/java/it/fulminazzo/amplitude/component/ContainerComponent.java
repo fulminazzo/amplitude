@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * An implementation of {@link TextComponent} that mimics XML tags.
+ * An implementation of {@link Component} that mimics XML tags.
  * This means that for any container component, opening and closing tags are required.
  * If those are not provided, a {@link InvalidComponentException} will be thrown.
  * <p>
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 @Getter
 abstract class ContainerComponent extends OptionComponent {
-    protected @Nullable TextComponent child;
+    protected @Nullable Component child;
 
     /**
      * Instantiates a new Container component.
@@ -53,7 +53,7 @@ abstract class ContainerComponent extends OptionComponent {
             throw new InvalidComponentException(String.format("Could not find valid end </%s> for component %s",
                     tagName, this.getClass().getSimpleName()));
 
-        startMatcher = TextComponent.TAG_REGEX.matcher(startMatcher.group());
+        startMatcher = Component.TAG_REGEX.matcher(startMatcher.group());
         if (startMatcher.find()) {
             String match = startMatcher.group(1);
             if (match != null)
@@ -69,17 +69,17 @@ abstract class ContainerComponent extends OptionComponent {
     }
 
     /**
-     * Get the inner text from the children using {@link TextComponent#toRaw(TextComponent)}.
+     * Get the inner text from the children using {@link Component#toRaw(Component)}.
      *
      * @return the text
      */
     @Override
     public @Nullable String getText() {
-        return child == null ? null : TextComponent.toRaw(child);
+        return child == null ? null : Component.toRaw(child);
     }
 
     /**
-     * Set the children as the given text using {@link TextComponent#fromRaw(String)}.
+     * Set the children as the given text using {@link Component#fromRaw(String)}.
      *
      * @param text the text
      */
@@ -87,36 +87,36 @@ abstract class ContainerComponent extends OptionComponent {
     public void setText(@Nullable String text) {
         this.child = null;
         if (text == null) return;
-        this.child = TextComponent.fromRaw(text);
+        this.child = Component.fromRaw(text);
     }
 
     /**
-     * Sets the child component and applies {@link #setSameOptions(TextComponent)} method.
+     * Sets the child component and applies {@link #setSameOptions(Component)} method.
      *
      * @param rawText the raw text
      */
     public void setChild(@Nullable String rawText) {
         if (rawText == null || rawText.trim().isEmpty()) return;
-        setChild(new TextComponent(rawText));
+        setChild(new Component(rawText));
     }
 
     /**
-     * Sets the child component and applies {@link #setSameOptions(TextComponent)} method.
+     * Sets the child component and applies {@link #setSameOptions(Component)} method.
      *
      * @param child the child
      */
-    public void setChild(TextComponent child) {
+    public void setChild(Component child) {
         this.child = child;
         setSameOptions(child);
     }
 
     @Override
-    public boolean contains(@NotNull TextComponent textComponent) {
-        if (!super.contains(textComponent)) return false;
-        if (!this.getClass().equals(textComponent.getClass())) return next != null && next.contains(textComponent);
-        ContainerComponent containerComponent = (ContainerComponent) textComponent;
-        TextComponent c1 = getChild();
-        TextComponent c2 = containerComponent.getChild();
+    public boolean contains(@NotNull Component component) {
+        if (!super.contains(component)) return false;
+        if (!this.getClass().equals(component.getClass())) return next != null && next.contains(component);
+        ContainerComponent containerComponent = (ContainerComponent) component;
+        Component c1 = getChild();
+        Component c2 = containerComponent.getChild();
         return (c1 == null && c2 == null) || (c1 != null && c2 != null && c1.contains(c2));
     }
 

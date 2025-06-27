@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Getter
 public final class TranslatableComponent extends ContainerComponent {
-    private List<TextComponent> arguments;
+    private List<Component> arguments;
 
     /**
      * Instantiates a new Translatable component.
@@ -67,25 +67,25 @@ public final class TranslatableComponent extends ContainerComponent {
      * @param rawArgument the raw argument
      */
     public void addArgument(final @Nullable String rawArgument) {
-        if (rawArgument != null) this.arguments.add(TextComponent.fromRaw(rawArgument));
+        if (rawArgument != null) this.arguments.add(Component.fromRaw(rawArgument));
     }
 
     /**
      * Add argument.
      *
-     * @param textComponent the text component
+     * @param component the text component
      */
-    public void addArgument(final @Nullable TextComponent textComponent) {
-        if (textComponent != null) this.arguments.add(textComponent);
+    public void addArgument(final @Nullable Component component) {
+        if (component != null) this.arguments.add(component);
     }
 
     /**
      * Remove argument.
      *
-     * @param textComponent the text component
+     * @param component the text component
      */
-    public void removeArgument(final @Nullable TextComponent textComponent) {
-        if (textComponent != null) this.arguments.removeIf(t -> t.equals(textComponent));
+    public void removeArgument(final @Nullable Component component) {
+        if (component != null) this.arguments.removeIf(t -> t.equals(component));
     }
 
     /**
@@ -94,13 +94,13 @@ public final class TranslatableComponent extends ContainerComponent {
      * @param rawArguments the raw arguments
      */
     public void setArguments(final String @Nullable ... rawArguments) {
-        List<TextComponent> arguments = null;
+        List<Component> arguments = null;
         if (rawArguments != null) {
             arguments = new ArrayList<>();
             for (String arg : rawArguments) {
                 if (arg.startsWith("\"") && arg.endsWith("\"") || arg.startsWith("'") && arg.endsWith("'"))
                     arg = arg.substring(1, arg.length() - 1);
-                arguments.add(TextComponent.fromRaw(arg));
+                arguments.add(Component.fromRaw(arg));
             }
         }
         setArguments(arguments);
@@ -111,7 +111,7 @@ public final class TranslatableComponent extends ContainerComponent {
      *
      * @param arguments the arguments
      */
-    public void setArguments(final @Nullable List<TextComponent> arguments) {
+    public void setArguments(final @Nullable List<Component> arguments) {
         this.arguments.clear();
         if (arguments != null) this.arguments.addAll(arguments);
     }

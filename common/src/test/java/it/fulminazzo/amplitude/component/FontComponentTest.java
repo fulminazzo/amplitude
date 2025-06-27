@@ -10,20 +10,20 @@ class FontComponentTest {
 
     @Test
     void testFontPropagation() {
-        FontComponent textComponent = new FontComponent(rawText);
-        assertEquals(Font.ILLAGERALT, textComponent.getNext().getFont());
+        FontComponent component = new FontComponent(rawText);
+        assertEquals(Font.ILLAGERALT, component.getNext().getFont());
     }
 
     @Test
     void testSerialize() {
-        FontComponent textComponent = new FontComponent(rawText);
-        assertEquals(rawText, textComponent.serialize());
+        FontComponent component = new FontComponent(rawText);
+        assertEquals(rawText, component.serialize());
     }
 
     @Test
     void testWrongSerialize() {
-        FontComponent textComponent = new FontComponent(rawText);
-        assertNotEquals("<font id=\"ILLAGERALT\">This text <font id=\"ILLAGERALT\"><bold>should propagate", textComponent.serialize());
+        FontComponent component = new FontComponent(rawText);
+        assertNotEquals("<font id=\"ILLAGERALT\">This text <font id=\"ILLAGERALT\"><bold>should propagate", component.serialize());
     }
 
     @Test

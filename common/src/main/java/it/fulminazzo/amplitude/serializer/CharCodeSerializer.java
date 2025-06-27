@@ -27,7 +27,7 @@ class CharCodeSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable String serializeSimpleTextComponent(@Nullable TextComponent component) {
+    public @Nullable String serializeSimpleComponent(@Nullable Component component) {
         if (component == null) return null;
         String output = "";
         if (component.isReset()) output = reset(output);
@@ -70,13 +70,13 @@ class CharCodeSerializer extends ComponentSerializer {
     @Override
     public @Nullable String serializeFontComponent(@Nullable FontComponent component) {
         if (component == null) return null;
-        return serializeSimpleTextComponent(component);
+        return serializeSimpleComponent(component);
     }
 
     @Override
     public @Nullable String serializeTranslateComponent(@Nullable TranslatableComponent component) {
         if (component == null) return null;
-        return serializeSimpleTextComponent(component.getChild());
+        return serializeSimpleComponent(component.getChild());
     }
 
     @Override

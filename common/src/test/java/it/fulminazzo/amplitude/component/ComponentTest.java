@@ -12,11 +12,11 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-class TextComponentTest {
+class ComponentTest {
 
     static Object[][] getTestFromRawParameters() {
         return new Object[][]{
-                new Object[]{TextComponent.class, "<red>Hello world"},
+                new Object[]{Component.class, "<red>Hello world"},
                 new Object[]{HexComponent.class, "<hex color=#FF00AA>Hello world"},
                 new Object[]{ClickComponent.class, "<click action=COPY_TO_CLIPBOARD text=\"I hacked you\">Hello world</click>"},
                 new Object[]{HoverComponent.class, "<hover action=SHOW_TEXT text=\"Can you see me!?\">Hello world</hover>"},
@@ -86,9 +86,9 @@ class TextComponentTest {
         };
     }
 
-    private static TextComponent[] getTestCloneComponents() {
-        return new TextComponent[]{
-                new TextComponent("<red>Hello world"),
+    private static Component[] getTestCloneComponents() {
+        return new Component[]{
+                new Component("<red>Hello world"),
                 new OptionComponentTest.MockContainer("<mock option=\"test\">Hello world"),
                 new HexComponent("<hex color=\"#FF00AA\">Hello world"),
                 new ContainerComponentTest.MockContainer("<mock option=\"test\">Hello world</mock>"),
@@ -100,36 +100,36 @@ class TextComponentTest {
     @ParameterizedTest
     @MethodSource("getTestComponents")
     void testComponent(String rawText, String expected) {
-        TextComponent textComponent = new TextComponent(rawText);
-        assertEquals(expected, textComponent.toString());
+        Component component = new Component(rawText);
+        assertEquals(expected, component.toString());
     }
 
     @ParameterizedTest
     @MethodSource("getTestComponents")
     void testSerialize(String rawText) {
-        TextComponent textComponent = new TextComponent(rawText);
-        assertEquals(rawText, TextComponent.toRaw(textComponent));
+        Component component = new Component(rawText);
+        assertEquals(rawText, Component.toRaw(component));
     }
 
     @ParameterizedTest
     @MethodSource("getTestCloneComponents")
-    void testClone(TextComponent component) {
+    void testClone(Component component) {
         assertEquals(component.copy(), component);
     }
 
     @Test
     void testSetSameOptions() {
-        TextComponent textComponent = new TextComponent("<red><bold>Hello <reset>world<blue>what color am I?");
-        TextComponent c = textComponent.getNext().getNext().getNext();
+        Component component = new Component("<red><bold>Hello <reset>world<blue>what color am I?");
+        Component c = component.getNext().getNext().getNext();
         assertEquals(Color.BLUE, c.getColor());
         assertNull(c.getStyle(Style.BOLD));
     }
 
     @Test
     void testFont() {
-        TextComponent first = new TextComponent("First<bold>second<reset>third");
-        TextComponent second = first.getNext();
-        TextComponent third = second.getNext();
+        Component first = new Component("First<bold>second<reset>third");
+        Component second = first.getNext();
+        Component third = second.getNext();
         first.setFont(Font.ILLAGERALT);
         assertEquals(Font.ILLAGERALT, second.getFont());
         assertEquals(Font.DEFAULT, third.getFont());
@@ -137,36 +137,36 @@ class TextComponentTest {
 
     @Test
     void testIsSimilar() {
-        TextComponent t1 = new TextComponent("<red>Hello world");
-        TextComponent t2 = new TextComponent("<red>How are you");
+        Component t1 = new Component("<red>Hello world");
+        Component t2 = new Component("<red>How are you");
         assertTrue(t1.isSimilar(t2));
     }
 
     @Test
     void testIsNotSimilar() {
-        TextComponent t1 = new TextComponent("<red>Hello world");
-        TextComponent t2 = new TextComponent("<blue>How are you");
+        Component t1 = new Component("<red>Hello world");
+        Component t2 = new Component("<blue>How are you");
         assertFalse(t1.isSimilar(t2));
     }
 
     @Test
     void testIsEqual() {
-        TextComponent t1 = new TextComponent("<red>Hello world");
-        TextComponent t2 = new TextComponent("<red>Hello world");
+        Component t1 = new Component("<red>Hello world");
+        Component t2 = new Component("<red>Hello world");
         assertTrue(t1.equals(t2));
     }
 
     @Test
     void testIsNotEqual() {
-        TextComponent t1 = new TextComponent("<red>Hello world");
-        TextComponent t2 = new TextComponent("<red>How are you");
+        Component t1 = new Component("<red>Hello world");
+        Component t2 = new Component("<red>How are you");
         assertFalse(t1.equals(t2));
     }
 
     @Test
     void testEmpty() {
-        TextComponent textComponent = new TextComponent();
-        assertTrue(textComponent.isEmpty());
+        Component component = new Component();
+        assertTrue(component.isEmpty());
     }
 
     @ParameterizedTest
@@ -181,69 +181,69 @@ class TextComponentTest {
             "Text"
     })
     void testNotEmpty(String rawText) {
-        TextComponent textComponent = new TextComponent(rawText);
-        assertFalse(textComponent.isEmpty());
+        Component component = new Component(rawText);
+        assertFalse(component.isEmpty());
     }
 
     @ParameterizedTest
     @MethodSource("it.fulminazzo.amplitude.component.Color#values")
     void testColorSetters(Color color) {
-        TextComponent textComponent = new TextComponent("Simple test <bold>sounds great");
+        Component component = new Component("Simple test <bold>sounds great");
 
-        textComponent.setColor(color, false);
-        assertNotEquals(color, textComponent.getNext().getColor());
+        component.setColor(color, false);
+        assertNotEquals(color, component.getNext().getColor());
 
-        textComponent.setColor(color);
-        assertEquals(color, textComponent.getNext().getColor());
+        component.setColor(color);
+        assertEquals(color, component.getNext().getColor());
     }
 
     @ParameterizedTest
     @EnumSource(Style.class)
     void testStyleSetters(Style style) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        TextComponent textComponent = new TextComponent("Simple test <red>sounds great");
+        Component component = new Component("Simple test <red>sounds great");
 
         String methodName = style.name();
         methodName = methodName.charAt(0) + methodName.substring(1).toLowerCase();
 
-        Method getMethod = TextComponent.class.getDeclaredMethod("is" + methodName);
+        Method getMethod = Component.class.getDeclaredMethod("is" + methodName);
 
         if (style != Style.RESET) methodName = "set" + methodName;
         else methodName = methodName.toLowerCase();
 
         // setStyle(Boolean, boolean)
-        Method setMethod = TextComponent.class.getDeclaredMethod(methodName, Boolean.class, boolean.class);
-        setMethod.invoke(textComponent, true, false);
-        assertFalse((Boolean) getMethod.invoke(textComponent.getNext()));
+        Method setMethod = Component.class.getDeclaredMethod(methodName, Boolean.class, boolean.class);
+        setMethod.invoke(component, true, false);
+        assertFalse((Boolean) getMethod.invoke(component.getNext()));
 
         // setStyle(Boolean)
-        setMethod = TextComponent.class.getDeclaredMethod(methodName, Boolean.class);
-        setMethod.invoke(textComponent, true);
-        assertEquals(style != Style.RESET, getMethod.invoke(textComponent.getNext()));
+        setMethod = Component.class.getDeclaredMethod(methodName, Boolean.class);
+        setMethod.invoke(component, true);
+        assertEquals(style != Style.RESET, getMethod.invoke(component.getNext()));
     }
 
     @ParameterizedTest
     @EnumSource(Style.class)
     void testSetStyle(Style style) {
-        TextComponent textComponent = new TextComponent("Simple test <red>sounds great");
+        Component component = new Component("Simple test <red>sounds great");
 
-        textComponent.setStyle(style, true, false);
-        assertTrue(textComponent.getStyle(style));
-        assertNull(textComponent.getNext().getStyle(style));
+        component.setStyle(style, true, false);
+        assertTrue(component.getStyle(style));
+        assertNull(component.getNext().getStyle(style));
 
-        textComponent.setStyle(style, false, false);
-        assertFalse(textComponent.getStyle(style));
-        assertNull(textComponent.getNext().getStyle(style));
+        component.setStyle(style, false, false);
+        assertFalse(component.getStyle(style));
+        assertNull(component.getNext().getStyle(style));
 
-        textComponent.setStyle(style);
-        assertTrue(textComponent.getStyle(style));
+        component.setStyle(style);
+        assertTrue(component.getStyle(style));
         assumeTrue(style != Style.RESET, "If style is RESET, it should not be propagated");
-        assertTrue(textComponent.getNext().getStyle(style));
+        assertTrue(component.getNext().getStyle(style));
     }
 
     @ParameterizedTest
     @MethodSource("getTestFromRawParameters")
     void testFromRaw(Class<?> expected, String rawText) {
-        assertEquals(expected, TextComponent.fromRaw(rawText).getClass());
+        assertEquals(expected, Component.fromRaw(rawText).getClass());
     }
 
     static String mockComponent(String next, String color, Boolean obfuscated,

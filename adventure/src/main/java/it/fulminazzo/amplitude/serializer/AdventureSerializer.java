@@ -3,7 +3,6 @@ package it.fulminazzo.amplitude.serializer;
 import it.fulminazzo.amplitude.component.*;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,11 +26,11 @@ import java.util.stream.Collectors;
 public final class AdventureSerializer extends ComponentSerializer {
 
     @Override
-    public @Nullable Component serializeSimpleTextComponent(@Nullable TextComponent component) {
+    public @Nullable net.kyori.adventure.text.Component serializeSimpleComponent(@Nullable Component component) {
         if (component == null) return null;
         String rawText = component.getText();
         if (rawText == null) return null;
-        Component c = Component.text(rawText);
+        net.kyori.adventure.text.Component c = net.kyori.adventure.text.Component.text(rawText);
         if (component.isReset()) c = reset(c);
         else {
             Color color = component.getColor();
@@ -45,10 +44,10 @@ public final class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable Component serializeHoverComponent(@Nullable HoverComponent component) {
+    public @Nullable net.kyori.adventure.text.Component serializeHoverComponent(@Nullable HoverComponent component) {
         if (component == null) return null;
-        Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.empty();
+        net.kyori.adventure.text.Component c = serializeComponent(component.getChild());
+        if (c == null) c = net.kyori.adventure.text.Component.empty();
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
 
@@ -69,7 +68,7 @@ public final class AdventureSerializer extends ComponentSerializer {
                 String type = component.getTagOption("type");
                 String id = component.getTagOption("id");
                 String name = component.getTagOption("name");
-                hoverEvent = HoverEvent.showEntity(Key.key(type), UUID.fromString(id), Component.text(name));
+                hoverEvent = HoverEvent.showEntity(Key.key(type), UUID.fromString(id), net.kyori.adventure.text.Component.text(name));
                 break;
             }
             case SHOW_ACHIEVEMENT: {
@@ -79,7 +78,7 @@ public final class AdventureSerializer extends ComponentSerializer {
                 break;
             }
             default: {
-                hoverEvent = HoverEvent.showText(Component.text(component.getTagOption("text")));
+                hoverEvent = HoverEvent.showText(net.kyori.adventure.text.Component.text(component.getTagOption("text")));
             }
         }
 
@@ -87,10 +86,10 @@ public final class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable Component serializeClickComponent(@Nullable ClickComponent component) {
+    public @Nullable net.kyori.adventure.text.Component serializeClickComponent(@Nullable ClickComponent component) {
         if (component == null) return null;
-        Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.empty();
+        net.kyori.adventure.text.Component c = serializeComponent(component.getChild());
+        if (c == null) c = net.kyori.adventure.text.Component.empty();
 
         ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
         ClickEvent.Action action = ClickEvent.Action.valueOf(clickAction.name());
@@ -102,42 +101,42 @@ public final class AdventureSerializer extends ComponentSerializer {
     }
 
     @Override
-    public @Nullable Component serializeHexComponent(@Nullable HexComponent component) {
+    public @Nullable net.kyori.adventure.text.Component serializeHexComponent(@Nullable HexComponent component) {
         if (component == null) return null;
-        Component textComponent = serializeSimpleTextComponent(component);
-        if (textComponent == null) return null;
-        return textComponent.color(TextColor.fromHexString(component.getHexColor()));
+        net.kyori.adventure.text.Component c = serializeSimpleComponent(component);
+        if (c == null) return null;
+        return c.color(TextColor.fromHexString(component.getHexColor()));
     }
 
     @Override
-    public @Nullable Component serializeInsertionComponent(@Nullable InsertionComponent component) {
+    public @Nullable net.kyori.adventure.text.Component serializeInsertionComponent(@Nullable InsertionComponent component) {
         if (component == null) return null;
-        Component c = serializeComponent(component.getChild());
-        if (c == null) c = Component.empty();
+        net.kyori.adventure.text.Component c = serializeComponent(component.getChild());
+        if (c == null) c = net.kyori.adventure.text.Component.empty();
         return c.insertion(component.getInsertionText());
     }
 
     @Override
-    public @Nullable Component serializeFontComponent(@Nullable FontComponent component) {
+    public @Nullable net.kyori.adventure.text.Component serializeFontComponent(@Nullable FontComponent component) {
         if (component == null) return null;
-        Component c = serializeSimpleTextComponent(component);
-        if (c == null) c = Component.empty();
+        net.kyori.adventure.text.Component c = serializeSimpleComponent(component);
+        if (c == null) c = net.kyori.adventure.text.Component.empty();
         return c.font(Key.key(component.getFontID().toLowerCase()));
     }
 
     @Override
-    public @Nullable Component serializeTranslateComponent(TranslatableComponent component) {
+    public @Nullable net.kyori.adventure.text.Component serializeTranslateComponent(TranslatableComponent component) {
         if (component == null) return null;
         final String rawText;
-        final TextComponent child = component.getChild();
+        final Component child = component.getChild();
         if (child == null) rawText = "";
         else rawText = child.serialize();
 
-        net.kyori.adventure.text.TranslatableComponent c = Component.translatable(rawText);
+        net.kyori.adventure.text.TranslatableComponent c = net.kyori.adventure.text.Component.translatable(rawText);
         c = c.args(component.getArguments().stream()
                 .map(this::serializeComponent)
-                .map(bc -> bc == null ? Component.empty() : bc)
-                .map(bc -> (Component) bc)
+                .map(bc -> bc == null ? net.kyori.adventure.text.Component.empty() : bc)
+                .map(bc -> (net.kyori.adventure.text.Component) bc)
                 .collect(Collectors.toList())
         );
 
@@ -156,10 +155,10 @@ public final class AdventureSerializer extends ComponentSerializer {
 
     @Override
     public <T> @Nullable T sumTwoSerializedComponents(@Nullable T component1, @Nullable T component2) {
-        Component tc1 = (Component) component1;
-        Component tc2 = (Component) component2;
+        net.kyori.adventure.text.Component tc1 = (net.kyori.adventure.text.Component) component1;
+        net.kyori.adventure.text.Component tc2 = (net.kyori.adventure.text.Component) component2;
         if (tc1 == null) return null;
-        if (tc1.equals(Component.empty())) return (T) tc2;
+        if (tc1.equals(net.kyori.adventure.text.Component.empty())) return (T) tc2;
         if (tc2 != null) tc1 = tc1.append(tc2);
         return (T) tc1;
     }
@@ -167,21 +166,21 @@ public final class AdventureSerializer extends ComponentSerializer {
     @Override
     public <T> @Nullable T applyColor(@Nullable T component, @NotNull Color color) {
         if (component == null) return null;
-        Component c = (Component) component;
+        net.kyori.adventure.text.Component c = (net.kyori.adventure.text.Component) component;
         return (T) c.color(getColor(color));
     }
 
     @Override
     public <T> @Nullable T applyStyle(@Nullable T component, @NotNull Style style, Boolean value) {
         if (component == null) return null;
-        Component c = (Component) component;
+        net.kyori.adventure.text.Component c = (net.kyori.adventure.text.Component) component;
         return (T) c.decoration(TextDecoration.valueOf(style.name()), value);
     }
 
     @Override
     public <T> @Nullable T applyFont(@Nullable T component, @NotNull Font font) {
         if (component == null) return null;
-        Component c = (Component) component;
+        net.kyori.adventure.text.Component c = (net.kyori.adventure.text.Component) component;
         return (T) c.font(Key.key(font.name().toLowerCase()));
     }
 
@@ -194,7 +193,7 @@ public final class AdventureSerializer extends ComponentSerializer {
                 final Class<?> clazz = Class.forName("net.kyori.adventure.audience.Audience");
                 if (!clazz.isAssignableFrom(player.getClass()))
                     throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
-                Method sendMessage = player.getClass().getMethod("sendMessage", Component.class);
+                Method sendMessage = player.getClass().getMethod("sendMessage", net.kyori.adventure.text.Component.class);
                 sendMessage.setAccessible(true);
                 sendMessage.invoke(player, component);
                 return;

@@ -10,13 +10,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.HashMap;
 import java.util.Map;
 
-import static it.fulminazzo.amplitude.component.TextComponentTest.mockComponent;
+import static it.fulminazzo.amplitude.component.ComponentTest.mockComponent;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ContainerComponentTest {
 
     private static Object[][] getTestChildren() {
-        Object[][] objects = TextComponentTest.getTestComponents();
+        Object[][] objects = ComponentTest.getTestComponents();
         for (Object[] object : objects) {
             object[0] = String.format("<mock>%s</mock>", object[0]);
             object[1] = mockContainerComponent(null, object[1].toString());
@@ -25,7 +25,7 @@ class ContainerComponentTest {
     }
 
     private static Object[][] getTestNext() {
-        Object[][] objects = TextComponentTest.getTestComponents();
+        Object[][] objects = ComponentTest.getTestComponents();
         for (Object[] object : objects) {
             object[0] = String.format("<mock>%s</mock>%s", object[0], object[0]);
             object[1] = mockContainerComponent(object[1].toString(), object[1].toString());
@@ -34,7 +34,7 @@ class ContainerComponentTest {
     }
 
     private static Object[][] getTestEmptyNext() {
-        Object[][] objects = TextComponentTest.getTestComponents();
+        Object[][] objects = ComponentTest.getTestComponents();
         for (Object[] object : objects) {
             object[0] = String.format("<mock></mock>%s", object[0]);
             object[1] = mockContainerComponent(object[1].toString(), null);

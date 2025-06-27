@@ -9,19 +9,19 @@ class HexComponentTest {
 
     @Test
     void testHexPropagation() {
-        HexComponent textComponent = new HexComponent(rawText);
-        assertEquals(new Color("#FF00AA"), textComponent.getNext().getColor());
+        HexComponent component = new HexComponent(rawText);
+        assertEquals(new Color("#FF00AA"), component.getNext().getColor());
     }
 
     @Test
     void testSerialize() {
-        HexComponent textComponent = new HexComponent(rawText);
-        assertEquals(rawText, textComponent.serialize());
+        HexComponent component = new HexComponent(rawText);
+        assertEquals(rawText, component.serialize());
     }
 
     @Test
     void testWrongSerialize() {
-        HexComponent textComponent = new HexComponent(rawText);
-        assertNotEquals("<hex color=\"#FF00AA\">This text <hex color=\"#FF00AA\"><bold>should propagate", textComponent.serialize());
+        HexComponent component = new HexComponent(rawText);
+        assertNotEquals("<hex color=\"#FF00AA\">This text <hex color=\"#FF00AA\"><bold>should propagate", component.serialize());
     }
 }

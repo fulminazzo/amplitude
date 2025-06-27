@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,10 +31,10 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     private boolean showingHex = false;
 
     @Override
-    public @Nullable BaseComponent serializeSimpleTextComponent(@Nullable TextComponent component) {
+    public @Nullable BaseComponent serializeSimpleComponent(@Nullable Component component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent c = new net.md_5.bungee.api.chat.TextComponent(component.getText());
+        BaseComponent c = new TextComponent(component.getText());
         if (component.isReset()) c = reset(c);
         else {
             Color color = component.getColor();
@@ -50,7 +51,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         correctComponents(component);
         if (component == null) return null;
         BaseComponent comp = serializeComponent(component.getChild());
-        if (comp == null) comp = new net.md_5.bungee.api.chat.TextComponent();
+        if (comp == null) comp = new TextComponent();
 
         HoverAction hoverAction = HoverAction.valueOf(component.getTagOption("action").toUpperCase());
         HoverEvent.Action action = HoverEvent.Action.valueOf(hoverAction.name());
@@ -64,29 +65,29 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
                 if (rawTag == null || rawTag.isEmpty()) rawTag = component.getTagOption("tag");
                 if (rawTag == null) rawTag = "";
                 else rawTag = ",tag:" + rawTag;
-                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{Count:%s,id:\"%s\"%s}", count, id, rawTag));
+                content = new TextComponent(String.format("{Count:%s,id:\"%s\"%s}", count, id, rawTag));
                 break;
             }
             case SHOW_ENTITY: {
                 String type = component.getTagOption("type");
                 String id = component.getTagOption("id");
                 String name = component.getTagOption("name");
-                content = new net.md_5.bungee.api.chat.TextComponent(String.format("{type:%s,id:\"%s\",name:%s}", type, id, name));
+                content = new TextComponent(String.format("{type:%s,id:\"%s\",name:%s}", type, id, name));
                 break;
             }
             case SHOW_ACHIEVEMENT: {
                 String id = component.getTagOption("id");
                 if (!id.startsWith("achievement.")) id = "achievement." + id;
-                content = new net.md_5.bungee.api.chat.TextComponent(id);
+                content = new TextComponent(id);
                 break;
             }
             default: {
-                content = new net.md_5.bungee.api.chat.TextComponent(component.getTagOption("text"));
+                content = new TextComponent(component.getTagOption("text"));
             }
         }
         applyForAllComponents(comp, c -> c.setHoverEvent(new HoverEvent(action, new BaseComponent[]{content})));
 
-        BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
+        BaseComponent tmp = new TextComponent();
         tmp.addExtra(comp);
         return tmp;
     }
@@ -96,7 +97,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         correctComponents(component);
         if (component == null) return null;
         BaseComponent comp = serializeComponent(component.getChild());
-        if (comp == null) comp = new net.md_5.bungee.api.chat.TextComponent();
+        if (comp == null) comp = new TextComponent();
 
         ClickAction clickAction = ClickAction.valueOf(component.getTagOption("action").toUpperCase());
         ClickEvent.Action action = ClickEvent.Action.valueOf(clickAction.name());
@@ -105,7 +106,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         ClickEvent clickEvent = new ClickEvent(action, component.getTagOption(requiredOption));
         applyForAllComponents(comp, c -> c.setClickEvent(clickEvent));
 
-        BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
+        BaseComponent tmp = new TextComponent();
         tmp.addExtra(comp);
         return tmp;
     }
@@ -117,7 +118,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         String rawText = component.getText();
         if (rawText == null) rawText = "";
         if (showingHex) rawText = component.getHexColor() + rawText;
-        return new net.md_5.bungee.api.chat.TextComponent(rawText);
+        return new TextComponent(rawText);
     }
 
     @Override
@@ -125,7 +126,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         correctComponents(component);
         if (component == null) return null;
         BaseComponent comp = serializeComponent(component.getChild());
-        if (comp == null) comp = new net.md_5.bungee.api.chat.TextComponent();
+        if (comp == null) comp = new TextComponent();
         comp.setInsertion(component.getInsertionText());
         return comp;
     }
@@ -134,7 +135,7 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
     public @Nullable BaseComponent serializeFontComponent(@Nullable FontComponent component) {
         correctComponents(component);
         if (component == null) return null;
-        BaseComponent c = serializeSimpleTextComponent(component);
+        BaseComponent c = serializeSimpleComponent(component);
         return applyFont(c, Font.valueOf(component.getFontID()));
     }
 
@@ -143,14 +144,14 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         correctComponents(component);
         if (component == null) return null;
         final String rawText;
-        final TextComponent child = component.getChild();
+        final Component child = component.getChild();
         if (child == null) rawText = "";
         else rawText = child.serialize();
 
         net.md_5.bungee.api.chat.TranslatableComponent c = new net.md_5.bungee.api.chat.TranslatableComponent(rawText);
         c.setWith(component.getArguments().stream()
                 .map(this::serializeComponent)
-                .map(bc -> bc == null ? new TextComponent() : bc)
+                .map(bc -> bc == null ? new Component() : bc)
                 .filter(bc -> bc instanceof BaseComponent)
                 .map(bc -> (BaseComponent) bc)
                 .collect(Collectors.toList()));
@@ -171,12 +172,12 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
         BaseComponent bc1 = (BaseComponent) component1;
         BaseComponent bc2 = (BaseComponent) component2;
         if (bc1 == null) return null;
-        if (bc1 instanceof net.md_5.bungee.api.chat.TextComponent) {
-            net.md_5.bungee.api.chat.TextComponent tc1 = (net.md_5.bungee.api.chat.TextComponent) bc1;
+        if (bc1 instanceof TextComponent) {
+            TextComponent tc1 = (TextComponent) bc1;
             if (tc1.getText() == null || tc1.getText().isEmpty()) tc1.setText("");
         }
-        if (bc2 instanceof net.md_5.bungee.api.chat.TextComponent) {
-            net.md_5.bungee.api.chat.TextComponent tc2 = (net.md_5.bungee.api.chat.TextComponent) bc2;
+        if (bc2 instanceof TextComponent) {
+            TextComponent tc2 = (TextComponent) bc2;
             if (tc2.getText() == null) tc2.setText("");
         }
         if (bc2 != null) bc1.addExtra(bc2);
@@ -278,11 +279,11 @@ public class LegacyBungeeSerializer extends ComponentSerializer {
      *
      * @param component the component to correct
      */
-    protected void correctComponents(@Nullable TextComponent component) {
+    protected void correctComponents(@Nullable Component component) {
         if (component == null) return;
-        TextComponent c1 = component.getNext();
+        Component c1 = component.getNext();
         if (!(c1 instanceof HexComponent)) return;
-        TextComponent c2 = c1.getNext();
+        Component c2 = c1.getNext();
         if (c2 == null) return;
         if (!Objects.equals(c2.getColor(), c1.getColor())) return;
         c2.setColor(component.getColor());
