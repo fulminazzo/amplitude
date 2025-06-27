@@ -13,9 +13,12 @@ import java.util.regex.Pattern;
  * If those are not provided, a {@link InvalidComponentException} will be thrown.
  * <p>
  * Example: "&#60;component&#62;This is contained&#60;/component&#62;" is a valid container component.
+ *
+ * @param <C> the type of this component
  */
+@SuppressWarnings("unchecked")
 @Getter
-abstract class ContainerComponent extends OptionComponent {
+abstract class ContainerComponent<C> extends OptionComponent<C> {
     protected @Nullable Component child;
 
     /**
@@ -38,8 +41,8 @@ abstract class ContainerComponent extends OptionComponent {
     }
 
     @Override
-    public void setContent(@Nullable String rawText) {
-        if (rawText == null) return;
+    public @NotNull C setContent(@Nullable String rawText) {
+        if (rawText == null) return (C) this;
         this.tagOptions.clear();
 
         Matcher startMatcher = getTagRegex(tagName).matcher(rawText);
@@ -64,8 +67,8 @@ abstract class ContainerComponent extends OptionComponent {
         setChild(content);
 
         rawText = rawText.substring(endMatcher.end());
-        if (rawText.trim().isEmpty()) return;
-        setNext(rawText);
+        if (rawText.trim().isEmpty()) return (C) this;
+        else return setNext(rawText);
     }
 
     /**
@@ -84,10 +87,10 @@ abstract class ContainerComponent extends OptionComponent {
      * @param text the text
      */
     @Override
-    public void setText(@Nullable String text) {
+    public @NotNull C setText(@Nullable String text) {
         this.child = null;
-        if (text == null) return;
-        this.child = Component.fromRaw(text);
+        if (text != null) this.child = Component.fromRaw(text);
+        return (C) this;
     }
 
     /**
@@ -95,9 +98,9 @@ abstract class ContainerComponent extends OptionComponent {
      *
      * @param rawText the raw text
      */
-    public void setChild(@Nullable String rawText) {
-        if (rawText == null || rawText.trim().isEmpty()) return;
-        setChild(new Component(rawText));
+    public @NotNull C setChild(@Nullable String rawText) {
+        if (rawText == null || rawText.trim().isEmpty()) return (C) this;
+        return setChild(new Component(rawText));
     }
 
     /**
@@ -105,16 +108,16 @@ abstract class ContainerComponent extends OptionComponent {
      *
      * @param child the child
      */
-    public void setChild(Component child) {
+    public @NotNull C setChild(Component child) {
         this.child = child;
-        setSameOptions(child);
+        return setSameOptions(child);
     }
 
     @Override
     public boolean contains(@NotNull Component component) {
         if (!super.contains(component)) return false;
         if (!this.getClass().equals(component.getClass())) return next != null && next.contains(component);
-        ContainerComponent containerComponent = (ContainerComponent) component;
+        ContainerComponent<?> containerComponent = (ContainerComponent<?>) component;
         Component c1 = getChild();
         Component c2 = containerComponent.getChild();
         return (c1 == null && c2 == null) || (c1 != null && c2 != null && c1.contains(c2));
