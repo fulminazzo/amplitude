@@ -15,6 +15,12 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 class ComponentTest {
 
     @Test
+    void testFromRawSupportsEmptyString() {
+        Component component = Component.fromRaw("");
+        assertNotNull(component);
+    }
+
+    @Test
     void testFromRawSupportsAmpersandAndSectionSign() {
         String raw = "&dHello, §cworld!";
 
