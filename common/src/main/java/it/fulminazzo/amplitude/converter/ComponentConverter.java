@@ -279,7 +279,11 @@ public abstract class ComponentConverter {
             tmp = tmp.getSuperclass();
         }
         try {
-            return ComponentConverter.class.getMethod("convertSimpleComponent", Component.class);
+            if (component instanceof CustomComponent)
+                return ComponentConverter.class.getMethod("convertCustomComponent", CustomComponent.class);
+            else if (component instanceof CustomContainerComponent)
+                return ComponentConverter.class.getMethod("convertCustomContainerComponent", CustomContainerComponent.class);
+            else return ComponentConverter.class.getMethod("convertSimpleComponent", Component.class);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
