@@ -172,6 +172,17 @@ public abstract class ComponentConverter {
     }
 
     /**
+     * Convert a {@link CustomContainerComponent}.
+     *
+     * @param <T>       the type of the component
+     * @param component the component
+     * @return the t
+     */
+    public <T> @Nullable T convertCustomContainerComponent(CustomContainerComponent<?> component) {
+        return convertComponent(component.toMinecraft());
+    }
+
+    /**
      * Sum two serialized components.
      *
      * @param <T>        the type of the component
