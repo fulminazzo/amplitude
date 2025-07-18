@@ -272,6 +272,11 @@ public class Component {
     Field @NotNull [] getOptionFields() {
         List<Field> fields = new ArrayList<>();
         Class<?> clazz = this.getClass();
+        // Ignore custom fields
+        if (CustomComponent.class.isAssignableFrom(clazz))
+            while (clazz != CustomComponent.class) clazz = clazz.getSuperclass();
+        if (CustomContainerComponent.class.isAssignableFrom(clazz))
+            while (clazz != CustomContainerComponent.class) clazz = clazz.getSuperclass();
         while (Component.class.isAssignableFrom(clazz)) {
             Arrays.stream(clazz.getDeclaredFields())
                     .filter(f -> !Modifier.isStatic(f.getModifiers()))
