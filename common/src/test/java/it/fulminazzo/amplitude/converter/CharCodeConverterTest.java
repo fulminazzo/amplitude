@@ -17,7 +17,7 @@ class CharCodeConverterTest {
         Component component = Component.fromRaw("<blue>Hello<rose>world<red>!");
 
         String serialized = ComponentConverter.ampersand().convertComponent(component);
-        assertEquals("&9Hello&9world&c!", serialized);
+        assertEquals("&9Hello&x&F&F&0&0&A&Aworld&c!&c!", serialized);
     }
 
     @ParameterizedTest
