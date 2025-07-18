@@ -930,6 +930,7 @@ public class Component {
      */
     public static Component fromRaw(@Nullable String rawText) {
         if (rawText == null) return null;
+        if (rawText.isEmpty()) return new Component();
 
         for (Color color : Color.values())
             rawText = rawText.replaceAll("[§&]" + color.getIdentifierChar(), "<" + color.getName() + ">");
