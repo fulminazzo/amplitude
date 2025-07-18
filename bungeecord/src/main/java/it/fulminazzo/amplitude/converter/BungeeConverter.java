@@ -86,7 +86,7 @@ public final class BungeeConverter extends LegacyBungeeConverter {
     public <T> @Nullable T applyColor(@Nullable T component, @NotNull Color color) {
         if (component == null) return null;
         BaseComponent c = (BaseComponent) component;
-        ChatColor chatColor = ChatColor.of(color.isCustom() ? color.getCode() : color.getName());
+        ChatColor chatColor = ChatColor.of(color.isCustom() ? color.getCode() : color.name());
         c.setColor(chatColor);
         return component;
     }
