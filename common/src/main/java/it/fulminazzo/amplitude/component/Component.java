@@ -166,7 +166,7 @@ public class Component {
      * @return this component
      */
     public @NotNull Component addNext(@Nullable String rawText) {
-        return addNext(rawText == null ? null : new Component(rawText));
+        return addNext(rawText == null ? null : Component.fromRaw(rawText));
     }
 
     /**
@@ -190,7 +190,7 @@ public class Component {
      * @return this component
      */
     public @NotNull Component setNext(@Nullable String rawText) {
-        return setNext(rawText == null ? null : new Component(rawText));
+        return setNext(rawText == null ? null : Component.fromRaw(rawText));
     }
 
     /**
@@ -695,7 +695,7 @@ public class Component {
                 tmp = "";
             }
         }
-        Component component = new Component(finalSerialized + tmp);
+        Component component = Component.fromRaw(finalSerialized + tmp);
         return copyFrom(component);
     }
 

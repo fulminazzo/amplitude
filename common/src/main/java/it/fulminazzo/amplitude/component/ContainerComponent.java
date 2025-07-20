@@ -101,7 +101,7 @@ abstract class ContainerComponent<C extends OptionComponent<C>> extends OptionCo
      */
     public @NotNull C setChild(@Nullable String rawText) {
         if (rawText == null || rawText.trim().isEmpty()) return (C) this;
-        return setChild(new Component(rawText));
+        return setChild(Component.fromRaw(rawText));
     }
 
     /**
