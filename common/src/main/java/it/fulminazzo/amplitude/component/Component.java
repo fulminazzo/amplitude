@@ -105,6 +105,7 @@ public class Component {
      */
     public @NotNull Component setContent(@Nullable String rawText) {
         setText("");
+        setNext((String) null);
         if (rawText == null || rawText.isEmpty()) return this;
         final Matcher matcher = TAG_REGEX.matcher(rawText);
 
@@ -156,7 +157,7 @@ public class Component {
         }
 
         if (rawText.trim().isEmpty()) return this;
-        else return setNext(rawText);
+        else return getNext() == null ? setNext(rawText) : addNext(rawText);
     }
 
     /**
