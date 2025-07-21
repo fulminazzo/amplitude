@@ -15,6 +15,15 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 class ComponentTest {
 
     @Test
+    void testSpecialTextComponent() {
+        String text = "&f&l💬 Astra &8(<page>/<max_page>)";
+        String expected = "<white><bold>💬 Astra <darkgray><bold>(<page>/<max_page>)";
+        Component component = Component.fromRaw(text);
+
+        assertEquals(expected, component.serialize());
+    }
+
+    @Test
     void testFromRawSupportsEmptyString() {
         Component component = Component.fromRaw("");
         assertNotNull(component);
