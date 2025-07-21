@@ -127,4 +127,3 @@ allprojects {
 dependencies {
     subprojects.each {api project(it.path)}
 }
-
