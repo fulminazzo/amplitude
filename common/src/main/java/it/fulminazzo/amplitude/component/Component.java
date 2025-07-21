@@ -112,7 +112,9 @@ public class Component {
         if (matcher.find()) {
             if (matcher.start() != 0) {
                 setText(rawText.substring(0, matcher.start()));
-                setNext(rawText.substring(matcher.start()));
+                String remainder = rawText.substring(matcher.start());
+                if (getNext() != null) addNext(remainder);
+                else setNext(remainder);
                 return this;
             } else setText("");
 
