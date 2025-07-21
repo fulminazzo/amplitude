@@ -70,9 +70,7 @@ class LegacyBungeeConverterTest {
         addExtra(c2, createComponent(ChatColor.BOLD + "Hope you are... "));
         addExtra(c2, createComponent(ChatColor.BOLD + "or else... "));
         addExtra(c2, createComponent(ChatColor.RESET + "This should be reset. ", this::resetComponent));
-        addExtra(c2, createComponent(ChatColor.WHITE.toString()));
         addExtra(c2, createComponent("Insert DEMO ", c -> c.setInsertion("Hello there!")));
-        addExtra(c2, createComponent(""));
         net.md_5.bungee.api.chat.TranslatableComponent tc = new net.md_5.bungee.api.chat.TranslatableComponent("commands.give.successful.single");
         tc.addWith(new net.md_5.bungee.api.chat.TextComponent("Diamond Sword"));
         tc.addWith(new net.md_5.bungee.api.chat.TextComponent("1"));
