@@ -937,11 +937,6 @@ public class Component {
         if (rawText == null) return null;
         if (rawText.isEmpty()) return new Component();
 
-        for (Color color : Color.values())
-            rawText = rawText.replaceAll("[§&]" + color.getIdentifierChar(), "<" + color.getName() + ">");
-        for (Style style : Style.values())
-            rawText = rawText.replaceAll("[§&]" + style.getIdentifierChar(), "<" + style.getName() + ">");
-
         Component component = new Component(rawText);
         while (component.isEmpty()) component = component.getNext();
         return component;
