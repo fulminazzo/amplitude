@@ -129,7 +129,7 @@ public class Component {
             rawText = rawText.substring(fullTag.length());
 
             ChatFormatter formatter = ChatFormatter.getChatFormatter(tag);
-            setText(rawText);
+            this.text = rawText;
             if (matcher.find())
                 setText(this.text.substring(0, matcher.start() - fullTag.length()));
 
@@ -147,7 +147,6 @@ public class Component {
                         throw new RuntimeException(e);
                     }
                 }
-
             } else if (!CONTAINER_COMPONENTS.containsKey(tag)) {
                 setText(String.format("<%s>", tag) + this.text);
             }
@@ -316,7 +315,15 @@ public class Component {
      * @param text the text
      * @return this component
      */
-    public @NotNull Component setText(@Nullable String text) {
+    public @NotNull Component setText(final @Nullable String text) {
+        String finalText = text;
+        if (finalText != null) {
+            for (Color color : Color.values())
+                finalText = finalText.replaceAll("[§&]" + color.getIdentifierChar(), "<" + color.getName() + ">");
+            for (Style style : Style.values())
+                finalText = finalText.replaceAll("[§&]" + style.getIdentifierChar(), "<" + style.getName() + ">");
+            if (!finalText.equals(text)) return setContent(finalText);
+        }
         this.text = text;
         return this;
     }
