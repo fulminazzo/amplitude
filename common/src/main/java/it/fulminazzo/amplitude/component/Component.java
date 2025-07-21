@@ -104,16 +104,16 @@ public class Component {
      * @return this component
      */
     public @NotNull Component setContent(@Nullable String rawText) {
-        this.text = "";
+        setText("");
         if (rawText == null || rawText.isEmpty()) return this;
         final Matcher matcher = TAG_REGEX.matcher(rawText);
 
         if (matcher.find()) {
             if (matcher.start() != 0) {
-                this.text = rawText.substring(0, matcher.start());
+                setText(rawText.substring(0, matcher.start()));
                 setNext(rawText.substring(matcher.start()));
                 return this;
-            } else this.text = "";
+            } else setText("");
 
             final String tag = matcher.group(1).split(" ")[0];
             final String fullTag = matcher.group();
@@ -128,9 +128,9 @@ public class Component {
             rawText = rawText.substring(fullTag.length());
 
             ChatFormatter formatter = ChatFormatter.getChatFormatter(tag);
-            this.text = rawText;
+            setText(rawText);
             if (matcher.find())
-                this.text = this.text.substring(0, matcher.start() - fullTag.length());
+                setText(this.text.substring(0, matcher.start() - fullTag.length()));
 
             rawText = rawText.substring(this.text.length());
 
@@ -148,10 +148,10 @@ public class Component {
                 }
 
             } else if (!CONTAINER_COMPONENTS.containsKey(tag)) {
-                this.text = String.format("<%s>", tag) + this.text;
+                setText(String.format("<%s>", tag) + this.text);
             }
         } else {
-            this.text = rawText;
+            setText(rawText);
             rawText = "";
         }
 
