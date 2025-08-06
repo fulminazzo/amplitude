@@ -248,26 +248,42 @@ public class LegacyBungeeConverter extends ComponentConverter {
         try {
             // BungeeCord
             try {
-                final Class<?> clazz = Class.forName("net.md_5.bungee.api.connection.ProxiedPlayer");
-                if (!clazz.isAssignableFrom(player.getClass()))
-                    throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
-                Method sendMessage = player.getClass().getMethod("sendMessage", BaseComponent.class);
-                sendMessage.invoke(player, component);
+                Class<?> clazz = Class.forName("net.md_5.bungee.api.console.ProxiedConsole");
+                if (!clazz.isAssignableFrom(player.getClass())) {
+                    clazz = Class.forName("net.md_5.bungee.api.connection.ProxiedPlayer");
+                    if (!clazz.isAssignableFrom(player.getClass()))
+                        throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
+                    Method sendMessage = player.getClass().getMethod("sendMessage", BaseComponent.class);
+                    sendMessage.invoke(player, component);
+                } else {
+                    Method sendMessage = player.getClass().getMethod("sendMessage", String.class);
+                    sendMessage.setAccessible(true);
+                    sendMessage.invoke(player, ((BaseComponent) component).toLegacyText());
+                }
                 return;
-            } catch (ClassNotFoundException ignored) {}
+            } catch (ClassNotFoundException ignored) {
+            }
 
             // Spigot
             try {
-                final Class<?> clazz = Class.forName("org.bukkit.entity.Player");
-                if (!clazz.isAssignableFrom(player.getClass()))
-                    throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
-                Method spigotMethod = player.getClass().getMethod("spigot");
-                Object spigot = spigotMethod.invoke(player);
-                Method sendMessage = spigot.getClass().getMethod("sendMessage", BaseComponent.class);
-                sendMessage.setAccessible(true);
-                sendMessage.invoke(spigot, component);
+                Class<?> clazz = Class.forName("org.bukkit.command.ConsoleCommandSender");
+                if (!clazz.isAssignableFrom(player.getClass())) {
+                    clazz = Class.forName("org.bukkit.entity.Player");
+                    if (!clazz.isAssignableFrom(player.getClass()))
+                        throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
+                    Method spigotMethod = player.getClass().getMethod("spigot");
+                    Object spigot = spigotMethod.invoke(player);
+                    Method sendMessage = spigot.getClass().getMethod("sendMessage", BaseComponent.class);
+                    sendMessage.setAccessible(true);
+                    sendMessage.invoke(spigot, component);
+                } else {
+                    Method sendMessage = player.getClass().getMethod("sendMessage", String.class);
+                    sendMessage.setAccessible(true);
+                    sendMessage.invoke(player, ((BaseComponent) component).toLegacyText());
+                }
                 return;
-            } catch (ClassNotFoundException ignored) {}
+            } catch (ClassNotFoundException ignored) {
+            }
 
             throw new Exception("Platform not recognized: this serializer works only on BungeeCord or Spigot.");
         } catch (Exception e) {
