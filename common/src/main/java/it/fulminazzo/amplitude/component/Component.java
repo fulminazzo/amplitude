@@ -29,7 +29,8 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public class Component {
-    public static final Pattern TAG_REGEX = Pattern.compile("<((?:\"[^<>]*<|>[^<>]*\"|'[^<>]*<|>[^<>]*'|[^>])+(?:>\\\\\")?)>");
+    public static final Pattern TAG_REGEX = Pattern.compile("<((?:\"[^<>]*<|>[^<>]*\"|'[^<>]*<|>[^<>]*'|[^>])+(?:>\\\\\")?)>", Pattern.DOTALL);
+    static final Pattern WHITE_SPACE_PATTERN = Pattern.compile("\\s.*", Pattern.DOTALL);
     static final Map<String, Function<String, Component>> CONTAINER_COMPONENTS = new HashMap<>();
     @Getter
     protected Component next;
@@ -133,7 +134,7 @@ public class Component {
             ChatFormatter formatter = ChatFormatter.getChatFormatter(tag);
             // For not recognized tags.
             if (formatter == null) {
-                while (rawText.matches("\\s.*")) {
+                while (WHITE_SPACE_PATTERN.matcher(rawText).matches()) {
                     fullTag += rawText.substring(0, 1);
                     rawText = rawText.substring(1);
                 }
