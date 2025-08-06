@@ -89,7 +89,7 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
                 final String[] tmp = StringUtils.splitQuoteSensitive(raw, ' ');
                 if (tmp.length > 1)
                     rawOptions = String.join(" ", Arrays.copyOfRange(tmp, 1, tmp.length));
-            }
+            } else rawOptions = rawText;
         }
 
         if (rawOptions != null) {
