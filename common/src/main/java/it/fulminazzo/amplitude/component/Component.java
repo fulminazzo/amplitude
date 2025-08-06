@@ -147,20 +147,16 @@ public class Component {
 
             rawText = rawText.substring(this.text.length());
 
-            if (formatter != null) {
-                if (formatter instanceof Color) this.color = (Color) formatter;
-                else if (formatter.equals(Style.RESET)) reset(true);
-                else {
-                    try {
-                        Field field = Component.class.getDeclaredField(formatter.getName());
-                        field.setAccessible(true);
-                        field.set(this, !tag.startsWith("!"));
-                    } catch (IllegalAccessException | NoSuchFieldException e) {
-                        throw new RuntimeException(e);
-                    }
+            if (formatter instanceof Color) this.color = (Color) formatter;
+            else if (formatter.equals(Style.RESET)) reset(true);
+            else {
+                try {
+                    Field field = Component.class.getDeclaredField(formatter.getName());
+                    field.setAccessible(true);
+                    field.set(this, !tag.startsWith("!"));
+                } catch (IllegalAccessException | NoSuchFieldException e) {
+                    throw new RuntimeException(e);
                 }
-            } else if (!CONTAINER_COMPONENTS.containsKey(tag)) {
-                setText(String.format("<%s>", tag) + this.text);
             }
         } else {
             setText(rawText);
