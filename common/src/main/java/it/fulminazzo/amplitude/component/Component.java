@@ -709,24 +709,6 @@ public class Component {
     }
 
     /**
-     * Copy all the fields from the given text component to the current one.
-     *
-     * @param component the text component
-     * @return this component modified
-     */
-    public @NotNull Component copyFrom(final @NotNull Component component) {
-        for (Field field : Component.class.getDeclaredFields())
-            try {
-                if (Modifier.isStatic(field.getModifiers())) continue;
-                field.setAccessible(true);
-                field.set(this, field.get(component));
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        return this;
-    }
-
-    /**
      * Recursively check if the given component is contained in the current one.
      *
      * @param component the text component
