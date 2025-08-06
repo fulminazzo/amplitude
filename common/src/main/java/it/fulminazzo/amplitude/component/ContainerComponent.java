@@ -1,5 +1,6 @@
 package it.fulminazzo.amplitude.component;
 
+import it.fulminazzo.amplitude.util.StringUtils;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,8 +60,10 @@ abstract class ContainerComponent<C extends OptionComponent<C>> extends OptionCo
         startMatcher = Component.TAG_REGEX.matcher(startMatcher.group());
         if (startMatcher.find()) {
             String match = startMatcher.group(1);
-            if (match != null)
-                setOptions(match.substring(tagName.length()));
+            if (match != null) {
+                String split = StringUtils.splitQuoteSensitive(rawText, '>')[0].substring(1);
+                setOptions(split.substring(tagName.length()));
+            }
         }
 
         final String content = rawText.substring(startMatcher.end(), endMatcher.end() - endRegex.length());
