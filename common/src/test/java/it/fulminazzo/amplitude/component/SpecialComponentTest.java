@@ -31,6 +31,22 @@ class SpecialComponentTest {
                                 "<darkgray>- <white>Age: <darkgreen><age>\n" +
                                 "<darkgray>- <white>Total players: <yellow><total_players>\n" +
                                 "<darkgray>- <white>Total deaths: <red><total_deaths>"
+                },
+                new Object[]{
+                        "<aqua><bold>DOL<red><bold>002 <darkgray><bold>» <reset><yellow>Server stats:\n" +
+                                "<darkgray>- <white>Name: <darkgray><server_name>\n" +
+                                "- <white>Date of birth: <green><date_of_birth>\n" +
+                                "<darkgray>- <white>Age: <darkgreen>§e12 days§8, §e2 hours§8, §e35 minutes§8, §e22 seconds\n" +
+                                "<darkgray>- <white>Total players: <yellow><total_players>\n" +
+                                "<darkgray>- <white>Total deaths: <red><total_deaths>\n" +
+                                "<yellow>Players top deaths:",
+                        "<aqua><bold>DOL<red><bold>002 <darkgray><bold>» <reset><yellow>Server stats:\n" +
+                                "<darkgray>- <white>Name: <darkgray><server_name>\n" +
+                                "- <white>Date of birth: <green><date_of_birth>\n" +
+                                "<darkgray>- <white>Age: <darkgreen><yellow>12 days<darkgray>, <yellow>2 hours<darkgray>, <yellow>35 minutes<darkgray>, <yellow>22 seconds\n" +
+                                "<darkgray>- <white>Total players: <yellow><total_players>\n" +
+                                "<darkgray>- <white>Total deaths: <red><total_deaths>\n" +
+                                "<yellow>Players top deaths:"
                 }
         };
     }
