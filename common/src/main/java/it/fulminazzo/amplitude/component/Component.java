@@ -705,8 +705,7 @@ public class Component {
                 tmp = "";
             }
         }
-        Component component = Component.fromRaw(finalSerialized + tmp);
-        return copyFrom(component);
+        return Component.fromRaw(finalSerialized + tmp);
     }
 
     /**
