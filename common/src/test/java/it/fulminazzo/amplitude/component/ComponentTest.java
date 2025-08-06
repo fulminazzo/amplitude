@@ -15,6 +15,19 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 class ComponentTest {
 
     @Test
+    void testReplace() {
+        Component from = Component.fromRaw("<player>");
+        Component to = Component.fromRaw(
+                "<hover action=\"SHOW_TEXT\" text=\"<white>Name: <yellow>Bipolale\n" +
+                "<white>First login: <green>07/18/2025 22:20\">Bipolale</hover>"
+        );
+
+        Component actual = from.replace(from, to);
+
+        assertEquals(to, actual);
+    }
+
+    @Test
     void testSpecialTextComponent() {
         String text = "&f&l💬 Astra &8(<page>/<max_page>)";
         String expected = "<white><bold>💬 Astra <darkgray><bold>(<page>/<max_page>)";
