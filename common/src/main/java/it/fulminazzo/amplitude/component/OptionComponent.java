@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 @Getter
 abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
-    public static final String OPTIONS_REGEX = "([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?";
+    static final Pattern OPTIONS_REGEX = Pattern.compile("([^=\\n ]+)(?:=(\"((?:\\\\\"|[^\"])+)\"|'((?:\\\\'|[^'])+)'|[^ ]+))?", Pattern.DOTALL);
     protected final @NotNull String tagName;
     protected final @NotNull Map<String, String> tagOptions;
 
@@ -93,7 +93,7 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
         }
 
         if (rawOptions != null) {
-            final Matcher optionsMatcher = Pattern.compile(OPTIONS_REGEX).matcher(rawOptions);
+            final Matcher optionsMatcher = OPTIONS_REGEX.matcher(rawOptions);
             while (optionsMatcher.find()) {
                 String key = optionsMatcher.group(1);
                 String value = optionsMatcher.group(4);
