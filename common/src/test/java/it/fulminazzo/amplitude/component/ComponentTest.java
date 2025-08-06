@@ -14,6 +14,24 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class ComponentTest {
 
+    private static Object[][] components() {
+        return new Object[][]{
+                new Object[]{"&f&l💬 Astra &8(<page>/<max_page>)", "<white><bold>💬 Astra <darkgray><bold>(<page>/<max_page>)"},
+                new Object[]{
+                        "<name>&8: &4<deaths> &cdeaths &8(&eSince last death: <time_since_death>&8)",
+                        "<name><darkgray>: <darkred><deaths> <red>deaths <darkgray>(<yellow>Since last death: <time_since_death><darkgray>)"
+                }
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("components")
+    void testGeneralComponents(String text, String expected) {
+        Component component = Component.fromRaw(text);
+
+        assertEquals(expected, component.serialize());
+    }
+
     @Test
     void testReplace() {
         Component from = Component.fromRaw("<player>");
@@ -25,15 +43,6 @@ class ComponentTest {
         Component actual = from.replace(from, to);
 
         assertEquals(to, actual);
-    }
-
-    @Test
-    void testSpecialTextComponent() {
-        String text = "&f&l💬 Astra &8(<page>/<max_page>)";
-        String expected = "<white><bold>💬 Astra <darkgray><bold>(<page>/<max_page>)";
-        Component component = Component.fromRaw(text);
-
-        assertEquals(expected, component.serialize());
     }
 
     @Test
