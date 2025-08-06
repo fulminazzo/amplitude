@@ -57,16 +57,19 @@ abstract class ContainerComponent<C extends OptionComponent<C>> extends OptionCo
             throw new InvalidComponentException(String.format("Could not find valid end </%s> for component %s",
                     tagName, this.getClass().getSimpleName()));
 
+        int start = startMatcher.end();
+
         startMatcher = Component.TAG_REGEX.matcher(startMatcher.group());
         if (startMatcher.find()) {
             String match = startMatcher.group(1);
             if (match != null) {
                 String split = StringUtils.splitQuoteSensitive(rawText, '>')[0].substring(1);
+                start += split.length() + 2 - start;
                 setOptions(split.substring(tagName.length()));
             }
         }
 
-        final String content = rawText.substring(startMatcher.end(), endMatcher.end() - endRegex.length());
+        final String content = rawText.substring(start, endMatcher.end() - endRegex.length());
         setChild(content);
 
         rawText = rawText.substring(endMatcher.end());
