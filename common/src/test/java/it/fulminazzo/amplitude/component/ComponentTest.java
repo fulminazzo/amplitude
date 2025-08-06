@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class ComponentTest {
 
-    private static Object[][] components() {
+    private static Object[][] fromRawComponents() {
         return new Object[][]{
                 new Object[]{"&f&l💬 Astra &8(<page>/<max_page>)", "<white><bold>💬 Astra <darkgray><bold>(<page>/<max_page>)"},
                 new Object[]{
@@ -39,24 +39,37 @@ class ComponentTest {
     }
 
     @ParameterizedTest
-    @MethodSource("components")
+    @MethodSource("fromRawComponents")
     void testGeneralComponents(String text, String expected) {
         Component component = Component.fromRaw(text);
 
         assertEquals(expected, component.serialize());
     }
 
-    @Test
-    void testReplace() {
-        Component from = Component.fromRaw("<player>");
-        Component to = Component.fromRaw(
-                "<hover action=\"SHOW_TEXT\" text=\"<white>Name: <yellow>Bipolale\n" +
-                        "<white>First login: <green>07/18/2025 22:20\">Bipolale</hover>"
-        );
+    private static Object[][] replaceComponents() {
+        return new Object[][]{
+                new Object[]{
+                        "<player>",
+                        "<player>",
+                        "<hover action=\"SHOW_TEXT\" text=\"<white>Name: <yellow>Bipolale\n" +
+                                "<white>First login: <green>07/18/2025 22:20\">Bipolale</hover>",
+                        "<hover action=\"SHOW_TEXT\" text=\"<white>Name: <yellow>Bipolale\n" +
+                                "<white>First login: <green>07/18/2025 22:20\">Bipolale</hover>"
+                },
+        };
+    }
 
-        Component actual = from.replace(from, to);
+    @ParameterizedTest
+    @MethodSource("replaceComponents")
+    void testGeneralReplaceComponents(String text, String from, String to, String expected) {
+        Component component = Component.fromRaw(text);
+        Component fromComponent = Component.fromRaw(from);
+        Component toComponent = Component.fromRaw(to);
+        Component expectedComponent = Component.fromRaw(expected);
 
-        assertEquals(to, actual);
+        Component actualComponent = component.replace(fromComponent, toComponent);
+
+        assertEquals(expectedComponent, actualComponent);
     }
 
     @Test
