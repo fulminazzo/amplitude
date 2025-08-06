@@ -81,7 +81,7 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
     protected void setOptions(@Nullable String rawText) {
         this.tagOptions.clear();
 
-        String rawOptions = rawText;
+        String rawOptions = null;
         if (rawText != null) {
             Matcher startMatcher = TAG_REGEX.matcher(rawText);
             if (startMatcher.find()) {
