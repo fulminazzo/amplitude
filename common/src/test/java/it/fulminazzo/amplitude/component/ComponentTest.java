@@ -20,6 +20,20 @@ class ComponentTest {
                 new Object[]{
                         "<name>&8: &4<deaths> &cdeaths &8(&eSince last death: <time_since_death>&8)",
                         "<name><darkgray>: <darkred><deaths> <red>deaths <darkgray>(<yellow>Since last death: <time_since_death><darkgray>)"
+                },
+                new Object[]{
+                        "<prefix>&eServer stats:\n" +
+                                "&8- &fName: &8<server_name>\n" +
+                                "&8- &fDate of birth: &a<date_of_birth>\n" +
+                                "&8- &fAge: &2<age>\n" +
+                                "&8- &fTotal players: &e<total_players>\n" +
+                                "&8- &fTotal deaths: &c<total_deaths>",
+                        "<prefix><yellow>Server stats:\n" +
+                                "<darkgray>- <white>Name: <darkgray><server_name>\n" +
+                                "- <white>Date of birth: <green><date_of_birth>\n" +
+                                "<darkgray>- <white>Age: <darkgreen><age>\n" +
+                                "<darkgray>- <white>Total players: <yellow><total_players>\n" +
+                                "<darkgray>- <white>Total deaths: <red><total_deaths>"
                 }
         };
     }
@@ -37,7 +51,7 @@ class ComponentTest {
         Component from = Component.fromRaw("<player>");
         Component to = Component.fromRaw(
                 "<hover action=\"SHOW_TEXT\" text=\"<white>Name: <yellow>Bipolale\n" +
-                "<white>First login: <green>07/18/2025 22:20\">Bipolale</hover>"
+                        "<white>First login: <green>07/18/2025 22:20\">Bipolale</hover>"
         );
 
         Component actual = from.replace(from, to);
