@@ -183,7 +183,7 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
      */
     public static @NotNull Pattern getTagRegex(final @NotNull String tagName) {
         String regex = "<" + tagName + " ?((?:(?!<" + tagName + ")(?!</" + tagName + ">).)*)";
-        return Pattern.compile(regex);
+        return Pattern.compile(regex, Pattern.DOTALL);
     }
 
     @Override
