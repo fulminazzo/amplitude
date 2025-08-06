@@ -84,7 +84,8 @@ abstract class OptionComponent<C extends OptionComponent<C>> extends Component {
         if (rawText != null) {
             Matcher startMatcher = TAG_REGEX.matcher(rawText);
             if (startMatcher.find()) {
-                final String[] tmp = startMatcher.group(1).split(" ");
+                String raw = StringUtils.splitQuoteSensitive(rawText, '>')[0];
+                final String[] tmp = StringUtils.splitQuoteSensitive(raw, ' ');
                 if (tmp.length > 1)
                     rawOptions = String.join(" ", Arrays.copyOfRange(tmp, 1, tmp.length));
             }
