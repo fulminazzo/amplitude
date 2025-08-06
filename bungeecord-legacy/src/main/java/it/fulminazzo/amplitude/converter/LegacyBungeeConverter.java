@@ -82,7 +82,9 @@ public class LegacyBungeeConverter extends ComponentConverter {
                 break;
             }
             default: {
-                content = new TextComponent(component.getTagOption("text"));
+                String raw = component.getTagOption("text");
+                raw = new SectionSignConverter().convertComponent(Component.fromRaw(raw));
+                content = new TextComponent(raw);
             }
         }
         applyForAllComponents(comp, c -> c.setHoverEvent(new HoverEvent(action, new BaseComponent[]{content})));
