@@ -9,6 +9,15 @@ class FontComponentTest {
     private static final String rawText = "<font id=\"ILLAGERALT\">This text <bold>should propagate";
 
     @Test
+    void testSerializeParticular() {
+        String raw = "<font id=\"ILLAGERALT\" text=\"<white>Name: <yellow>Bipolale\n" +
+                "<white>First login: <green>07/18/2025 22:20\">Bipolale";
+        Component component = Component.fromRaw(raw);
+
+        assertEquals(raw, component.serialize());
+    }
+
+    @Test
     void testFontPropagation() {
         FontComponent component = new FontComponent(rawText);
         assertEquals(Font.ILLAGERALT, component.getNext().getFont());

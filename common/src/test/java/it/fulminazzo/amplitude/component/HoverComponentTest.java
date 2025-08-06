@@ -1,6 +1,7 @@
 package it.fulminazzo.amplitude.component;
 
 import it.fulminazzo.amplitude.exception.InvalidOptionException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -8,6 +9,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HoverComponentTest {
+
+    @Test
+    void testSerializeParticular() {
+        String raw = "<hover action=\"SHOW_TEXT\" text=\"<white>Name: <yellow>Bipolale\n" +
+                "<white>First login: <green>07/18/2025 22:20\">Bipolale</hover>";
+        Component component = Component.fromRaw(raw);
+
+        assertEquals(raw, component.serialize());
+    }
 
     private static Object[][] getTestParameters() {
         return new Object[][]{
