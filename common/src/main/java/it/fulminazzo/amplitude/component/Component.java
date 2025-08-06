@@ -119,7 +119,7 @@ public class Component {
             } else setText("");
 
             final String tag = matcher.group(1).split(" ")[0];
-            final String fullTag = matcher.group();
+            String fullTag = matcher.group();
 
             if (this.getClass().equals(Component.class))
                 for (String key : CONTAINER_COMPONENTS.keySet())
@@ -131,6 +131,15 @@ public class Component {
             rawText = rawText.substring(fullTag.length());
 
             ChatFormatter formatter = ChatFormatter.getChatFormatter(tag);
+            // For not recognized tags.
+            if (formatter == null) {
+                while (rawText.matches("\\s.*")) {
+                    fullTag += rawText.substring(0, 1);
+                    rawText = rawText.substring(1);
+                }
+                return setText(fullTag).setNext(rawText);
+            }
+
             this.text = rawText;
             if (matcher.find())
                 setText(this.text.substring(0, matcher.start() - fullTag.length()));
