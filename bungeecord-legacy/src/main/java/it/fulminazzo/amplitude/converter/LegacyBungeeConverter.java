@@ -248,18 +248,11 @@ public class LegacyBungeeConverter extends ComponentConverter {
         try {
             // BungeeCord
             try {
-                Class<?> clazz = Class.forName("net.md_5.bungee.api.console.ProxiedConsole");
-                if (!clazz.isAssignableFrom(player.getClass())) {
-                    clazz = Class.forName("net.md_5.bungee.api.connection.ProxiedPlayer");
-                    if (!clazz.isAssignableFrom(player.getClass()))
-                        throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
-                    Method sendMessage = player.getClass().getMethod("sendMessage", BaseComponent.class);
-                    sendMessage.invoke(player, component);
-                } else {
-                    Method sendMessage = player.getClass().getMethod("sendMessage", String.class);
-                    sendMessage.setAccessible(true);
-                    sendMessage.invoke(player, ((BaseComponent) component).toLegacyText());
-                }
+                Class<?> clazz = Class.forName("net.md_5.bungee.api.CommandSender");
+                if (!clazz.isAssignableFrom(player.getClass()))
+                    throw new Exception(String.format("%s is not a %s", player, clazz.getCanonicalName()));
+                Method sendMessage = player.getClass().getMethod("sendMessage", BaseComponent.class);
+                sendMessage.invoke(player, component);
                 return;
             } catch (ClassNotFoundException ignored) {
             }
