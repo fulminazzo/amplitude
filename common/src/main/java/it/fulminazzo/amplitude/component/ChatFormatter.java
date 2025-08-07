@@ -1,5 +1,6 @@
 package it.fulminazzo.amplitude.component;
 
+import it.fulminazzo.amplitude.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,8 +105,10 @@ interface ChatFormatter {
      * @return the replaced string
      */
     static @NotNull String replaceFormats(@NotNull String from) {
-        for (ChatFormatter formatter : getChatFormatters())
-            from = from.replaceAll("[§&]" + formatter.getIdentifierChar(), "<" + formatter.getName() + ">");
+        for (ChatFormatter formatter : getChatFormatters()) {
+            String[] tmp = StringUtils.splitQuoteSensitive(from, "[§&]" + formatter.getIdentifierChar());
+            from = String.join("<" + formatter.getName() + ">", tmp);
+        }
         return from;
     }
 
