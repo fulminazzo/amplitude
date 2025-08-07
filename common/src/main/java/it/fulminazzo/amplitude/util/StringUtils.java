@@ -2,10 +2,13 @@ package it.fulminazzo.amplitude.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * String utilities.
@@ -21,6 +24,17 @@ public final class StringUtils {
      * @return the result of the split
      */
     public static @Nullable String[] splitQuoteSensitive(@Nullable String string, char separator) {
+        return splitQuoteSensitive(string, separator + "");
+    }
+
+    /**
+     * Split a string using the given separator, ignoring it if it is contained inside quotes.
+     *
+     * @param string the string
+     * @param regex  the regular expression to use to split
+     * @return the result of the split
+     */
+    public static @Nullable String[] splitQuoteSensitive(@Nullable String string, @NotNull String regex) {
         if (string == null) return null;
         List<String> split = new ArrayList<>();
 
@@ -30,7 +44,8 @@ public final class StringUtils {
             if (startingQuote != 0) {
                 if (c == startingQuote) startingQuote = 0;
             } else {
-                if (c == separator) {
+                Matcher matcher = Pattern.compile(".*" + regex).matcher(tmp + c);
+                if (matcher.matches()) {
                     split.add(tmp);
                     tmp = "";
                     continue;
