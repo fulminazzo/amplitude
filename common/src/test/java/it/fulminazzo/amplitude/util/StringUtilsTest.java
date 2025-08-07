@@ -10,9 +10,11 @@ class StringUtilsTest {
 
     @Test
     void testSplitQuoteSensitive() {
-        String[] tmp = new String[]{"Hello", "\"world, are you ok?\"", "hope", "'you,are'"};
+        String[] expected = new String[]{"Hello", "\"world, are you ok?\"", "hope", "'you,are'"};
         String rawString = "Hello,\"world, are you ok?\",hope,'you,are'";
-        assertEquals(Arrays.toString(tmp), Arrays.toString(StringUtils.splitQuoteSensitive(rawString, ',')));
-        assertArrayEquals(tmp, StringUtils.splitQuoteSensitive(rawString, ','));
+        String[] actual = StringUtils.splitQuoteSensitive(rawString, ',');
+        assertEquals(Arrays.toString(expected), Arrays.toString(actual),
+                String.format("Expected had %s elements, Actual has %s", expected.length, actual.length));
+        assertArrayEquals(expected, actual);
     }
 }
