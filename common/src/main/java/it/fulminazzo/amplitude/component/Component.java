@@ -1,6 +1,7 @@
 package it.fulminazzo.amplitude.component;
 
 import it.fulminazzo.amplitude.converter.ComponentConverter;
+import it.fulminazzo.amplitude.converter.SectionSignConverter;
 import it.fulminazzo.fulmicollection.utils.ClassUtils;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -772,6 +773,15 @@ public class Component {
         if (underlined != null && !underlined.equals(component.underlined)) return false;
         if (italic != null && !italic.equals(component.italic)) return false;
         return reset == null || reset.equals(component.reset);
+    }
+
+    /**
+     * Converts the current component using {@link SectionSignConverter}.
+     *
+     * @return the converted component
+     */
+    public @NotNull String toLegacy() {
+        return new SectionSignConverter().convertComponent(this);
     }
 
     /**
