@@ -44,8 +44,10 @@ public final class StringUtils {
             if (startingQuote != 0) {
                 if (c == startingQuote) startingQuote = 0;
             } else {
-                Matcher matcher = Pattern.compile(".*" + regex).matcher(tmp + c);
+                Matcher matcher = Pattern.compile(".*(" + regex + ")", Pattern.DOTALL).matcher(tmp + c);
                 if (matcher.matches()) {
+                    tmp += c;
+                    tmp = tmp.substring(0, tmp.length() - matcher.group(1).length());
                     split.add(tmp);
                     tmp = "";
                     continue;
