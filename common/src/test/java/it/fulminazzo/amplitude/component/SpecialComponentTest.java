@@ -1,5 +1,6 @@
 package it.fulminazzo.amplitude.component;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -10,6 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
  * As such, they contain code or strings from those as testing benchmarks.
  */
 class SpecialComponentTest {
+
+    @Test
+    void testToLegacy() {
+        String raw = "<<lightpurple>player>";
+
+        Component component = Component.fromRaw(raw);
+
+        assertEquals("<§dplayer>", component.toLegacy());
+    }
 
     private static Object[][] fromRawComponents() {
         return new Object[][]{
