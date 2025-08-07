@@ -96,4 +96,17 @@ interface ChatFormatter {
                 .toArray(ChatFormatter[]::new);
     }
 
+    /**
+     * Replaces all the formats from an ampersand or section sign character
+     * to their respective extended tag.
+     *
+     * @param from the source
+     * @return the replaced string
+     */
+    static @NotNull String replaceFormats(@NotNull String from) {
+        for (ChatFormatter formatter : getChatFormatters())
+            from = from.replaceAll("[§&]" + formatter.getIdentifierChar(), "<" + formatter.getName() + ">");
+        return from;
+    }
+
 }
