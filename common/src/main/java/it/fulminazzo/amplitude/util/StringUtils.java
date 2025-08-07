@@ -5,8 +5,7 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +14,8 @@ import java.util.regex.Pattern;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringUtils {
+
+    public static final Pattern QUOTE_PATTERN = Pattern.compile("(\"[^\"]*\")|('([^'])*')", Pattern.DOTALL);
 
     /**
      * Split a string using the given separator, ignoring it if it is contained inside quotes.
@@ -36,28 +37,29 @@ public final class StringUtils {
      */
     public static @Nullable String[] splitQuoteSensitive(@Nullable String string, @NotNull String regex) {
         if (string == null) return null;
-        List<String> split = new ArrayList<>();
+        final String placeholder = String.valueOf((char) 22);
 
-        String tmp = "";
-        char startingQuote = 0;
-        for (char c : string.toCharArray()) {
-            if (startingQuote != 0) {
-                if (c == startingQuote) startingQuote = 0;
-            } else {
-                Matcher matcher = Pattern.compile(".*(" + regex + ")", Pattern.DOTALL).matcher(tmp + c);
-                if (matcher.matches()) {
-                    tmp += c;
-                    tmp = tmp.substring(0, tmp.length() - matcher.group(1).length());
-                    split.add(tmp);
-                    tmp = "";
-                    continue;
-                } else if (c == '"' | c == '\'') startingQuote = c;
-            }
-            tmp += c;
+        LinkedList<String> quoted = new LinkedList<>();
+        Matcher matcher = QUOTE_PATTERN.matcher(string);
+        while (matcher.find()) {
+            quoted.add(matcher.group());
+            string = string.substring(0, matcher.start()) + placeholder + string.substring(matcher.end());
+            matcher = QUOTE_PATTERN.matcher(string);
         }
-        if (!tmp.isEmpty()) split.add(tmp);
 
-        return split.toArray(new String[0]);
+        final String[] split = string.split(regex);
+        final Pattern placeholderPattern = Pattern.compile(placeholder, Pattern.DOTALL);
+        for (int i = 0; i < split.length; i++) {
+            String s = split[i];
+            matcher = placeholderPattern.matcher(s);
+            while (matcher.find()) {
+                s = s.substring(0, matcher.start()) + quoted.pop() + s.substring(matcher.end());
+                matcher = placeholderPattern.matcher(s);
+            }
+            split[i] = s;
+        }
+
+        return split;
     }
 
     /**
