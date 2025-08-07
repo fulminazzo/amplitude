@@ -108,6 +108,7 @@ public class Component {
         setText("");
         setNext((String) null);
         if (rawText == null || rawText.isEmpty()) return this;
+        rawText = ChatFormatter.replaceFormats(rawText);
         final Matcher matcher = TAG_REGEX.matcher(rawText);
 
         if (matcher.find()) {
@@ -324,14 +325,6 @@ public class Component {
      * @return this component
      */
     public @NotNull Component setText(final @Nullable String text) {
-        String finalText = text;
-        if (finalText != null) {
-            for (Color color : Color.values())
-                finalText = finalText.replaceAll("[§&]" + color.getIdentifierChar(), "<" + color.getName() + ">");
-            for (Style style : Style.values())
-                finalText = finalText.replaceAll("[§&]" + style.getIdentifierChar(), "<" + style.getName() + ">");
-            if (!finalText.equals(text)) return setContent(finalText);
-        }
         this.text = text;
         return this;
     }
