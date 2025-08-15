@@ -23,6 +23,32 @@ class SpecialComponentTest {
 
     private static Object[][] fromRawComponents() {
         return new Object[][]{
+                new Object[]{
+                        "<red>Dupe<white>Book <darkgray>» <white><red>You don't have enough experience. Required <darkred>1000 XP levels",
+                        new Component("Dupe").setColor(Color.RED)
+                                .addNext(new Component("Book ").setColor(Color.WHITE))
+                                .addNext(new Component("» ").setColor(Color.DARK_GRAY))
+                                .addNext(new Component().setColor(Color.WHITE))
+                                .addNext(new Component("You don't have enough experience. Required ").setColor(Color.RED))
+                                .addNext(new Component("1000 XP levels").setColor(Color.DARK_RED))
+                }
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("fromRawComponents")
+    void testGeneralComponents(String text, Component expected) {
+        Component component = Component.fromRaw(text);
+
+        while (expected != null) {
+            assertEquals(expected, component);
+            expected = expected.getNext();
+            component = component.getNext();
+        }
+    }
+
+    private static Object[][] fromRawComponentsToSerialize() {
+        return new Object[][]{
                 new Object[]{"&f&l💬 Astra &8(<page>/<max_page>)", "<white><bold>💬 Astra <darkgray><bold>(<page>/<max_page>)"},
                 new Object[]{
                         "<name>&8: &4<deaths> &cdeaths &8(&eSince last death: <time_since_death>&8)",
@@ -62,8 +88,8 @@ class SpecialComponentTest {
     }
 
     @ParameterizedTest
-    @MethodSource("fromRawComponents")
-    void testGeneralComponents(String text, String expected) {
+    @MethodSource("fromRawComponentsToSerialize")
+    void testGeneralComponentsSerialized(String text, String expected) {
         Component component = Component.fromRaw(text);
 
         assertEquals(expected, component.serialize());
