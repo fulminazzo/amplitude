@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public class Component {
-    public static final Pattern TAG_REGEX = Pattern.compile("<([^<>](?:\"[^<>]*<|>[^<>]*\"|'[^<>]*<|>[^<>]*'|[^>])+(?:>\\\\\")?)>", Pattern.DOTALL);
+    public static final Pattern TAG_REGEX = Pattern.compile("<([^<>]+|\"[^<>\"]*<[^<>\"]*>\"|'[^<>]*<[^<>]*>')>", Pattern.DOTALL);
     static final Pattern WHITE_SPACE_PATTERN = Pattern.compile("\\s.*", Pattern.DOTALL);
     static final Map<String, Function<String, Component>> CONTAINER_COMPONENTS = new HashMap<>();
     @Getter
@@ -106,6 +106,7 @@ public class Component {
      * @return this component
      */
     public @NotNull Component setContent(@Nullable String rawText) {
+        System.out.println(String.format("Setting content with raw text: '%s'", rawText));
         setText("");
         setNext((String) null);
         if (rawText == null || rawText.isEmpty()) return this;
@@ -113,7 +114,9 @@ public class Component {
         final Matcher matcher = TAG_REGEX.matcher(rawText);
 
         if (matcher.find()) {
+            System.out.println("Found match!");
             if (matcher.start() != 0) {
+                System.out.println("Not at 0 tho");
                 setText(rawText.substring(0, matcher.start()));
                 String remainder = rawText.substring(matcher.start());
                 if (getNext() != null) addNext(remainder);
@@ -131,6 +134,8 @@ public class Component {
                         return this;
                     }
 
+            System.out.println(String.format("Tag: '%s'", tag));
+            System.out.println(String.format("Found full tag: '%s'", fullTag));
             rawText = rawText.substring(fullTag.length());
 
             ChatFormatter formatter = ChatFormatter.getChatFormatter(tag);
@@ -144,10 +149,16 @@ public class Component {
             }
 
             this.text = rawText;
-            if (matcher.find())
+            System.out.println("Setting raw text: "+ rawText);
+            if (matcher.find()) {
+                System.out.println("Matcher found new match: " + matcher.group());
+                System.out.println(String.format("'%s'", this.text.substring(0, matcher.start() - fullTag.length())));
                 setText(this.text.substring(0, matcher.start() - fullTag.length()));
+            }
 
             rawText = rawText.substring(this.text.length());
+            System.out.println(String.format("New raw text: '%s'", rawText));
+            System.out.println("Formatter: " + formatter);
 
             if (formatter instanceof Color) this.color = (Color) formatter;
             else if (formatter.equals(Style.RESET)) reset(true);
@@ -161,10 +172,12 @@ public class Component {
                 }
             }
         } else {
+            System.out.println("COuld not find match?");
             setText(rawText);
             rawText = "";
         }
 
+        System.out.println("Setting next: " + rawText);
         if (rawText.trim().isEmpty()) return this;
         else return getNext() == null ? setNext(rawText) : addNext(rawText);
     }
@@ -213,7 +226,11 @@ public class Component {
     public @NotNull Component setNext(Component next) {
         this.next = next;
 
-        setSameOptions(this.next);
+        if (this.next != null) {
+            System.out.println("New next: " + this.next.serialize());
+            setSameOptions(this.next);
+            System.out.println("Set same options: " + this.next.serialize());
+        }
 
         while (this.next != null && this.next.isSimilar(this)) {
             String nextText = this.next.text;
