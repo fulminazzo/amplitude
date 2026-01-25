@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'it.fulminazzo'
-version = '2.3'
+version = '2.4'
 
 allprojects {
     apply plugin: 'java-library'
