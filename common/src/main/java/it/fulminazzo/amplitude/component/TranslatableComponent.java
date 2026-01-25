@@ -50,8 +50,8 @@ public final class TranslatableComponent extends ContainerComponent<Translatable
     protected void setOptions(final @Nullable String rawText) {
         super.setOptions(rawText);
 
-        final String rawArguments = getTagOption("arguments");
-        if (rawArguments == null) return;
+        String rawArguments = getTagOption("arguments");
+        if (rawArguments == null) rawArguments = "";
         if (this.arguments == null) this.arguments = new LinkedList<>();
         setArguments(StringUtils.splitQuoteSensitive(rawArguments, '&'));
     }
