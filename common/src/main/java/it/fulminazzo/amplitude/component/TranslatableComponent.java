@@ -125,4 +125,10 @@ public final class TranslatableComponent extends ContainerComponent<Translatable
         return this;
     }
 
+    @Override
+    public @NotNull TranslatableComponent setChild(Component child) {
+        this.child = child;
+        return this;
+    }
+
 }
