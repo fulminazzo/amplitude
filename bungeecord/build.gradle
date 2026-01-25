@@ -1,6 +1,8 @@
 dependencies {
     api(project(":bungeecord-legacy"))
 
-    compileOnly(libs.bungeecord)
-    testImplementation(libs.bungeecord)
+    compileOnly files('../libs/BungeeCord-1.16.jar')
+//    compileOnly(libs.bungeecord)
+    testImplementation files('../libs/BungeeCord-1.16.jar')
+//    testImplementation(libs.bungeecord)
 }

@@ -50,8 +50,8 @@ public final class TranslatableComponent extends ContainerComponent<Translatable
     protected void setOptions(final @Nullable String rawText) {
         super.setOptions(rawText);
 
-        final String rawArguments = getTagOption("arguments");
-        if (rawArguments == null) return;
+        String rawArguments = getTagOption("arguments");
+        if (rawArguments == null) rawArguments = "";
         if (this.arguments == null) this.arguments = new LinkedList<>();
         setArguments(StringUtils.splitQuoteSensitive(rawArguments, '&'));
     }
@@ -122,6 +122,12 @@ public final class TranslatableComponent extends ContainerComponent<Translatable
     public @NotNull TranslatableComponent setArguments(final @Nullable List<Component> arguments) {
         this.arguments.clear();
         if (arguments != null) this.arguments.addAll(arguments);
+        return this;
+    }
+
+    @Override
+    public @NotNull TranslatableComponent setChild(Component child) {
+        this.child = child;
         return this;
     }
 
