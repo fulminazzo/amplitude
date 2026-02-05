@@ -6,10 +6,7 @@ import it.fulminazzo.amplitude.component.Component;
 import it.fulminazzo.amplitude.component.ClickAction;
 import it.fulminazzo.amplitude.component.HoverAction;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.ItemTag;
+import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
@@ -44,7 +41,7 @@ class BungeeConverterTest {
                 new Object[]{HoverAction.SHOW_ACHIEVEMENT,
                         null, "id=achievement.mineWood"
                 },
-                new Object[]{HoverAction.SHOW_TEXT, new Text("Hello friend!"),
+                new Object[]{HoverAction.SHOW_TEXT, new Text(new BaseComponent[]{new TextComponent("Hello friend!")}),
                         "text=\"Hello friend!\""
                 },
                 new Object[]{HoverAction.SHOW_ENTITY,
@@ -156,7 +153,7 @@ class BungeeConverterTest {
         c2.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(action.name()), content));
         BaseComponent tmp = new net.md_5.bungee.api.chat.TextComponent();
         tmp.addExtra(c2);
-        assertEquals(tmp.toString(), serializer.convertHoverComponent(c1).toString());
+        assertEquals(tmp, serializer.convertHoverComponent(c1));
     }
 
     @Test
