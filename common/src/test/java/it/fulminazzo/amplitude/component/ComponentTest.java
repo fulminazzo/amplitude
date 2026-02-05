@@ -15,6 +15,14 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 class ComponentTest {
 
     @Test
+    void testFromRawSupportsEscapedCharacters() {
+        String raw = "<hover action=\"SHOW_TEXT\" text=\"&ePlayer: &6<hex color=#ff00aa>Bipolale<hex color=#ff00aa>\n" +
+                "&eXP levels: &b59\"><hex color=#ff00aa>Bipolale<hex color=#ff00aa></hover>";
+        Component component = Component.fromRaw(raw);
+        assertInstanceOf(HoverComponent.class, component);
+    }
+
+    @Test
     void testFromRawSupportsEmptyString() {
         Component component = Component.fromRaw("");
         assertNotNull(component);
